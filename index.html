@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TRPGキャラクター作成ツール v99</title>
+<title>TRPGキャラクター作成ツール v100</title>
 <style>
 :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;padding:16px;background:#10131a;color:#edf1f7;font:16px/1.5 system-ui,sans-serif}main{max-width:920px;margin:auto}section{background:#1a202b;border:1px solid #30394a;border-radius:12px;padding:15px;margin:13px 0}h1{font-size:1.45rem}h2{font-size:1.1rem;margin:0 0 10px}.hint,label{color:#aab4c5}.hint{font-size:.86rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:11px}label{display:block;font-size:.88rem;margin-bottom:5px}input,textarea,button{font:inherit;border-radius:8px;padding:9px}input,textarea{width:100%;background:#111722;border:1px solid #30394a;color:#fff}button{border:1px solid #526184;background:#293246;color:#fff;cursor:pointer;margin:4px 3px 4px 0}.primary{background:#5368d8}.danger{background:#42272d}.row{display:grid;grid-template-columns:minmax(80px,1fr) minmax(80px,1fr) auto;gap:8px;align-items:end;margin:9px 0}.derived-row{display:grid;grid-template-columns:minmax(90px,.7fr) minmax(120px,1.4fr) minmax(90px,.7fr);gap:8px;align-items:end;margin:9px 0}.derived-row output{display:block;min-height:42px;padding:9px;background:#111722;border:1px solid #30394a;border-radius:8px;color:#edf1f7}.damage-row{display:grid;grid-template-columns:minmax(80px,1fr) minmax(80px,1fr) auto;gap:8px;align-items:end;margin:9px 0}textarea{min-height:190px;margin-top:8px}.output-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0}.switch-label{display:flex;align-items:center;gap:8px;margin:8px 0;color:#edf1f7}.switch-label input{width:auto;accent-color:#7186ff}.small-btn{padding:6px 10px;font-size:.9rem}#message{color:#b9c5ff;min-height:1.5em}.result{padding:10px;background:#111722;border-radius:8px;margin-top:8px;white-space:pre-wrap;overflow-wrap:anywhere}.db-panel{margin:12px 0;padding:10px 12px;background:#111722;border:1px solid #30394a;border-radius:8px}.db-panel output{display:block;font-size:1.2rem;font-weight:700;margin-top:4px}@media(max-width:500px){body{padding:9px}.row{grid-template-columns:1fr 1fr auto}.derived-row{grid-template-columns:1fr 1fr}.derived-row>div:last-child{grid-column:1/-1}.damage-row{grid-template-columns:1fr 1fr}.damage-row button{width:100%}}
 
@@ -629,7 +629,7 @@ body.sp-on #skills .row>div:nth-child(1){grid-column:2/5}
  <section><h2>基本能力値</h2><p class="hint">値または式（例：3d6、2d6+6）を入力するか、ダイスで振れます。</p><div class="grid" id="base"></div><div class="db-panel db-compact"><div class="db-main"><strong>ダメージボーナス</strong><output id="dbDisplay">STR＋SIZから自動計算</output></div><div class="db-input"><label for="dbOverride" class="sr-only">DBを手入力（空欄ならSTR＋SIZから自動計算）</label><input id="dbOverride" placeholder="手入力 例：+1D4"></div></div><div class="btn-row"><button class="primary" id="rollStats">3d6で能力値を振る</button><button id="resetStats">0に戻す</button></div><div id="message" role="status" aria-live="polite"></div></section>
 <section><h2>基本ステータス（能力値から計算）</h2><p class="hint">HP・MP・SANはステータスに出力。アイデア・幸運・知識はチャットパレットだけに出力します。</p><div class="derived-head" aria-hidden="true"><span>ステータス名</span><span>計算式</span><span>計算値</span><span></span></div><div id="derivedStatuses"></div><div id="sanInfo" class="db-panel"></div><div class="btn-row"><button id="addCustomDerived">＋ ステータスを追加</button><button id="applyDerived" title="能力値に準ずるステータス（HP・MP・SANなど）の計算値を更新します">まとめて適用</button></div></section>
 <section><h2>追加ステータス</h2><div id="extras"></div><button id="addExtra">＋ ステータスを追加</button></section>
-<section><h2>技能・ダメージ</h2><p class="hint">各行の「ダメージ式」に式（例：1d3+DB）を入れると、チャットパレットのダメージ判定になります。武器だけの行は、成功値を空のままにしてください。<br>成功値には 50+1d50 のほか、50&lt;1d100 のような最低保証も書けます（出目が50以下なら51。50&lt;=1d100 なら50以上）。割り振り方式のときは「その他」にもダイス（例：1d10）を書けて、記述はそのまま、振った結果が合計に入ります（🎲で振り直し）。<br>「基本機能を適用」から、クトゥルフ神話TRPGの基本技能をカテゴリ別に一覧表示し、まとめて、または1つずつ追加できます。</p><div class="btn-row"><button type="button" class="primary" id="openPresetDialog">⚙ 基本技能を適用</button><button type="button" id="openSkillSets">★ お気に入りセット</button></div><label class="switch-label"><input type="checkbox" id="spMode">技能ポイント割り振り方式（職業P・興味P）</label>
+<section><h2>技能・ダメージ</h2><p class="hint">各行の「ダメージ式」に式（例：1d3+DB）を入れると、チャットパレットのダメージ判定になります。武器だけの行は、成功値を空のままにしてください。<br>成功値には 50+1d50 のほか、50&lt;1d100 のような最低保証も書けます（出目が50以下なら51。50&lt;=1d100 なら50以上）。割り振り方式のときは「その他」にもダイス（例：1d10）を書けて、記述はそのまま、振った結果が合計に入ります（🎲で振り直し）。<br>「基本技能を適用」から、クトゥルフ神話TRPGの基本技能をカテゴリ別に一覧表示し、まとめて、または1つずつ追加できます。</p><div class="btn-row"><button type="button" class="primary" id="openPresetDialog">⚙ 基本技能を適用</button><button type="button" id="openSkillSets">★ お気に入りセット</button></div><label class="switch-label"><input type="checkbox" id="spMode">技能ポイント割り振り方式（職業P・興味P）</label>
 <div id="spPanel" class="db-panel hidden"><div class="sp-formulas"><div><label for="spOccFormula">職業技能Pの上限（式）</label><input id="spOccFormula" value="EDU*20"></div><div><label for="spIntFormula">興味技能Pの上限（式）</label><input id="spIntFormula" value="INT*10"></div></div><div class="sp-line" id="spOccLine"></div><div class="sp-line" id="spIntLine"></div><p class="hint">各技能に「初期値＋職業P＋興味P＋その他」を入力すると、成功値が自動で合計されます。上限は能力値が数値に確定していると計算されます（「3d6で能力値を振る」の後など）。上限の式は版に合わせて書き換えられます。</p></div>
 <div class="skill-tools"><input id="skillSearch" type="search" placeholder="🔍 技能名で絞り込み（例：回避、目星）" aria-label="技能を検索" autocomplete="off"><div class="opt-row"><label class="switch-label"><input type="checkbox" id="hideInitial">初期値のままを隠す</label><label class="switch-label priority-switch"><input type="checkbox" id="skillOrderSwitch">並べ替えを編集</label><button type="button" id="secretEditToggleSkills" class="small-btn secret-edit-btn" aria-pressed="false">シークレット設定：OFF</button></div></div><div id="skillOrderPanel" class="hidden"><div class="palette-selection-bar"><span class="palette-selection-count" id="skillSelectionCount">0件選択中</span><button type="button" id="clearSkillSelection">選択解除</button><span class="hint">チェックした項目はまとめて移動できます</span></div><div id="skillOrderList" class="palette-order-list"></div><button type="button" id="cancelSkillOrder">編集を取り消す</button><p class="hint">並べ替えは左端の⠿マークを長押しして上下にドラッグしてください。中央・文字部分・余白では普通に画面を上下スクロールできます。ドラッグ中に画面の上端・下端へ近づけると自動スクロールします。順番はチャットパレットとJSONにすぐ反映されます。</p></div><div class="skill-table"><div class="skill-head" aria-hidden="true"><span>技能名</span><span class="plain-col">成功値</span><span class="sp-col">初期</span><span class="sp-col">職業</span><span class="sp-col">興味</span><span class="sp-col">他</span><span class="sp-col">合計</span><span class="dmg-col" style="text-align:center;padding:0">⚔</span><span></span></div><div id="skills"></div></div><button id="addSkill">＋ 技能を追加</button></section>
 
@@ -1211,7 +1211,7 @@ document.getElementById("cancelSkillOrder").onclick=()=>{
 new MutationObserver(()=>{if(!skillOrderSwitch.checked||skillDraftMatchesDom())return;skillOrderDraft=[...skills.children];selectedSkillIdx.clear();renderSkillOrderList();}).observe(skills,{childList:true});
 // 並べ替え中に技能名・成功値・ダメージ式を編集したら、一覧の表示も更新する
 skills.addEventListener("input",()=>{if(!skillOrderSwitch.checked)return;skillOrderList.querySelectorAll(".palette-order-item").forEach(el=>{const r=skillOrderDraft[Number(el.dataset.index)];const n=el.querySelector(".skill-order-name");if(r&&n)n.textContent=skillOrderLabel(r);});});
-// ===== 技能名・判定名の予測入力：基本機能カタログから候補を出し、値が空なら初期値も自動入力 =====
+// ===== 技能名・判定名の予測入力：基本技能カタログから候補を出し、値が空なら初期値も自動入力 =====
 (function(){
  const dl=document.createElement("datalist");dl.id="nameSuggestList";
  const seen=new Set();
@@ -1324,7 +1324,7 @@ document.getElementById("presetApplyChecked").onclick=()=>{
  if(!items.length){setPresetStatus("適用する項目にチェックを入れてください。");return;}
  finishBulk("選択した項目を適用",applyPresetItems(items));
 };
-document.getElementById("presetApplyAll").onclick=()=>finishBulk("すべての基本機能を適用",applyPresetItems(allPresetItems()));
+document.getElementById("presetApplyAll").onclick=()=>finishBulk("すべての基本技能を適用",applyPresetItems(allPresetItems()));
 document.getElementById("presetApplyCombat").onclick=()=>finishBulk("戦闘機能を適用",applyPresetItems(presetCatalog[0].items));
 document.getElementById("presetClose").onclick=closePresetDialog;
 document.getElementById("presetDialog").addEventListener("click",e=>{if(e.target.id==="presetDialog")closePresetDialog();});
@@ -1534,10 +1534,8 @@ function updateDerivedPreviews(baseValues=readBase(),notify=false){
   const name=r.dataset.derivedName, formula=r.querySelector(".derived-formula").value.trim(), out=r.querySelector(".derived-preview");
   try{
    const value=/[A-Za-z]/.test(formula)?resolveExpr(formula,baseValues):rollFormula(formula);
-   out.textContent=String(value);out.style.fontSize="";applied++;
-}catch(e){out.textContent="未確定";out.style.fontSize="0.8em";skipped.push(name)}
-
-
+   out.textContent=String(value);applied++;
+  }catch(e){out.textContent="未確定";skipped.push(name)}
  });
  updatePointSummary();updateSanInfo();
 }
@@ -3888,7 +3886,7 @@ document.getElementById("viewerJson").onclick=()=>{if(viewerSrc==="editor"){if(v
 
 
 // ===== v85：他ツールから来たキャラの標準ダメージ／いあきゃらテキストの読み込み =====
-// 「基本機能」の定番技能（こぶし・キック・頭突き）に標準のダメージ式を付ける。技能名の末尾の（…）は無視して照合する（例：こぶし（パンチ））。
+// 「基本技能」の定番技能（こぶし・キック・頭突き）に標準のダメージ式を付ける。技能名の末尾の（…）は無視して照合する（例：こぶし（パンチ））。
 function presetDamageFor(name){
  const raw=String(name||"").trim();if(!raw)return null;
  const cand=[raw,raw.replace(/\s*[（(].*[）)]\s*$/,"")];
