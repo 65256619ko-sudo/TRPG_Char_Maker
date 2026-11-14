@@ -1534,8 +1534,10 @@ function updateDerivedPreviews(baseValues=readBase(),notify=false){
   const name=r.dataset.derivedName, formula=r.querySelector(".derived-formula").value.trim(), out=r.querySelector(".derived-preview");
   try{
    const value=/[A-Za-z]/.test(formula)?resolveExpr(formula,baseValues):rollFormula(formula);
-   out.textContent=String(value);applied++;
-  }catch(e){out.textContent="未確定";skipped.push(name)}
+   out.textContent=String(value);out.style.fontSize="";applied++;
+}catch(e){out.textContent="未確定";out.style.fontSize="0.8em";skipped.push(name)}
+
+
  });
  updatePointSummary();updateSanInfo();
 }
