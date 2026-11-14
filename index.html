@@ -673,7 +673,7 @@ body.sp-on #skills .row>div:nth-child(1){grid-column:2/5}
 </div></div>
 <div id="inputDialog" class="hidden" role="dialog" aria-modal="true" aria-labelledby="inputDialogTitle"><div class="delete-dialog-card"><h2 id="inputDialogTitle"></h2><p id="inputDialogDesc" class="muted"></p><input id="inputDialogField" type="text" maxlength="80" aria-label="入力"><div class="actions" style="margin-top:14px"><button type="button" id="inputDialogOk" class="primary">OK</button><button type="button" id="inputDialogCancel">キャンセル</button></div></div></div>
 <div id="presetDialog" class="hidden" role="dialog" aria-modal="true" aria-labelledby="presetTitle">
- <div class="preset-card"><div class="preset-foot" style="justify-content:flex-start;margin:0 0 8px"><button type="button" id="presetClose">← 戻る</button></div><h2 id="presetTitle">基本機能を適用</h2><p class="hint">追加したい項目にチェックして「選択を適用」、または「適用」で1つずつ追加できます。すでに同名の技能がある場合は重複して追加しません。</p>
+ <div class="preset-card"><div class="preset-foot" style="justify-content:flex-start;margin:0 0 8px"><button type="button" id="presetClose">← 戻る</button></div><h2 id="presetTitle">基本技能を適用</h2><p class="hint">追加したい項目にチェックして「選択を適用」、または「適用」で1つずつ追加できます。すでに同名の技能がある場合は重複して追加しません。</p>
   <div class="preset-quick"><button type="button" class="primary" id="presetApplyAll">すべて適用</button><button type="button" class="primary" id="presetApplyCombat" title="戦闘機能だけ適用">戦闘のみ適用</button><button type="button" id="presetApplyChecked">選択を適用</button></div>
   <div id="presetStatus" role="status" aria-live="polite"></div>
   <div style="margin:8px 0"><label for="presetSearch" class="sr-only">技能一覧を検索</label><input id="presetSearch" type="search" placeholder="技能名・カテゴリで検索" autocomplete="off"></div>
@@ -1086,7 +1086,7 @@ function addDamage(n="",v="",secret){
  }
  const x=addSkill(name,"",undefined,false,val,secret);return x.row;
 }
-// ===== 基本機能（定番技能・戦闘機能）のカタログ =====
+// ===== 基本技能（定番技能・戦闘機能）のカタログ =====
 // skill: 技能の成功値 / damage: ダメージ式 / dodge: 基本ステータスの回避（DEX*2）を適用
 const presetCatalog=[
  {cat:"戦闘（近接）",items:[
