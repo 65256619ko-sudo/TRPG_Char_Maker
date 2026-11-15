@@ -2924,7 +2924,7 @@ async function shareWithImages(){
  }catch(e){toast("共有ファイルを作れません："+(e.message||String(e)));}
 }
 // ===== v100：共有リンクで初めて画像をアップロードし、公開URLを発行する（Cloudinary・署名なしアップロード）。JSON出力ではアップロードしない。発行済みなら、JSONにもそのURLが入る =====
-const IMG_UPLOAD_DEFAULT={cloud:"",preset:""}; // 運営者の Cloud name とアップロードプリセット名。ここに入れておくと、友達の設定が要らない
+const IMG_UPLOAD_DEFAULT={cloud:"lafsypps",preset:"trpg-portrait"}; // 運営者の Cloud name とアップロードプリセット名。ここに入れておくと、友達の設定が要らない
 const IMG_UPLOAD_CFG_KEY="trpg-image-upload-config",IMG_URL_MAP_KEY="trpg-image-url-map";
 function imgUploadConfig(){let c={};try{c=JSON.parse(localStorage.getItem(IMG_UPLOAD_CFG_KEY)||"{}")||{};}catch(e){}return {cloud:(c.cloud||IMG_UPLOAD_DEFAULT.cloud||"").trim(),preset:(c.preset||IMG_UPLOAD_DEFAULT.preset||"").trim()};}
 function imgUploadReady(){const c=imgUploadConfig();return !!(c.cloud&&c.preset);}
