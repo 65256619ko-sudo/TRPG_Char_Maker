@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TRPGキャラクター作成ツール v100</title>
+<title>TRPGキャラクター作成ツール v101</title>
 <style>
 :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;padding:16px;background:#10131a;color:#edf1f7;font:16px/1.5 system-ui,sans-serif}main{max-width:920px;margin:auto}section{background:#1a202b;border:1px solid #30394a;border-radius:12px;padding:15px;margin:13px 0}h1{font-size:1.45rem}h2{font-size:1.1rem;margin:0 0 10px}.hint,label{color:#aab4c5}.hint{font-size:.86rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:11px}label{display:block;font-size:.88rem;margin-bottom:5px}input,textarea,button{font:inherit;border-radius:8px;padding:9px}input,textarea{width:100%;background:#111722;border:1px solid #30394a;color:#fff}button{border:1px solid #526184;background:#293246;color:#fff;cursor:pointer;margin:4px 3px 4px 0}.primary{background:#5368d8}.danger{background:#42272d}.row{display:grid;grid-template-columns:minmax(80px,1fr) minmax(80px,1fr) auto;gap:8px;align-items:end;margin:9px 0}.derived-row{display:grid;grid-template-columns:minmax(90px,.7fr) minmax(120px,1.4fr) minmax(90px,.7fr);gap:8px;align-items:end;margin:9px 0}.derived-row output{display:block;min-height:42px;padding:9px;background:#111722;border:1px solid #30394a;border-radius:8px;color:#edf1f7}.damage-row{display:grid;grid-template-columns:minmax(80px,1fr) minmax(80px,1fr) auto;gap:8px;align-items:end;margin:9px 0}textarea{min-height:190px;margin-top:8px}.output-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0}.switch-label{display:flex;align-items:center;gap:8px;margin:8px 0;color:#edf1f7}.switch-label input{width:auto;accent-color:#7186ff}.small-btn{padding:6px 10px;font-size:.9rem}#message{color:#b9c5ff;min-height:1.5em}.result{padding:10px;background:#111722;border-radius:8px;margin-top:8px;white-space:pre-wrap;overflow-wrap:anywhere}.db-panel{margin:12px 0;padding:10px 12px;background:#111722;border:1px solid #30394a;border-radius:8px}.db-panel output{display:block;font-size:1.2rem;font-weight:700;margin-top:4px}@media(max-width:500px){body{padding:9px}.row{grid-template-columns:1fr 1fr auto}.derived-row{grid-template-columns:1fr 1fr}.derived-row>div:last-child{grid-column:1/-1}.damage-row{grid-template-columns:1fr 1fr}.damage-row button{width:100%}}
 
@@ -356,6 +356,7 @@ h2{font-size:1.02rem;margin:0 0 8px}
 .derived-row>div:last-child{grid-column:auto}
 .derived-row input{height:34px;padding:0 8px;font-size:15px}
 .derived-row>div:first-child>div{padding:0!important;font-weight:700}
+.derived-row output.pending{font-size:12.5px;font-weight:600;white-space:nowrap;letter-spacing:-.02em;color:#9aa6bb}
 .derived-row output{display:flex;align-items:center;justify-content:center;min-height:0;height:34px;padding:0 4px;font-weight:700;background:#161e2b}
 .derived-row button.danger{font-size:0;padding:0;width:24px;height:34px;margin:0;border-radius:6px}
 .derived-row button.danger::before{content:"×";font-size:15px}
@@ -955,7 +956,7 @@ function addDerivedStatus(def){
  if(def.custom){const nameInput=document.createElement("input");nameInput.className="derived-name";nameInput.value=def.name||"";nameInput.placeholder="例：装甲";nameInput.addEventListener("input",()=>{r.dataset.derivedName=nameInput.value.trim();updateDerivedPreviews();});nameWrap.append(nameInput);}
  else{const nameText=document.createElement("div");nameText.textContent=def.name;nameText.style.padding="9px 0";nameWrap.append(nameText);}
  const formulaWrap=document.createElement("div"),formulaLabel=document.createElement("label"),formulaInput=document.createElement("input");formulaLabel.textContent="計算式";formulaInput.className="derived-formula";formulaInput.value=def.formula;formulaInput.placeholder="例：INT*5";formulaInput.setAttribute("aria-label",def.name+"の計算式");formulaWrap.append(formulaLabel,formulaInput);
- const valueWrap=document.createElement("div"),valueLabel=document.createElement("label"),valueOutput=document.createElement("output");valueLabel.textContent="計算値";valueOutput.className="derived-preview";valueOutput.textContent="未計算";valueWrap.append(valueLabel,valueOutput);
+ const valueWrap=document.createElement("div"),valueLabel=document.createElement("label"),valueOutput=document.createElement("output");valueLabel.textContent="計算値";valueOutput.className="derived-preview pending";valueOutput.textContent="未計算";valueWrap.append(valueLabel,valueOutput);
  r.append(nameWrap,formulaWrap,valueWrap);
  if(!def.custom){const sp=document.createElement("span");sp.className="derived-spacer";r.append(sp);}
  if(def.custom){const del=document.createElement("button");del.type="button";del.className="danger";del.textContent="削除";del.onclick=()=>r.remove();r.append(del);}
@@ -1534,8 +1535,8 @@ function updateDerivedPreviews(baseValues=readBase(),notify=false){
   const name=r.dataset.derivedName, formula=r.querySelector(".derived-formula").value.trim(), out=r.querySelector(".derived-preview");
   try{
    const value=/[A-Za-z]/.test(formula)?resolveExpr(formula,baseValues):rollFormula(formula);
-   out.textContent=String(value);applied++;
-  }catch(e){out.textContent="未確定";skipped.push(name)}
+   out.textContent=String(value);out.classList.remove("pending");applied++;
+  }catch(e){out.textContent="未確定";out.classList.add("pending");skipped.push(name)}
  });
  updatePointSummary();updateSanInfo();
 }
