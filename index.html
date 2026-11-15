@@ -643,7 +643,7 @@ body.sp-on #skills .row>div:nth-child(1){grid-column:2/5}
  <button type="button" id="editorMore" aria-expanded="false" aria-controls="editorMenu">その他 ▴</button>
  <button type="button" id="saveStay" title="画面を移動せず、ここまでを保存">💾 保存</button>
  <button type="button" id="saveCharacter" class="primary">保存してホームへ</button>
- <div id="editorMenu" class="hidden" role="menu" aria-label="その他の操作"><div class="mn-h">育てる</div><button type="button" id="openGrowth" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📈</i><span class="mn-tx"><b>成長記録</b><small>通ったシナリオ・成長・獲得物を記録して、シートに反映</small></span></button><div class="mn-h">見る・試す</div><button type="button" id="openViewerFromEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">👁</i><span class="mn-tx"><b>閲覧で見る</b><small>いまの入力内容を読み取り専用で表示</small></span></button><button type="button" id="openDice" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">🎲</i><span class="mn-tx"><b>ダイスを振る</b><small>式を入れて自由に振る（1d100、2d6+3 など）</small></span></button><div class="mn-h">取り込む・書き出す</div><button type="button" id="openJsonImport" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📥</i><span class="mn-tx"><b>JSON・テキストを反映</b><small>ココフォリアのJSON／いあきゃらのテキスト</small></span></button><button type="button" id="copyJsonEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📋</i><span class="mn-tx"><b>JSONをコピー</b><small>ココフォリア用のキャラクターJSON</small></span></button><button type="button" id="shareWithImages" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📤</i><span class="mn-tx"><b>画像つきで共有（ファイル）</b><small>友達のこのツールに、画像ごと渡せる。LINE・Discordなどに送る</small></span></button><button type="button" id="shareLink" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">🔗</i><span class="mn-tx"><b>共有リンクをコピー</b><small>開くだけで取り込める。画像は小さい1枚だけ入る</small></span></button><div class="mn-h">増やす</div><button type="button" id="openBatch" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">👥</i><span class="mn-tx"><b>連続生成</b><small>能力値を振り直して、まとめて作る</small></span></button><button type="button" id="deriveCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">🧬</i><span class="mn-tx"><b>元に新規作成</b><small>技能の設定は引き継ぎ、能力値は振り直す</small></span></button><button type="button" id="duplicateCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📑</i><span class="mn-tx"><b>このキャラを複製</b><small>そのままコピーして、新規キャラとして開く</small></span></button></div>
+ <div id="editorMenu" class="hidden" role="menu" aria-label="その他の操作"><div class="mn-h">育てる</div><button type="button" id="openGrowth" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📈</i><span class="mn-tx"><b>成長記録</b><small>通ったシナリオ・成長・獲得物を記録して、シートに反映</small></span></button><div class="mn-h">見る・試す</div><button type="button" id="openViewerFromEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">👁</i><span class="mn-tx"><b>閲覧で見る</b><small>いまの入力内容を読み取り専用で表示</small></span></button><button type="button" id="openDice" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">🎲</i><span class="mn-tx"><b>ダイスを振る</b><small>式を入れて自由に振る（1d100、2d6+3 など）</small></span></button><div class="mn-h">取り込む・書き出す</div><button type="button" id="openJsonImport" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📥</i><span class="mn-tx"><b>JSON・テキストを反映</b><small>ココフォリアのJSON／いあきゃらのテキスト</small></span></button><button type="button" id="copyJsonEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📋</i><span class="mn-tx"><b>JSONをコピー</b><small>ココフォリア用のキャラクターJSON</small></span></button><button type="button" id="shareWithImages" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📤</i><span class="mn-tx"><b>画像つきで共有（ファイル）</b><small>友達のこのツールに、画像ごと渡せる。LINE・Discordなどに送る</small></span></button><button type="button" id="shareLink" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">🔗</i><span class="mn-tx"><b>共有リンクをコピー</b><small>開くだけで取り込める。画像はアップロード設定があれば全部、なければ小さい1枚</small></span></button><button type="button" id="imgUploadSetting" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">🖼</i><span class="mn-tx"><b>画像アップロード設定</b><small>共有リンクで画像を公開URLにする設定（Cloudinary）</small></span></button><div class="mn-h">増やす</div><button type="button" id="openBatch" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">👥</i><span class="mn-tx"><b>連続生成</b><small>能力値を振り直して、まとめて作る</small></span></button><button type="button" id="deriveCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">🧬</i><span class="mn-tx"><b>元に新規作成</b><small>技能の設定は引き継ぎ、能力値は振り直す</small></span></button><button type="button" id="duplicateCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">📑</i><span class="mn-tx"><b>このキャラを複製</b><small>そのままコピーして、新規キャラとして開く</small></span></button></div>
 </div>
 <div id="viewerBar" role="toolbar" aria-label="閲覧操作">
  <button type="button" id="viewerBack">← ホーム</button>
@@ -2887,9 +2887,10 @@ function rollBatchFormDice(form){
  (form.derived||[]).forEach(x=>{if(x&&hasD(x.formula))x.formula=rollDiceInExpr(x.formula,ctx);});
 }
 // v90：画像のURLをJSONに出す。ココフォリアの形式に合わせ、使用中の1枚は iconUrl、2枚以上あるときは faces にも全部入れる（この端末にだけある画像は出せない）
+function issuedUrlOf(id){return isImgUrlId(id)?imgUrlOf(id):(imgUrlMap()[id]||null);}
 function iconFields(){
- const urls=currentImageList.filter(isImgUrlId).map(imgUrlOf);if(!urls.length)return {};
- const main=isImgUrlId(currentImageId)?imgUrlOf(currentImageId):urls[0];
+ const pairs=currentImageList.map(id=>[id,issuedUrlOf(id)]).filter(x=>x[1]);const urls=pairs.map(x=>x[1]);if(!urls.length)return {};
+ const mp=pairs.find(x=>x[0]===currentImageId);const main=mp?mp[1]:urls[0];
  return urls.length>1?{iconUrl:main,faces:urls.map((u,i)=>({iconUrl:u,label:"画像"+(i+1)}))}:{iconUrl:main};
 }
 // ===== v98：画像つき共有。ツール同士で渡すためのファイル（ココフォリア用のJSONに、小さくした画像を同梱）。ココフォリア用のJSONとは別に作る =====
@@ -2899,7 +2900,8 @@ async function buildShareObject(side=SHARE_IMG_SIDE,onlyActive=false){
  const obj=JSON.parse(output.value);
  const list=[];let active=0;
  for(const id of currentImageList){
-  if(isImgUrlId(id)){if(onlyActive&&id!==currentImageId)continue;if(id===currentImageId)active=list.length;list.push({url:imgUrlOf(id)});continue;}
+  const iu=issuedUrlOf(id);
+  if(iu){if(onlyActive&&id!==currentImageId)continue;if(id===currentImageId)active=list.length;list.push({url:iu});continue;}
   if(onlyActive&&id!==currentImageId)continue;
   try{const b=await imgGet(id);if(!b)continue;const sm=await resizeImage(b,side);if(id===currentImageId)active=list.length;list.push({data:await blobToDataUrl(sm)});}catch(e){}
  }
@@ -2921,6 +2923,39 @@ async function shareWithImages(){
   toast("ファイルを保存しました（"+info+"）。LINEなどで友達に送ってください");
  }catch(e){toast("共有ファイルを作れません："+(e.message||String(e)));}
 }
+// ===== v100：共有リンクで初めて画像をアップロードし、公開URLを発行する（Cloudinary・署名なしアップロード）。JSON出力ではアップロードしない。発行済みなら、JSONにもそのURLが入る =====
+const IMG_UPLOAD_DEFAULT={cloud:"",preset:""}; // 運営者の Cloud name とアップロードプリセット名。ここに入れておくと、友達の設定が要らない
+const IMG_UPLOAD_CFG_KEY="trpg-image-upload-config",IMG_URL_MAP_KEY="trpg-image-url-map";
+function imgUploadConfig(){let c={};try{c=JSON.parse(localStorage.getItem(IMG_UPLOAD_CFG_KEY)||"{}")||{};}catch(e){}return {cloud:(c.cloud||IMG_UPLOAD_DEFAULT.cloud||"").trim(),preset:(c.preset||IMG_UPLOAD_DEFAULT.preset||"").trim()};}
+function imgUploadReady(){const c=imgUploadConfig();return !!(c.cloud&&c.preset);}
+function imgUrlMap(){try{return JSON.parse(localStorage.getItem(IMG_URL_MAP_KEY)||"{}")||{};}catch(e){return {};}}
+function setImgUrl(id,url){try{const m=imgUrlMap();m[id]=url;localStorage.setItem(IMG_URL_MAP_KEY,JSON.stringify(m));}catch(e){}}
+async function uploadOneImage(id){
+ const c=imgUploadConfig();const b=await imgGet(id);if(!b)throw Error("画像が見つかりません");
+ const big=await resizeImage(b,2048,0.9);
+ const fd=new FormData();fd.append("file",big,"portrait."+(big.type==="image/webp"?"webp":"jpg"));fd.append("upload_preset",c.preset);
+ const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),90000);
+ try{
+  const r=await fetch("https://api.cloudinary.com/v1_1/"+encodeURIComponent(c.cloud)+"/image/upload",{method:"POST",body:fd,signal:ac.signal});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||!j.secure_url)throw Error((j.error&&j.error.message)||("アップロードに失敗しました（"+r.status+"）"));
+  if(!/^https:\/\//.test(j.secure_url))throw Error("URLが不正です");
+  setImgUrl(id,j.secure_url);return j.secure_url;
+ }finally{clearTimeout(tm);}
+}
+// 立ち絵のうち、まだURLがない端末内の画像を上げる。失敗した画像はスキップして、成否を返す
+async function ensureImagesUploaded(){
+ const need=currentImageList.filter(id=>!issuedUrlOf(id));let ok=0,fail=0,msg="";
+ for(let i=0;i<need.length;i++){toast("画像をアップロード中… "+(i+1)+"/"+need.length);try{await uploadOneImage(need[i]);ok++;}catch(e){fail++;msg=e.message||String(e);}}
+ return {ok,fail,msg,total:need.length};
+}
+function configureImageUpload(){
+ const c=imgUploadConfig();
+ const cloud=prompt("Cloudinary の Cloud name を入れてください（空欄で既定に戻します）",c.cloud);if(cloud===null)return;
+ const preset=prompt("アップロードプリセット名（署名なし）を入れてください",c.preset);if(preset===null)return;
+ try{localStorage.setItem(IMG_UPLOAD_CFG_KEY,JSON.stringify({cloud:cloud.trim(),preset:preset.trim()}));}catch(e){}
+ toast(imgUploadReady()?"画像アップロードの設定を保存しました":"設定が空です。共有リンクは画像なし（小さい1枚）になります");
+}
 // ===== v99：共有リンク。キャラクターを圧縮して、リンクの # 以降に入れる（サーバーなし。開くとこのツールが読み取る） =====
 function b64urlEncode(bytes){let s="";for(let i=0;i<bytes.length;i+=8192)s+=String.fromCharCode.apply(null,bytes.subarray(i,i+8192));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
 function b64urlDecode(t){t=t.replace(/-/g,"+").replace(/_/g,"/");while(t.length%4)t+="=";const b=atob(t),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;}
@@ -2932,10 +2967,19 @@ const SHARE_LINK_MAX=9000;
 async function shareLink(){
  try{
   const base=location.href.split("#")[0];
-  let obj=await buildShareObject(112,true),link=base+"#c="+await packShare(JSON.stringify(obj)),withImg=!!(obj.toolImages&&obj.toolImages.some(x=>x.data));
+  // 画像：未公開のものがあれば、確認してアップロード→公開URLで共有（リンクが短く、全部の画像が入る）。しなければ、小さい1枚だけ付ける
+  let uploadNote="";
+  const pending=currentImageList.filter(id=>!issuedUrlOf(id));
+  if(pending.length&&imgUploadReady()){
+   if(confirm("未公開の画像が"+pending.length+"枚あります。\nアップロードして公開URLにしますか？（URLを知っている人は誰でも見られます）\n\nOK：アップロードして共有\nキャンセル：画像は小さい1枚だけ付けて共有")){
+    const u=await ensureImagesUploaded();if(u.fail)uploadNote="（"+u.fail+"枚はアップロードできませんでした："+u.msg+"）";
+   }
+  }
+  const allUrl=currentImageList.length>0&&currentImageList.every(id=>issuedUrlOf(id));
+  let obj=await buildShareObject(112,!allUrl),link=base+"#c="+await packShare(JSON.stringify(obj)),withImg=!!(obj.toolImages&&obj.toolImages.length);
   if(link.length>SHARE_LINK_MAX&&withImg){delete obj.toolImages;delete obj.toolImageActive;withImg=false;link=base+"#c="+await packShare(JSON.stringify(obj));}
   if(!await copyText(link)){toast("コピーできませんでした");return;}
-  let msg="共有リンクをコピーしました（"+link.length+"文字"+(withImg?"・画像つき":"・画像なし")+"）";
+  let msg="共有リンクをコピーしました（"+link.length+"文字"+(withImg?(allUrl?"・画像"+obj.toolImages.length+"枚":"・画像つき"):"・画像なし")+"）"+uploadNote;
   if(link.length>SHARE_LINK_MAX)msg+="。長いので、送れない場合は「画像つきで共有（ファイル）」を使ってください";
   else if(location.protocol==="file:")msg+="。ただし、このツールをURLで公開していないと、友達は開けません";
   toast(msg);
@@ -3389,6 +3433,7 @@ document.getElementById("deriveCharacter").onclick=deriveNewCharacter;
 document.getElementById("copyJsonEditor").onclick=()=>copyCharacterJSON({form:captureForm()});
 document.getElementById("shareWithImages").onclick=()=>shareWithImages();
 document.getElementById("shareLink").onclick=()=>shareLink();
+document.getElementById("imgUploadSetting").onclick=()=>configureImageUpload();
 // お気に入りセット（技能名・成功値・ダメージ式の組）
 function ensureSkillSets(){if(!Array.isArray(managerData.skillSets))managerData.skillSets=[];return managerData.skillSets;}
 (function(){
@@ -3524,12 +3569,12 @@ async function decodeImage(file){
   return {width:im.naturalWidth,height:im.naturalHeight,im,close(){}, _draw:(c,w,h)=>c.drawImage(im,0,0,w,h)};}
  finally{setTimeout(()=>URL.revokeObjectURL(url),3000);}
 }
-async function resizeImage(file,maxSide=640){
+async function resizeImage(file,maxSide=640,quality=0.82){
  const bmp=await decodeImage(file);const k=Math.min(1,maxSide/Math.max(bmp.width,bmp.height));
  const cv=document.createElement("canvas");cv.width=Math.max(1,Math.round(bmp.width*k));cv.height=Math.max(1,Math.round(bmp.height*k));
  if(bmp._draw)bmp._draw(cv.getContext("2d"),cv.width,cv.height);else cv.getContext("2d").drawImage(bmp,0,0,cv.width,cv.height);if(bmp.close)bmp.close();
- let blob=await new Promise(r=>cv.toBlob(r,"image/webp",0.82));
- if(!blob||blob.type!=="image/webp")blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",0.85));
+ let blob=await new Promise(r=>cv.toBlob(r,"image/webp",quality));
+ if(!blob||blob.type!=="image/webp")blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",Math.min(0.95,quality+0.03)));
  return blob;
 }
 // ===== v90：立ち絵は複数登録できる。いま使う1枚（imageId）が、カード・閲覧・JSON出力に使われる =====
