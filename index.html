@@ -5857,6 +5857,43 @@ function normalizeFormula(raw) {
     .replace(/｛/g, "{")
     .replace(/｝/g, "}");
 }
+// ステータス名（能力値・HPなどの派生ステータス・追加ステータス）の一覧。大文字にした名前 → 元の名前
+function statusNameMap(extraNames) {
+  const map = new Map();
+  const add = (n) => {
+    n = String(n || "").trim();
+    if (n) map.set(n.toUpperCase(), n);
+  };
+  [...names, "HP", "MP", "SAN", "アイデア", "幸運", "知識", "回避"].forEach(add);
+  derivedStatuses.querySelectorAll(".derived-row").forEach((r) => add(r.querySelector(".derived-name")?.value || r.dataset.derivedName));
+  extras.querySelectorAll(".row").forEach((r) => add(r.querySelector(".extra-name")?.value));
+  (extraNames || []).forEach(add);
+  return map;
+}
+// 技能名の照合用：全角かっこを半角にして、大文字にそろえる
+function nameKey(n) {
+  return String(n).replace(/（/g, "(").replace(/）/g, ")").trim().toUpperCase();
+}
+// 読み込んだ名前を、同じ名前（かっこの全角半角・大文字小文字の違いだけ）の既存の表記に合わせる
+function matchName(name, candidates) {
+  const key = nameKey(name);
+  const hit = candidates.find((c) => nameKey(c) === key);
+  return hit != null ? String(hit).trim() : name;
+}
+// 技能名の中の (MP)・（幸運） は、チャットパレットの【ラベル】ではココフォリアのステータス参照 {MP}・{幸運} にする
+function labelWithRefs(name) {
+  const known = statusNameMap();
+  return String(name).replace(/[(（]\s*([^()（）]+?)\s*[)）]/g, (m, x) =>
+    known.has(x.toUpperCase()) ? "{" + known.get(x.toUpperCase()) + "}" : m,
+  );
+}
+// labelWithRefs の逆。読み込むとき、ラベルの {MP} を技能名の (MP) に戻す
+function nameFromLabel(label, extraNames) {
+  const known = statusNameMap(extraNames);
+  return String(label).replace(/\{([^{}]+)\}/g, (m, x) =>
+    known.has(x.trim().toUpperCase()) ? "(" + known.get(x.trim().toUpperCase()) + ")" : m,
+  );
+}
 // 式の中の「名前」（英字・かな・漢字の並び）。ココフォリアでは {名前} で参照する
 const NAME_TOKEN_RE = /[A-Za-z_][A-Za-z0-9_]*|[\u3040-\u30ff\u3400-\u9fff々ー]+/g;
 function transformDamageFormula(raw, stats, derived, db, keepDB) {
@@ -6044,7 +6081,9 @@ function makeRawData() {
       if (sn && sr.querySelector(".skill-value").value.trim()) skillRefs[sn] = sn;
     });
     const formula = transformSuccessValue(raw, skillRefs, derived);
-    commands.push(secretPrefix(r) + rollCommandPrefix() + "<=" + (/^[0-9]+$/.test(raw) ? "{" + n + "}" : formula) + " 【" + n + "】");
+    commands.push(
+      secretPrefix(r) + rollCommandPrefix() + "<=" + (/^[0-9]+$/.test(raw) ? "{" + n + "}" : formula) + " 【" + labelWithRefs(n) + "】",
+    );
   });
   skills.querySelectorAll(".row").forEach((r) => {
     const label = r.querySelector(".skill-name").value.trim() || "ダメージ判定";
@@ -6058,7 +6097,7 @@ function makeRawData() {
                 .join("{DB個数}D{DB面}")
             : raw) +
           " 【" +
-          label +
+          labelWithRefs(label) +
           "】",
       );
   });
@@ -6239,7 +6278,11 @@ function makeData(options = {}) {
     try {
       const src = options.standalonePalette ? literalizeNames(raw, Object.fromEntries(skillRows.map((x) => [x.name, x.value]))) : raw;
       commands.push(
-        secretPrefixDmg(r) + transformDamageFormula(src, rolled, derived, db, !options.standalonePalette) + " 【" + label + "】",
+        secretPrefixDmg(r) +
+          transformDamageFormula(src, rolled, derived, db, !options.standalonePalette) +
+          " 【" +
+          labelWithRefs(label) +
+          "】",
       );
     } catch (e) {
       if (!options.allowInvalidDamage) throw e;
@@ -6256,7 +6299,7 @@ function makeData(options = {}) {
       : hasDice
         ? "{" + item.name + "}"
         : formulaForPalette(item.raw, item.name);
-    commands.push(secretPrefix(item.row) + rollCommandPrefix() + "<=" + paletteFormula + " 【" + item.name + "】");
+    commands.push(secretPrefix(item.row) + rollCommandPrefix() + "<=" + paletteFormula + " 【" + labelWithRefs(item.name) + "】");
     if (options.includeSkillValueComments) commands.push("※" + item.name + "は" + item.value);
     pushDmg(item.row);
   });
@@ -6603,7 +6646,8 @@ function importCharacterJSON() {
     cmds.forEach((cmd, ci) => {
       let m = cmd.match(/^CCB?<=([^【]+)\s*【(.+?)】$/i);
       if (m && !/[×x]\s*5$/.test(m[2]) && !/^(アイデア|幸運|知識|回避)$/.test(m[2])) {
-        const skillName = m[2].trim();
+        const statusLabels = Object.values(statusByName).map((x) => String(x.label));
+        const skillName = matchName(nameFromLabel(m[2].trim(), statusLabels), statusLabels);
         const statusValue = statusByName[skillName.toUpperCase()]?.value;
         const rawValue = /^\{[^{}]+\}$/.test(m[1].trim()) && statusValue != null ? String(statusValue) : m[1].trim();
         addSkill(skillName, rawValue, undefined, secretFlags[ci]);
@@ -6613,7 +6657,14 @@ function importCharacterJSON() {
       if (/【(正気度ロール|一日の終わり|アイデア|幸運|知識|回避|.+ × 5)】$/.test(cmd)) return;
       const dm = cmd.match(/^(.*?)\s*【(.*?)】$/);
       if (dm && /(?:\d*d|\{[^}]+\}|DB|装甲|ダメージ)/i.test(dm[1])) {
-        addDamage(dm[2], restoreDBLabels(dm[1], dbNeg).replace(/\{DB\}/g, "DB"), secretFlags[ci]);
+        addDamage(
+          matchName(
+            nameFromLabel(dm[2]),
+            Object.values(statusByName).map((x) => String(x.label)),
+          ),
+          restoreDBLabels(dm[1], dbNeg).replace(/\{DB\}/g, "DB"),
+          secretFlags[ci],
+        );
         damageCount++;
       }
     });
@@ -6791,6 +6842,7 @@ document.getElementById("reflectPalette").onclick = () => {
     try {
       textLines(makeData({ standalonePalette: true, allowInvalidDamage: true }).data.commands, true).forEach((l) => unchangedLines.add(l));
     } catch (e) {}
+    const formSkillNames = [...skills.querySelectorAll(".skill-name")].map((i) => i.value.trim()).filter(Boolean);
     cmds.forEach((cmd, ci) => {
       if (unchangedLines.has(rawCmds[ci])) return;
       const labelMatch = cmd.match(/【(.*?)】\s*$/);
@@ -6798,7 +6850,7 @@ document.getElementById("reflectPalette").onclick = () => {
       if (/^(正気度ロール|アイデア|幸運|知識|回避|.+\s*[×x]\s*5)$/i.test(label)) return;
       const m = cmd.match(/^CC(?:B)?<=([^【]+)\s*【(.+?)】$/i);
       if (m && !/^[A-Z]+ × 5$/i.test(m[2].trim())) {
-        const skillName = m[2].trim();
+        const skillName = matchName(nameFromLabel(m[2].trim()), formSkillNames);
         const key = skillName.toUpperCase();
         const val = m[1].trim();
         let value;
@@ -6815,7 +6867,7 @@ document.getElementById("reflectPalette").onclick = () => {
       const dm = cmd.match(/^(.*?)\s*【(.*?)】$/);
       if (dm && /(?:\d*d|\{[^}]+\}|DB|装甲|ダメージ|C\()/i.test(dm[1])) {
         parsedDamages.push({
-          name: dm[2],
+          name: matchName(nameFromLabel(dm[2]), formSkillNames),
           value: restoreDBLabels(dm[1].replace(/^C\((.*)\)$/i, "$1"), currentDBNeg()).replace(/\{DB\}/g, "DB"),
           secret: secretFlags[ci],
         });
