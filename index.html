@@ -5857,6 +5857,8 @@ function normalizeFormula(raw) {
     .replace(/｛/g, "{")
     .replace(/｝/g, "}");
 }
+// 式の中の「名前」（英字・かな・漢字の並び）。ココフォリアでは {名前} で参照する
+const NAME_TOKEN_RE = /[A-Za-z_][A-Za-z0-9_]*|[\u3040-\u30ff\u3400-\u9fff々ー]+/g;
 function transformDamageFormula(raw, stats, derived, db, keepDB) {
   let s = normalizeFormula(raw);
   if (!s) throw Error("ダメージ式が空です");
@@ -5889,7 +5891,7 @@ function transformDamageFormula(raw, stats, derived, db, keepDB) {
   s = s.replace(/\bDB\b/gi, db === "0" ? "0" : db[0] === "+" ? db.slice(1) : db);
   // 1d(STR+6) のような面数式は計算せず、ステータス参照を残す。
   s = s.replace(/(\d*)d\s*\(([^()]*)\)/gi, (_, count, expr) => {
-    const faceExpr = expr.replace(/[A-Za-z_][A-Za-z0-9_]*/g, (name) => "{" + name + "}");
+    const faceExpr = expr.replace(NAME_TOKEN_RE, (name) => "{" + name + "}");
     return (count || "1") + "D(" + faceExpr + ")";
   });
   // 登録済みステータスは名前に関係なく、ダイス面数の参照にも使える。
@@ -5933,9 +5935,9 @@ function transformDamageFormula(raw, stats, derived, db, keepDB) {
     bracedRefs.push(ref);
     return token;
   });
-  // 残った英数字の名前はすべてココフォリア変数として扱う。
-  // STRなどの基本能力値やHP・装甲などの追加ステータスも、数値へ展開しない。
-  s = s.replace(/[A-Za-z_][A-Za-z0-9_]*/g, (name) => "{" + name + "}");
+  // 残った名前（英数字・日本語）はすべてココフォリア変数として扱う。
+  // STRなどの基本能力値やHP・装甲などの追加ステータス、「こぶし」などの技能名も、数値へ展開しない。
+  s = s.replace(NAME_TOKEN_RE, (name) => "{" + name + "}");
   s = s.replace(/\uE006(\d+)\uE007/g, (_, i) => bracedRefs[Number(i)]);
   s = s.replace(/\uE000(\d+)\uE001/g, (_, i) => diceTerms[Number(i)]);
   s = s.replace(/\uE002(\d+)\uE003/g, (_, i) => userVars[Number(i)]);
