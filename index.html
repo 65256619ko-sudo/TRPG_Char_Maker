@@ -3505,6 +3505,216 @@ input.has-search-ic.has-search-ic {
   background-position: 10px center;
   background-size: 17px 17px;
 }
+
+/* ===== 閲覧モード：タップで内訳 ===== */
+.vw-tile.tap,
+.vw-skill.tap {
+  cursor: pointer;
+}
+.vw-tile.tap.open {
+  border-color: #6f7ce0;
+  background: #1a2250;
+}
+.vw-skill {
+  flex-wrap: wrap;
+}
+.vw-skill.open {
+  background: #121936;
+}
+.vw-detail {
+  margin-top: 8px;
+  background: #0e1328;
+  border: 1px solid #3a4590;
+  border-radius: 9px;
+  padding: 8px 10px;
+  font-size: 0.84rem;
+}
+.vw-detail.hidden {
+  display: none;
+}
+.vw-detail.more {
+  flex: 0 0 100%;
+  margin: 4px 0 2px;
+  cursor: default;
+}
+.vw-detail .r {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 0;
+}
+.vw-detail .r span {
+  color: #98a4d6;
+}
+.vw-detail .r b {
+  color: #f2f4ff;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.vw-detail h4 {
+  margin: 6px 0 2px;
+  font-size: 0.78rem;
+  color: #8f9be0;
+}
+.vw-detail .vw-detail-title {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  color: #f2f4ff;
+}
+
+/* ===== エラーから該当行へ飛ぶ ===== */
+#message.has-jump {
+  display: block;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+#message .jump-hint {
+  display: block;
+  margin-top: 2px;
+  color: #ffd479;
+  font-weight: 700;
+}
+.jump-hl {
+  animation: jumpHl 2.6s ease-out;
+}
+@keyframes jumpHl {
+  0%,
+  55% {
+    box-shadow: 0 0 0 3px #ffd479;
+    background: #3a3414;
+  }
+  100% {
+    box-shadow: 0 0 0 0 #ffd47900;
+  }
+}
+.jump-link {
+  margin-left: 4px;
+}
+
+/* ===== 技能の分類・成功時の処理 ===== */
+.cat-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 0;
+}
+.cat-bar.hidden {
+  display: none;
+}
+.cat-chip {
+  min-height: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: #161c27;
+  border: 1px solid #3d4b63;
+  color: #b4c0d8;
+}
+.cat-chip.on {
+  background: #27476b;
+  border-color: #5aa7e8;
+  color: #fff;
+}
+#skills .row > div:first-child {
+  position: relative;
+}
+#skills .skill-more-btn {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 26px;
+  height: 26px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  color: #7c89a6;
+}
+#skills .skill-more-btn .ic {
+  width: 15px;
+  height: 15px;
+}
+#skills .skill-more-btn.has-os {
+  color: #ffd479;
+}
+#skills .row.more-open .skill-more-btn {
+  color: #fff;
+  background: #2a3446;
+}
+#skills .row input.skill-name {
+  padding-right: 30px;
+}
+#skills .skill-more {
+  display: none;
+  grid-column: 1/-1;
+  order: 16;
+  margin: 2px 0 4px;
+  padding: 8px;
+  border: 1px solid #3a4660;
+  border-radius: 8px;
+  background: #121722;
+}
+#skills .row.more-open .skill-more {
+  display: block;
+}
+#skills .skill-more .sm-h {
+  margin: 6px 0 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #9fb0d4;
+}
+#skills .skill-more .sm-h:first-child {
+  margin-top: 0;
+}
+#skills .skill-cat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#skills .sm-add {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+#skills .sm-add input {
+  flex: 1;
+  text-align: left;
+  padding: 0 8px;
+}
+#skills .skill-more textarea {
+  width: 100%;
+  font-size: 14px;
+  min-height: 0;
+}
+#skills .skill-more .hint {
+  margin: 4px 0 0;
+}
+.vw-skill .tg.os {
+  background: #3a3414;
+  color: #ffd479;
+  border: 1px solid #7a6a22;
+}
+.vw-os {
+  margin-top: 6px;
+}
+.vw-os .vw-os-memo {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #e5e9ff;
+}
+.vw-os .vw-os-lines {
+  margin: 6px 0 0;
+  padding: 6px 8px;
+  background: #0a0e1d;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #bfe3ff;
+}
 </style></head><body><main>
 <h1 id="appTitle">TRPG キャラクター管理・作成ツール</h1>
 <p class="hint" id="appSub">キャラクターの作成・保存・複製・グループ管理ができます。</p>
@@ -3547,7 +3757,7 @@ input.has-search-ic.has-search-ic {
 <section><h2>追加ステータス</h2><div id="extras"></div><button id="addExtra">＋ ステータスを追加</button></section>
 <section><h2>技能・ダメージ</h2><p class="hint">各行の「ダメージ式」に式（例：1d3+DB）を入れると、チャットパレットのダメージ判定になります。武器だけの行は、成功値を空のままにしてください。<br>成功値には 50+1d50 のほか、50&lt;1d100 のような最低保証も書けます（出目が50以下なら51。50&lt;=1d100 なら50以上）。割り振り方式のときは「その他」にもダイス（例：1d10）を書けて、記述はそのまま、振った結果が合計に入ります（ダイスのボタンで振り直し）。<br>「基本技能を適用」から、クトゥルフ神話TRPGの基本技能をカテゴリ別に一覧表示し、まとめて、または1つずつ追加できます。</p><div class="btn-row"><button type="button" class="primary" id="openPresetDialog"><svg class="ic ic-l" data-ic="gear" viewBox="0 0 24 24" aria-hidden="true"></svg>基本技能を適用</button><button type="button" id="openSkillSets">★ お気に入りセット</button></div><label class="switch-label"><input type="checkbox" id="spMode">技能ポイント割り振り方式（職業P・興味P）</label>
 <div id="spPanel" class="db-panel hidden"><div class="sp-formulas"><div><label for="spOccFormula">職業技能Pの上限（式）</label><input id="spOccFormula" value="EDU*20"></div><div><label for="spIntFormula">興味技能Pの上限（式）</label><input id="spIntFormula" value="INT*10"></div></div><div class="sp-line" id="spOccLine"></div><div class="sp-line" id="spIntLine"></div><p class="hint">各技能に「初期値＋職業P＋興味P＋その他」を入力すると、成功値が自動で合計されます。上限は能力値が数値に確定していると計算されます（「3d6で能力値を振る」の後など）。上限の式は版に合わせて書き換えられます。</p></div>
-<div class="skill-tools"><input id="skillSearch" type="search" class="has-search-ic" placeholder="技能名で絞り込み（例：回避、目星）" aria-label="技能を検索" autocomplete="off"><div class="opt-row"><label class="switch-label"><input type="checkbox" id="hideInitial">初期値のままを隠す</label><label class="switch-label priority-switch"><input type="checkbox" id="skillOrderSwitch">並べ替えを編集</label><button type="button" id="secretEditToggleSkills" class="small-btn secret-edit-btn" aria-pressed="false">シークレット設定：OFF</button></div></div><div id="skillOrderPanel" class="hidden"><div class="palette-selection-bar"><span class="palette-selection-count" id="skillSelectionCount">0件選択中</span><button type="button" id="clearSkillSelection">選択解除</button><span class="hint">チェックした項目はまとめて移動できます</span></div><div id="skillOrderList" class="palette-order-list"></div><button type="button" id="cancelSkillOrder">編集を取り消す</button><p class="hint">並べ替えは左端の⠿マークを長押しして上下にドラッグしてください。中央・文字部分・余白では普通に画面を上下スクロールできます。ドラッグ中に画面の上端・下端へ近づけると自動スクロールします。順番はチャットパレットとJSONにすぐ反映されます。</p></div><div class="skill-table"><div class="skill-head" aria-hidden="true"><span>技能名</span><span class="plain-col">成功値</span><span class="sp-col">初期</span><span class="sp-col">職業</span><span class="sp-col">興味</span><span class="sp-col">他</span><span class="sp-col">合計</span><span class="dmg-col" style="text-align:center;padding:0"><svg class="ic" data-ic="sword" viewBox="0 0 24 24" aria-hidden="true"></svg></span><span></span></div><div id="skills"></div></div><button id="addSkill">＋ 技能を追加</button></section>
+<div class="skill-tools"><input id="skillSearch" type="search" class="has-search-ic" placeholder="技能名で絞り込み（例：回避、目星）" aria-label="技能を検索" autocomplete="off"><div id="skillCatBar" class="cat-bar hidden" aria-label="分類で絞り込み"></div><div class="opt-row"><label class="switch-label"><input type="checkbox" id="hideInitial">初期値のままを隠す</label><label class="switch-label priority-switch"><input type="checkbox" id="skillOrderSwitch">並べ替えを編集</label><button type="button" id="secretEditToggleSkills" class="small-btn secret-edit-btn" aria-pressed="false">シークレット設定：OFF</button></div></div><div id="skillOrderPanel" class="hidden"><div class="palette-selection-bar"><span class="palette-selection-count" id="skillSelectionCount">0件選択中</span><button type="button" id="clearSkillSelection">選択解除</button><span class="hint">チェックした項目はまとめて移動できます</span></div><div id="skillOrderList" class="palette-order-list"></div><button type="button" id="cancelSkillOrder">編集を取り消す</button><p class="hint">並べ替えは左端の⠿マークを長押しして上下にドラッグしてください。中央・文字部分・余白では普通に画面を上下スクロールできます。ドラッグ中に画面の上端・下端へ近づけると自動スクロールします。順番はチャットパレットとJSONにすぐ反映されます。</p></div><div class="skill-table"><div class="skill-head" aria-hidden="true"><span>技能名</span><span class="plain-col">成功値</span><span class="sp-col">初期</span><span class="sp-col">職業</span><span class="sp-col">興味</span><span class="sp-col">他</span><span class="sp-col">合計</span><span class="dmg-col" style="text-align:center;padding:0"><svg class="ic" data-ic="sword" viewBox="0 0 24 24" aria-hidden="true"></svg></span><span></span></div><div id="skills"></div></div><button id="addSkill">＋ 技能を追加</button></section>
 
 <section><h2>追加チャパレコマンド</h2><p class="hint">ステータスを検索・選択し、現在値か最大値（:HP.max+3 のような形）に対する増減・設定を追加できます。カテゴリ別に表示され、技能名でも検索できます。独自のステータスは、上の「追加ステータス」欄で名前を登録すると選択肢に出ます。</p><label class="switch-label" style="margin:4px 0"><input type="checkbox" id="includeIndefinite" checked>不定の判定「C({SAN}*0.8)」をチャットパレットの先頭に入れる</label><div class="palette-builder"><div class="palette-status-picker"><label for="paletteStatusSearch" class="sr-only">対象ステータスを検索</label><input id="paletteStatusSearch" type="search" class="has-search-ic" placeholder="検索" autocomplete="off"><label for="paletteStatusSelect" class="sr-only">ステータスを選択</label><select id="paletteStatusSelect"></select><p class="hint" id="paletteStatusCount" aria-live="polite"></p></div><div><label for="paletteTarget">対象の値</label><select id="paletteTarget"><option value="">現在値</option><option value=".max">最大値（.max）</option></select></div><div><label for="paletteOperator">操作</label><select id="paletteOperator"><option value="-">減らす（−）</option><option value="+">増やす（＋）</option><option value="=">設定する（＝）</option></select></div><div><label for="paletteAmount">数字</label><input id="paletteAmount" type="number" min="0" step="1" value="1" inputmode="numeric"></div><button type="button" class="primary" id="addPaletteCommand">＋ 追加</button></div><p class="hint">追加したコマンド</p><div id="paletteCommandList" class="palette-command-list"></div><textarea id="extraPaletteCommands" class="hidden" aria-label="追加チャパレコマンド（保存用）"></textarea></section>
 <section><div class="palette-heading"><h2>チャットパレット単体</h2><div class="palette-heading-actions"><button type="button" id="rollModeToggle" class="small-btn" aria-pressed="true">判定方式：CCB</button><button type="button" id="autoUpdateToggle" class="small-btn" aria-pressed="true">自動更新：ON</button><label class="switch-label priority-switch"><input type="checkbox" id="priorityEditSwitch">優先順位を編集</label></div></div><div id="autoUpdateStatus" class="hint" style="margin:4px 0 0;min-height:1.4em"></div><p class="hint">JSONとは別に、チャットパレットのコマンドだけを出力・コピーできます。判定方式・自動更新・「計算式をそのままJSONに出力」の設定は、キャラクターごとに保存されます。優先順位編集をオンにすると、左端の⠿マークを長押しして上下へドラッグすると順番を変更できます。中央・文字部分・余白は通常どおり画面スクロールできます。編集内容はチャットパレット欄にすぐ反映されます。生成し直して数値や式が変わっても、【コマンド名】を基準に並び順を維持します。チャットパレット単体では、入力したステータス（SANなど）は参照のまま、技能の成功値とダメージボーナスはラベルを作らず数値の式で出力します（JSONは技能ごとのステータスを自動作成して参照します）。</p><div class="btn-row"><button class="primary" id="generatePalette">生成</button><button id="reflectPalette" title="チャットパレットの内容をフォームへ反映します">フォームへ反映</button><button id="copyPalette">コピー</button></div><div id="paletteOrderPanel" class="hidden"><div class="palette-selection-bar"><span class="palette-selection-count" id="paletteSelectionCount">0件選択中</span><button type="button" id="clearPaletteSelection">選択解除</button><span class="hint">チェックした項目はまとめて移動できます</span></div><div id="paletteOrderList" class="palette-order-list"></div><button type="button" id="cancelPaletteOrder">編集を取り消す</button><p class="hint">並べ替えは左端の⠿マークを長押しして上下にドラッグしてください。中央・文字部分・余白では普通に画面を上下スクロールできます。ドラッグ中に画面の上端・下端へ近づけると自動スクロールします。編集をオフにすると順番が保存されます。生成し直したときも【コマンド名】を基準に順番を引き継ぎます。上の「チャパレをフォームへ反映」で他の変更と一緒にフォームへ反映できます。</p></div><textarea id="paletteOutput" placeholder="ここにチャットパレットが表示されます" aria-label="チャットパレット出力"></textarea><button type="button" class="danger small-btn" data-clear-field="paletteOutput">クリア</button></section><section><h2>出力</h2><label class="switch-label"><input type="checkbox" id="numbering">JSON生成時にキャラクター名へ連番を付ける（例：NPC1、NPC2…）</label><label class="switch-label"><input type="checkbox" id="preserveFormulas">計算式をそのままJSONに出力する（ダイスを振らない）</label><div class="btn-row"><button class="primary" id="generate">JSON生成</button><button class="primary" id="copy">JSONコピー</button><button id="download">ファイル保存</button></div><textarea id="output" placeholder="ここにJSONが表示されます" aria-label="JSON出力"></textarea><button type="button" class="danger small-btn" data-clear-field="output">クリア</button></section>
@@ -3620,6 +3830,7 @@ input.has-search-ic.has-search-ic {
 const ICONS = {
   dice: '<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>',
   growth: '<polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/>',
+  tag: '<path d="M20.5 12.5l-8 8-9-9V3.5h8z"/><circle cx="7.6" cy="7.6" r="1.3"/>',
   sword: '<path d="M12 2.5l2.2 3v8.5H9.8V5.5z"/><path d="M7 14h10"/><path d="M12 14v5"/><circle cx="12" cy="20.5" r="1.2"/>',
   folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
   folderOpen:
@@ -3756,7 +3967,7 @@ function paletteOrderKey(line) {
 }
 // 初期の並び：目星・聞き耳・図書館・こぶし・回避（とそのダメージ）を、不定の行の次に出す。「優先順位を編集」で決めた並びがあればそちらが優先される
 const PRIORITY_SKILLS = ["目星", "聞き耳", "図書館", "こぶし", "回避"];
-function prioritizeCommands(cmds) {
+function prioritizeCommands(cmds, follow) {
   const lines = cmds.slice(),
     picked = new Set(),
     groups = [];
@@ -3770,6 +3981,11 @@ function prioritizeCommands(cmds) {
     if (j < lines.length && !picked.has(j) && !/^S?CCB?<=/.test(lines[j]) && lines[j].trim().endsWith(tag)) {
       g.push(j);
       picked.add(j);
+    }
+    // 成功時に続けて出す行（技能ごとの設定）も一緒に動かす
+    for (let k = g[g.length - 1] + 1; follow && follow.has(k) && !picked.has(k); k++) {
+      g.push(k);
+      picked.add(k);
     }
     groups.push(g);
   });
@@ -4403,6 +4619,157 @@ function addExtra(n = "", v = "") {
     { label: "値・計算式", value: v, className: "extra-value", placeholder: "例：4、CON+SIZ" },
   ]);
 }
+// ===== 技能の分類・成功時の処理 =====
+// 分類は複数付けられる。基本技能は名前から自動で分類され、ユーザーが変えたときだけ技能ごとに保存する（cats）。
+let skillCatFilter = "";
+let skillCatBarSig = "";
+const SKILL_CAT_DEFAULTS = ["戦闘", "探索", "行動", "交渉", "知識", "技術", "医療"];
+const SKILL_CAT_MAP = {
+  戦闘: "こぶし、キック、頭突き、組み付き、マーシャルアーツ、投擲、拳銃、サブマシンガン、ショットガン、マシンガン、ライフル、弓、火炎放射器、回避",
+  探索: "目星、聞き耳、図書館、隠す、隠れる、忍び歩き、追跡",
+  行動: "跳躍、登攀、水泳、運転、操縦、ナビゲート、乗馬、サバイバル、重機械操作、鍵開け、忍び歩き、隠れる、追跡、回避",
+  交渉: "説得、言いくるめ、信用、値切り、母国語、他の言語、心理学",
+  知識: "図書館、医学、薬学、精神分析、心理学、オカルト、歴史、クトゥルフ神話、生物学、地質学、化学、物理学、天文学、博物学、考古学、人類学、法律、経理、コンピューター、電子工学、鑑定、母国語、他の言語、言語学",
+  技術: "機械修理、電気修理、鍵開け、重機械操作、運転、操縦、コンピューター、電子工学、写真術、製作、芸術、変装、隠す",
+  医療: "応急手当、医学、精神分析、薬学",
+};
+const SKILL_CAT_BY_NAME = (() => {
+  const m = new Map();
+  SKILL_CAT_DEFAULTS.forEach((cat) => SKILL_CAT_MAP[cat].split("、").forEach((n) => m.set(n, (m.get(n) || []).concat(cat))));
+  m.set("ほかの言語", m.get("他の言語"));
+  return m;
+})();
+// 「芸術（絵画）」「運転(自動車)」→「芸術」「運転」
+function skillBaseName(name) {
+  return String(name || "")
+    .replace(/[（(].*$/, "")
+    .replace(/\s+/g, "");
+}
+function defaultSkillCats(name) {
+  return (SKILL_CAT_BY_NAME.get(skillBaseName(name)) || []).slice();
+}
+// 保存された分類（配列）があればそれ、なければ名前からの既定
+function effectiveSkillCats(name, cats) {
+  return Array.isArray(cats) ? cats.slice() : defaultSkillCats(name);
+}
+function rowCatsExplicit(r) {
+  try {
+    const a = JSON.parse(r.dataset.cats || "null");
+    return Array.isArray(a) ? a : null;
+  } catch (e) {
+    return null;
+  }
+}
+function rowCats(r) {
+  return effectiveSkillCats(r.querySelector(".skill-name").value.trim(), rowCatsExplicit(r));
+}
+function setRowCats(r, arr) {
+  if (!Array.isArray(arr)) delete r.dataset.cats;
+  else r.dataset.cats = JSON.stringify(arr);
+}
+// 保存用：入力があるものだけ返す（空のままなら何も出さない）
+function rowMoreData(r) {
+  const o = {},
+    c = rowCatsExplicit(r),
+    m = r.querySelector(".skill-os-memo"),
+    l = r.querySelector(".skill-os-lines");
+  if (c) o.cats = c;
+  if (m && m.value.trim()) o.osMemo = m.value;
+  if (l && l.value.trim()) o.osLines = l.value;
+  return o;
+}
+function setRowMore(r, d) {
+  d = d || {};
+  setRowCats(r, Array.isArray(d.cats) ? d.cats.map(String) : null);
+  r.querySelector(".skill-os-memo").value = d.osMemo || "";
+  r.querySelector(".skill-os-lines").value = d.osLines || "";
+  syncSkillMore(r);
+}
+// 画面に出ている全技能で使われている分類（既定→自分で足したもの）
+function allSkillCats(extra) {
+  const set = new Set(SKILL_CAT_DEFAULTS);
+  skills.querySelectorAll(".row").forEach((r) => rowCats(r).forEach((c) => set.add(c)));
+  (extra || []).forEach((c) => set.add(c));
+  return [...set];
+}
+function syncSkillMore(r) {
+  const has = !!(r.querySelector(".skill-os-memo").value.trim() || r.querySelector(".skill-os-lines").value.trim());
+  const b = r.querySelector(".skill-more-btn");
+  if (b) {
+    b.classList.toggle("has-os", has);
+    const cats = rowCats(r);
+    b.title = "分類・成功時の処理" + (cats.length ? "（" + cats.join("・") + "）" : "");
+  }
+  renderSkillCatChips(r);
+}
+function renderSkillCatChips(r) {
+  const box = r.querySelector(".skill-cat-chips");
+  if (!box) return;
+  const cur = rowCats(r);
+  box.textContent = "";
+  allSkillCats(cur).forEach((c) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "cat-chip" + (cur.includes(c) ? " on" : "");
+    b.textContent = c;
+    b.setAttribute("aria-pressed", String(cur.includes(c)));
+    b.onclick = () => {
+      const next = cur.includes(c) ? cur.filter((x) => x !== c) : cur.concat(c);
+      const def = defaultSkillCats(r.querySelector(".skill-name").value.trim());
+      const same = next.length === def.length && next.every((x) => def.includes(x));
+      setRowCats(r, same ? null : next);
+      syncSkillMore(r);
+      r.dispatchEvent(new Event("input", { bubbles: true }));
+      filterSkillRows();
+    };
+    box.append(b);
+  });
+}
+function attachSkillMore(r, nameInput) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "skill-more-btn";
+  setIconText(btn, "tag");
+  btn.setAttribute("aria-label", "分類・成功時の処理");
+  btn.setAttribute("aria-expanded", "false");
+  nameInput.parentElement.append(btn);
+  const panel = document.createElement("div");
+  panel.className = "skill-more";
+  panel.innerHTML =
+    '<div class="sm-h">分類（複数選べます）</div><div class="skill-cat-chips"></div>' +
+    '<div class="sm-add"><input type="text" class="skill-cat-new" maxlength="12" placeholder="新しい分類名" aria-label="新しい分類名" autocomplete="off"><button type="button" class="small-btn skill-cat-add">追加</button></div>' +
+    '<div class="sm-h">成功したときのメモ</div><textarea class="skill-os-memo" rows="2" placeholder="例：成功したら鍵開け道具の耐久を1減らす" aria-label="成功したときのメモ"></textarea>' +
+    '<div class="sm-h">成功のあとに出すチャットパレット（1行に1コマンド）</div><textarea class="skill-os-lines" rows="2" placeholder="例：1d3 【鍵開け成功：道具消耗】" aria-label="成功のあとに出すチャットパレット"></textarea>' +
+    '<div class="hint">パレットは、この技能の判定のすぐ後ろに並びます。</div>';
+  r.append(panel);
+  btn.onclick = () => {
+    const open = !r.classList.contains("more-open");
+    r.classList.toggle("more-open", open);
+    btn.setAttribute("aria-expanded", String(open));
+    if (open) renderSkillCatChips(r);
+  };
+  const addCat = () => {
+    const inp = panel.querySelector(".skill-cat-new"),
+      t = inp.value.trim().replace(/\s+/g, "");
+    if (!t) return;
+    const cur = rowCats(r);
+    if (!cur.includes(t)) setRowCats(r, cur.concat(t));
+    inp.value = "";
+    syncSkillMore(r);
+    r.dispatchEvent(new Event("input", { bubbles: true }));
+    filterSkillRows();
+  };
+  panel.querySelector(".skill-cat-add").onclick = addCat;
+  panel.querySelector(".skill-cat-new").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addCat();
+    }
+  });
+  ["skill-os-memo", "skill-os-lines"].forEach((c) => panel.querySelector("." + c).addEventListener("input", () => syncSkillMore(r)));
+  nameInput.addEventListener("input", () => syncSkillMore(r));
+  syncSkillMore(r);
+}
 function addSkill(n = "", v = "", pts, secret, damage = "", dsecret) {
   const x = row(skills, "row", [
     { label: "技能名", value: n, className: "skill-name", placeholder: "例：こぶし" },
@@ -4420,6 +4787,7 @@ function addSkill(n = "", v = "", pts, secret, damage = "", dsecret) {
     filterSkillRows();
   });
   attachSkillPoints(x, v, pts);
+  attachSkillMore(x.row, x.inputs[0]);
   refreshPaletteStatusOptions();
   filterSkillRows();
   return x;
@@ -5016,8 +5384,42 @@ function filterSkillRows() {
     r.classList.toggle("is-initial", init);
     syncDamageUi(r);
     const focused = r.contains(document.activeElement);
-    r.classList.toggle("hidden", (!!q && !n.includes(q)) || (hide && init && !focused));
+    const catHide = !!skillCatFilter && !rowCats(r).includes(skillCatFilter);
+    r.classList.toggle("hidden", (!!q && !n.includes(q)) || (hide && init && !focused) || catHide);
   });
+  renderSkillCatBar();
+}
+// 分類で絞り込む（もう一度押すと解除）
+function renderSkillCatBar() {
+  const bar = document.getElementById("skillCatBar");
+  if (!bar) return;
+  const count = new Map();
+  skills.querySelectorAll(".row").forEach((r) => {
+    if (!r.querySelector(".skill-name").value.trim()) return;
+    rowCats(r).forEach((c) => count.set(c, (count.get(c) || 0) + 1));
+  });
+  if (skillCatFilter && !count.has(skillCatFilter)) skillCatFilter = "";
+  const order = allSkillCatsOrdered(count);
+  const sig = order.map((c) => c + count.get(c)).join("|") + "#" + skillCatFilter;
+  if (sig === skillCatBarSig) return;
+  skillCatBarSig = sig;
+  bar.textContent = "";
+  bar.classList.toggle("hidden", !order.length);
+  order.forEach((c) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "cat-chip" + (skillCatFilter === c ? " on" : "");
+    b.textContent = c + " " + count.get(c);
+    b.setAttribute("aria-pressed", String(skillCatFilter === c));
+    b.onclick = () => {
+      skillCatFilter = skillCatFilter === c ? "" : c;
+      filterSkillRows();
+    };
+    bar.append(b);
+  });
+}
+function allSkillCatsOrdered(count) {
+  return [...SKILL_CAT_DEFAULTS.filter((c) => count.has(c)), ...[...count.keys()].filter((c) => !SKILL_CAT_DEFAULTS.includes(c))];
 }
 document.getElementById("skillSearch").addEventListener("input", filterSkillRows);
 function filterPresetItems() {
@@ -6269,6 +6671,7 @@ function makeData(options = {}) {
   }
 
   const dmgDone = new Set();
+  const followIdx = new Set();
   const pushDmg = (r) => {
     if (dmgDone.has(r)) return;
     dmgDone.add(r);
@@ -6302,6 +6705,11 @@ function makeData(options = {}) {
     commands.push(secretPrefix(item.row) + rollCommandPrefix() + "<=" + paletteFormula + " 【" + labelWithRefs(item.name) + "】");
     if (options.includeSkillValueComments) commands.push("※" + item.name + "は" + item.value);
     pushDmg(item.row);
+    // 「成功したら続けて出すチャットパレット」を、この技能の判定の直後に並べる
+    textLines(item.row.querySelector(".skill-os-lines")?.value, true).forEach((ln) => {
+      followIdx.add(commands.length);
+      commands.push(ln);
+    });
   });
   skills.querySelectorAll(".row").forEach((r) => pushDmg(r));
   if (!options.standalonePalette) pushDBStatuses(extrasResolved, dbLabelParts(db));
@@ -6316,7 +6724,7 @@ function makeData(options = {}) {
       initiative: rolled.DEX,
       externalUrl: (document.getElementById("prof-url")?.value || "").trim(),
       ...iconFields(),
-      commands: prioritizeCommands(commands).join("\n"),
+      commands: prioritizeCommands(commands, followIdx).join("\n"),
       status: extrasResolved.map((x) => ({ label: x.label, value: x.value, max: x.max })),
       params,
     },
@@ -6801,7 +7209,7 @@ function runAutoUpdate() {
   }
 }
 const AUTO_IGNORE =
-  "#secretMemoText,#output,#paletteOutput,#jsonImport,#jsonFile,#skillSearch,#presetSearch,#paletteStatusSearch,#paletteStatusSelect,#jsonImportPanel,#paletteOrderPanel";
+  "#secretMemoText,#output,#paletteOutput,#jsonImport,#jsonFile,#skillSearch,#presetSearch,#paletteStatusSearch,#paletteStatusSelect,#jsonImportPanel,#paletteOrderPanel,#skillCatBar,.skill-more";
 function scheduleAutoUpdate() {
   if (!autoUpdate || document.getElementById("editorView").classList.contains("hidden")) return;
   clearTimeout(autoTimer);
@@ -7146,6 +7554,7 @@ function captureForm() {
       secret: rowSecret(r),
       damage: r.querySelector(".damage-value").value,
       dsecret: rowSecretDmg(r),
+      ...rowMoreData(r),
     })),
     spMode: document.body.classList.contains("sp-on"),
     spOccFormula: document.getElementById("spOccFormula").value,
@@ -7194,16 +7603,17 @@ function restoreForm(d) {
   extras.innerHTML = "";
   (d.extras || []).forEach((x) => addExtra(x.name || "", x.value || ""));
   skills.innerHTML = "";
-  (d.skills && d.skills.length ? d.skills : [{ name: "", value: "" }]).forEach((x) =>
-    addSkill(
+  (d.skills && d.skills.length ? d.skills : [{ name: "", value: "" }]).forEach((x) => {
+    const added = addSkill(
       x.name || "",
       x.value || "",
       x.base !== undefined ? { base: x.base, occ: x.occ, int: x.int, other: x.other, otherRoll: x.otherRoll } : undefined,
       !!x.secret,
       x.damage || "",
       !!x.dsecret,
-    ),
-  );
+    );
+    setRowMore(added.row, x);
+  });
   document.getElementById("spOccFormula").value = d.spOccFormula || "EDU*20";
   document.getElementById("spIntFormula").value = d.spIntFormula || "INT*10";
   setSkillPointMode(!!d.spMode);
@@ -9688,12 +10098,75 @@ function rollDetailed(raw) {
   new MutationObserver(() => {
     clearTimeout(t);
     if (message.textContent)
-      t = setTimeout(() => {
-        message.textContent = "";
-      }, 3500);
+      t = setTimeout(
+        () => {
+          message.textContent = "";
+        },
+        message.querySelector(".jump-hint") ? 9000 : 3500,
+      );
   }).observe(message, { childList: true, characterData: true, subtree: true });
 })();
+// ===== エラー文の「技能「鍵開け」の…」から、該当する入力行を探して飛ぶ =====
+function findErrorTarget(text) {
+  const m = /(技能|基本ステータス|ステータス)「(.+?)」/.exec(String(text || ""));
+  if (!m) return null;
+  const kind = m[1],
+    name = m[2].trim();
+  const inDerived = () => {
+    const r = [...derivedStatuses.querySelectorAll(".derived-row")].find((x) => (x.dataset.derivedName || "").trim() === name);
+    return r && { row: r, input: r.querySelector(".derived-formula"), name };
+  };
+  const inExtras = () => {
+    const r = [...extras.querySelectorAll(".row")].find((x) => (x.querySelector(".extra-name")?.value || "").trim() === name);
+    return r && { row: r, input: r.querySelector(".extra-value"), name };
+  };
+  if (kind === "技能") {
+    const r = findRowByName(skills, ".skill-name", name);
+    return r ? { row: r, input: r.querySelector(".skill-value"), name } : null;
+  }
+  return kind === "基本ステータス" ? inDerived() || inExtras() : inExtras() || inDerived();
+}
+function jumpToErrorTarget(t) {
+  if (!t || !t.row.isConnected) return false;
+  t.row.scrollIntoView({ block: "center", behavior: "smooth" });
+  t.row.classList.remove("jump-hl");
+  void t.row.offsetWidth;
+  t.row.classList.add("jump-hl");
+  setTimeout(() => t.row.classList.remove("jump-hl"), 2600);
+  setTimeout(() => t.input && t.input.focus({ preventScroll: true }), 350);
+  return true;
+}
+// メッセージ・自動更新の一時停止表示に「タップで該当行へ」を付ける
+(function () {
+  new MutationObserver(() => {
+    if (!message.textContent || message.querySelector(".jump-hint")) return;
+    const t = findErrorTarget(message.textContent);
+    if (!t) return;
+    const h = document.createElement("span");
+    h.className = "jump-hint";
+    h.textContent = "▶ タップで「" + t.name + "」の入力欄へ移動";
+    message.append(h);
+    message.classList.add("has-jump");
+  }).observe(message, { childList: true, characterData: true, subtree: true });
+  new MutationObserver(() => {
+    if (!message.textContent) message.classList.remove("has-jump");
+  }).observe(message, { childList: true, characterData: true, subtree: true });
+  const st = document.getElementById("autoUpdateStatus");
+  new MutationObserver(() => {
+    if (!st.textContent || st.querySelector(".jump-link")) return;
+    const t = findErrorTarget(st.textContent);
+    if (!t) return;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "small-btn jump-link";
+    b.textContent = "「" + t.name + "」へ移動";
+    b.onclick = () => jumpToErrorTarget(findErrorTarget(st.textContent.replace(b.textContent, "")));
+    st.append(" ", b);
+  }).observe(st, { childList: true, characterData: true });
+})();
 message.addEventListener("click", () => {
+  const h = message.querySelector(".jump-hint");
+  if (h) jumpToErrorTarget(findErrorTarget(message.textContent.replace(h.textContent, "")));
   message.textContent = "";
 });
 document.getElementById("backHome").addEventListener("click", (e) => {
@@ -9848,6 +10321,7 @@ document.getElementById("spMode").addEventListener("change", (e) => setSkillPoin
 ["spOccFormula", "spIntFormula"].forEach((id) => document.getElementById(id).addEventListener("input", updatePointSummary));
 base.addEventListener("input", updatePointSummary);
 new MutationObserver(updatePointSummary).observe(skills, { childList: true });
+new MutationObserver(() => filterSkillRows()).observe(skills, { childList: true });
 
 // ===== v64：通知・正気度/不定・お気に入りセット・元に新規作成 =====
 (function () {
@@ -10892,7 +11366,7 @@ function viewerCompute(f) {
         ctx[d.name] = Number(r);
       }
     } catch (e) {}
-    derived.push({ name: String(d.name).trim(), value: v });
+    derived.push({ name: String(d.name).trim(), value: v, formula: String(d.formula || "").trim() });
   });
   const extras = [];
   (f.extras || []).forEach((x) => {
@@ -10903,7 +11377,7 @@ function viewerCompute(f) {
     try {
       if (raw && !/^\d+$/.test(raw) && !VW_DICE_RE.test(raw) && /[A-Za-z]/.test(raw)) v = String(resolveExpr(raw, ctx));
     } catch (e) {}
-    extras.push({ name: n, value: v || "—" });
+    extras.push({ name: n, value: v || "—", raw });
   });
   const rows = (f.skills || [])
     .filter((s) => s && String(s.name || "").trim())
@@ -10920,6 +11394,9 @@ function viewerCompute(f) {
       other: Math.max(0, Number(s.other) || 0),
       otx: String(s.other == null ? "" : s.other).trim(),
       orl: s.otherRoll,
+      cats: effectiveSkillCats(String(s.name).trim(), s.cats),
+      osMemo: String(s.osMemo || "").trim(),
+      osLines: textLines(s.osLines, true),
     }));
   const sv = { ...ctx };
   let pend = rows.filter((r) => r.raw);
@@ -10960,7 +11437,7 @@ function viewerCompute(f) {
   const ov = String(f.dbOverride || "").trim();
   if (ov) db = ov.replace(/\s+/g, "");
   else if (nums.STR != null && nums.SIZ != null) db = calculateDB(nums.STR, nums.SIZ);
-  return { nums, derived, extras, skills: rows, db };
+  return { nums, derived, extras, skills: rows, db, ctx };
 }
 function vwSec(title, small, tag) {
   const d = vwEl(tag || "div", "vw-sec");
@@ -10976,6 +11453,106 @@ function vwTile(label, val, big) {
   const t = vwEl("div", "vw-tile" + (big ? " big" : ""));
   t.append(vwEl("span", null, label), vwEl("b", null, val));
   return t;
+}
+// 式の中の名前を、いまの数値に置き換えた形（例：(CON+SIZ)/2 → (50+60)/2）
+function vwSubst(formula, vals) {
+  return String(formula).replace(NAME_TOKEN_RE, (n) => {
+    const v = vals[n] != null ? vals[n] : vals[n.toUpperCase()];
+    return v != null ? String(v) : n;
+  });
+}
+// 成長記録のうち、この名前（技能・能力値・SANなど）に関わる変化の一覧：[[シナリオ名, 増減]]
+function vwGrowthRows(f, name) {
+  const key = nameKey(name),
+    out = [];
+  (f.growthLog || []).forEach((e) =>
+    (e.growth || []).forEach((x) => {
+      if (!x.skill || nameKey(x.skill) !== key) return;
+      const amount = typeof x.delta === "number" ? (x.delta >= 0 ? "+" : "") + x.delta : String(x.amount == null ? "" : x.amount);
+      out.push([(e.scenario || "（シナリオ名なし）") + (e.applied ? "" : "（未反映）"), amount]);
+    }),
+  );
+  return out;
+}
+// タップで開く「内訳」の中身。rows: [[項目, 値]]、growth: [[シナリオ名, 増減]]
+function vwDetailBody(rows, growth, notes) {
+  const box = vwEl("div", "vw-detail-body");
+  rows.forEach(([l, v]) => {
+    const r = vwEl("div", "r");
+    r.append(vwEl("span", null, l), vwEl("b", null, v));
+    box.append(r);
+  });
+  if (growth && growth.length) {
+    box.append(vwEl("h4", null, "成長記録"));
+    growth.forEach(([l, v]) => {
+      const r = vwEl("div", "r");
+      r.append(vwEl("span", null, l), vwEl("b", null, v));
+      box.append(r);
+    });
+  }
+  (notes || []).forEach((n) => box.append(n));
+  if (!box.childNodes.length) box.append(vwEl("div", "muted", "内訳の入力はありません"));
+  return box;
+}
+// タイル（ステータス・能力値）を並べ、タップするとその下に内訳を出す。defs: [{label, val, big, rows, growth}]
+function vwTapTiles(sec, defs) {
+  const grid = vwEl("div", "vw-tiles"),
+    panel = vwEl("div", "vw-detail hidden");
+  let current = null;
+  const close = () => {
+    if (!current) return;
+    current.classList.remove("open");
+    current.setAttribute("aria-expanded", "false");
+    current = null;
+    panel.classList.add("hidden");
+  };
+  defs.forEach((d) => {
+    const t = vwTile(d.label, d.val, d.big);
+    t.classList.add("tap");
+    t.setAttribute("role", "button");
+    t.setAttribute("tabindex", "0");
+    t.setAttribute("aria-expanded", "false");
+    const toggle = () => {
+      if (current === t) return close();
+      close();
+      current = t;
+      t.classList.add("open");
+      t.setAttribute("aria-expanded", "true");
+      panel.replaceChildren(vwEl("h4", "vw-detail-title", d.label), vwDetailBody(d.rows || [], d.growth || []));
+      panel.classList.remove("hidden");
+    };
+    t.addEventListener("click", toggle);
+    t.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle();
+      }
+    });
+    grid.append(t);
+  });
+  sec.append(grid, panel);
+}
+// 技能の内訳：[[項目, 値]]、成長記録、補足の要素
+function vwSkillDetail(r, f) {
+  const rows = [];
+  const od = !!r.otx && !/^\d+$/.test(r.otx);
+  if (r.pbase && r.pbase !== "0") rows.push(["初期値", r.pbase]);
+  if (r.occ) rows.push(["職業P", "＋" + r.occ]);
+  if (r.int) rows.push(["興味P", "＋" + r.int]);
+  if (od) rows.push(["その他", r.otx + (r.orl !== undefined && r.orl !== null && r.orl !== "" ? "→" + r.orl : "")]);
+  else if (r.other) rows.push(["その他", "＋" + r.other]);
+  if (r.raw && !/^\d+$/.test(r.raw)) rows.push(["値の式", r.raw]);
+  rows.push(["合計", r.text]);
+  if (r.cats && r.cats.length) rows.push(["分類", r.cats.join("・")]);
+  const notes = [];
+  if (r.osMemo || r.osLines.length) {
+    const box = vwEl("div", "vw-os");
+    box.append(vwEl("h4", null, "成功したとき"));
+    if (r.osMemo) box.append(vwEl("div", "vw-os-memo", r.osMemo));
+    if (r.osLines.length) box.append(vwEl("pre", "vw-os-lines", r.osLines.join("\n")));
+    notes.push(box);
+  }
+  return [rows, vwGrowthRows(f, r.name), notes];
 }
 function renderViewer(c) {
   const f = c.form || {},
@@ -11033,22 +11610,48 @@ function renderViewer(c) {
   hero.append(meta);
   host.append(hero);
   // ステータス
-  const st = vwSec("ステータス"),
-    tiles = vwEl("div", "vw-tiles");
+  const st = vwSec("ステータス", "タップで内訳");
   const main = new Set(["HP", "MP", "SAN"]);
-  k.derived.forEach((d) => tiles.append(vwTile(d.name, d.value, main.has(d.name))));
-  if (k.db !== "") tiles.append(vwTile("DB", k.db));
-  k.extras.forEach((x) => tiles.append(vwTile(x.name, x.value)));
-  st.append(tiles);
+  const stDefs = k.derived.map((d) => {
+    const rows = [];
+    if (d.formula) {
+      rows.push(["計算式", d.formula]);
+      const sub = vwSubst(d.formula, k.ctx);
+      if (sub !== d.formula) rows.push(["代入", sub]);
+    }
+    rows.push(["値", d.value]);
+    return { label: d.name, val: d.value, big: main.has(d.name), rows, growth: vwGrowthRows(f, d.name) };
+  });
+  if (k.db !== "") {
+    const rows = [];
+    if (String(f.dbOverride || "").trim()) rows.push(["手入力", k.db]);
+    else if (k.nums.STR != null && k.nums.SIZ != null)
+      rows.push(["STR＋SIZ", k.nums.STR + "＋" + k.nums.SIZ + "＝" + (k.nums.STR + k.nums.SIZ)], ["ダメージボーナス", k.db]);
+    stDefs.push({ label: "DB", val: k.db, rows, growth: [] });
+  }
+  k.extras.forEach((x) => {
+    const rows = [];
+    if (x.raw && x.raw !== x.value) {
+      rows.push(["式", x.raw]);
+      const sub = vwSubst(x.raw, k.ctx);
+      if (sub !== x.raw) rows.push(["代入", sub]);
+    }
+    rows.push(["値", x.value]);
+    stDefs.push({ label: x.name, val: x.value, rows, growth: vwGrowthRows(f, x.name) });
+  });
+  vwTapTiles(st, stDefs);
   host.append(st);
   // 能力値
-  const ab = vwSec("能力値"),
-    at = vwEl("div", "vw-tiles");
-  names.forEach((n) => {
-    const v = f.base && f.base[n] != null && String(f.base[n]).trim() !== "" ? String(f.base[n]).trim() : "—";
-    at.append(vwTile(n, v));
-  });
-  ab.append(at);
+  const ab = vwSec("能力値", "タップで内訳");
+  vwTapTiles(
+    ab,
+    names.map((n) => {
+      const v = f.base && f.base[n] != null && String(f.base[n]).trim() !== "" ? String(f.base[n]).trim() : "—";
+      const rows = [["値", v]];
+      if (k.nums[n] != null) rows.push(["×5", String(k.nums[n] * 5)]);
+      return { label: n, val: v, rows, growth: vwGrowthRows(f, n) };
+    }),
+  );
   host.append(ab);
   // 技能（検索・並べ替え・職業/興味の絞り込み付き）
   if (k.skills.length) {
@@ -11129,12 +11732,30 @@ function renderViewer(c) {
       });
       sk.append(fchips);
     }
+    // 分類で絞り込む（もう一度押すと解除）
+    let cf = "";
+    const cchips = vwEl("div", "vw-fchips vw-cats"),
+      catCount = new Map();
+    k.skills.forEach((r) => r.cats.forEach((c) => catCount.set(c, (catCount.get(c) || 0) + 1)));
+    allSkillCatsOrdered(catCount).forEach((c) => {
+      const b = vwEl("button", "chip", c + " " + catCount.get(c));
+      b.type = "button";
+      b.onclick = () => {
+        cf = cf === c ? "" : c;
+        cchips.querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === b && !!cf));
+        draw();
+      };
+      cchips.append(b);
+    });
+    if (catCount.size) sk.append(cchips);
     sk.append(tools, list);
     const draw = () => {
       const kw = q.value.trim().toLowerCase();
       let rs = k.skills.filter(
         (r) =>
-          (!kw || r.name.toLowerCase().includes(kw)) && (pf2 === "all" || (pf2 === "occ" && r.occ > 0) || (pf2 === "int" && r.int > 0)),
+          (!kw || r.name.toLowerCase().includes(kw)) &&
+          (!cf || r.cats.includes(cf)) &&
+          (pf2 === "all" || (pf2 === "occ" && r.occ > 0) || (pf2 === "int" && r.int > 0)),
       );
       if (so.value === "high") rs = rs.slice().sort((a, b) => (b.val == null ? -1 : b.val) - (a.val == null ? -1 : a.val));
       else if (so.value === "name") rs = rs.slice().sort((a, b) => a.name.localeCompare(b.name, "ja"));
@@ -11149,23 +11770,34 @@ function renderViewer(c) {
         nm.append(document.createTextNode(r.name));
         if (r.occ > 0) nm.append(vwEl("span", "tg occ", "職"));
         if (r.int > 0) nm.append(vwEl("span", "tg int", "興"));
+        if (r.osMemo || r.osLines.length) nm.append(vwEl("span", "tg os", "成功時"));
         if (r.damage) nm.append(setIconText(vwEl("span", "d"), "sword", r.damage));
-        const od = !!r.otx && !/^\d+$/.test(r.otx);
-        if (r.occ || r.int || r.other || od) {
-          const ln = vwEl("span", "pt");
-          const parts = [];
-          if (r.pbase && r.pbase !== "0") parts.push(["初期 " + r.pbase, ""]);
-          if (r.occ) parts.push(["職業 " + r.occ, "o"]);
-          if (r.int) parts.push(["興味 " + r.int, "t"]);
-          if (od) parts.push(["その他 " + r.otx + (r.orl !== undefined && r.orl !== null && r.orl !== "" ? "→" + r.orl : ""), ""]);
-          else if (r.other) parts.push(["その他 " + r.other, ""]);
-          parts.forEach((pt, i) => {
-            if (i) ln.append(document.createTextNode(" ＋ "));
-            ln.append(vwEl("i", pt[1], pt[0]));
-          });
-          nm.append(ln);
-        }
         row.append(nm, vwEl("div", "v", r.text));
+        // タップで内訳（初期値・職業P・興味P・その他・成長記録）を開閉する
+        const more = vwEl("div", "vw-detail more hidden");
+        row.classList.add("tap");
+        row.setAttribute("role", "button");
+        row.setAttribute("tabindex", "0");
+        row.setAttribute("aria-expanded", "false");
+        const toggle = () => {
+          const open = more.classList.contains("hidden");
+          if (open) more.replaceChildren(vwDetailBody(...vwSkillDetail(r, f)));
+          more.classList.toggle("hidden", !open);
+          row.classList.toggle("open", open);
+          row.setAttribute("aria-expanded", String(open));
+        };
+        row.addEventListener("click", (e) => {
+          if (e.target.closest("a")) return;
+          toggle();
+        });
+        row.addEventListener("keydown", (e) => {
+          if (e.target === row && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            toggle();
+          }
+        });
+        more.addEventListener("click", (e) => e.stopPropagation());
+        row.append(more);
         list.append(row);
       });
     };
