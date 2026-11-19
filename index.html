@@ -3715,6 +3715,61 @@ input.has-search-ic.has-search-ic {
   overflow-wrap: anywhere;
   color: #bfe3ff;
 }
+
+/* ===== 基本能力値の表（初期値／増加分／その他／合計） ===== */
+#base {
+  grid-template-columns: 2.6em repeat(3, minmax(0, 1fr)) minmax(0, 0.9fr);
+  gap: 6px 5px;
+  align-items: center;
+}
+@media (min-width: 700px) {
+  #base {
+    grid-template-columns: 3em repeat(3, minmax(0, 1fr)) minmax(0, 0.9fr);
+  }
+}
+#base .st-h {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #9fb0d4;
+  text-align: center;
+}
+#base .st-n {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #c7b5ff;
+}
+#base input {
+  height: 38px;
+  min-width: 0;
+  width: 100%;
+  font-size: 16px;
+}
+#base input.st-d {
+  font-size: 15px;
+}
+#base input.inv {
+  border-color: #ff8f8f;
+  background: #3a1e24;
+}
+#base .st-total {
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #e5e9ff;
+  background: #0e1328;
+  border: 1px solid #2f3a66;
+  border-radius: 8px;
+  padding: 8px 2px;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+#base .st-total.changed {
+  color: #ffd479;
+  border-color: #7a6a22;
+}
 </style></head><body><main>
 <h1 id="appTitle">TRPG キャラクター管理・作成ツール</h1>
 <p class="hint" id="appSub">キャラクターの作成・保存・複製・グループ管理ができます。</p>
@@ -3752,7 +3807,7 @@ input.has-search-ic.has-search-ic {
 <details class="profile-block" open><summary>メモ（自由記入）</summary><textarea id="memo" rows="3" placeholder="自由に書けます（【メモ】として出力）"></textarea></details>
 </section>
 
- <section><h2>基本能力値</h2><p class="hint">値または式（例：3d6、2d6+6）を入力するか、ダイスで振れます。</p><div class="grid" id="base"></div><div class="db-panel db-compact"><div class="db-main"><strong>ダメージボーナス</strong><output id="dbDisplay">STR＋SIZから自動計算</output></div><div class="db-input"><label for="dbOverride" class="sr-only">DBを手入力（空欄ならSTR＋SIZから自動計算）</label><input id="dbOverride" placeholder="手入力 例：+1D4"></div></div><div class="btn-row"><button class="primary" id="rollStats">3d6で能力値を振る</button><button id="resetStats">0に戻す</button></div><div id="message" role="status" aria-live="polite"></div></section>
+ <section><h2>基本能力値</h2><p class="hint">初期値は値または式（例：3d6、2d6+6）。増加分・その他は整数（例：+2、-1）で、合計が計算に使われます。</p><div class="grid" id="base"></div><div class="db-panel db-compact"><div class="db-main"><strong>ダメージボーナス</strong><output id="dbDisplay">STR＋SIZから自動計算</output></div><div class="db-input"><label for="dbOverride" class="sr-only">DBを手入力（空欄ならSTR＋SIZから自動計算）</label><input id="dbOverride" placeholder="手入力 例：+1D4"></div></div><div class="btn-row"><button class="primary" id="rollStats">3d6で能力値を振る</button><button id="resetStats">0に戻す</button></div><div id="message" role="status" aria-live="polite"></div></section>
 <section><h2>基本ステータス（能力値から計算）</h2><p class="hint">HP・MP・SANはステータスに出力。アイデア・幸運・知識はチャットパレットだけに出力します。</p><div class="derived-head" aria-hidden="true"><span>ステータス名</span><span>計算式</span><span>計算値</span><span></span></div><div id="derivedStatuses"></div><div id="sanInfo" class="db-panel"></div><div class="btn-row"><button id="addCustomDerived">＋ ステータスを追加</button><button id="applyDerived" title="能力値に準ずるステータス（HP・MP・SANなど）の計算値を更新します">まとめて適用</button></div></section>
 <section><h2>追加ステータス</h2><div id="extras"></div><button id="addExtra">＋ ステータスを追加</button></section>
 <section><h2>技能・ダメージ</h2><p class="hint">各行の「ダメージ式」に式（例：1d3+DB）を入れると、チャットパレットのダメージ判定になります。武器だけの行は、成功値を空のままにしてください。<br>成功値には 50+1d50 のほか、50&lt;1d100 のような最低保証も書けます（出目が50以下なら51。50&lt;=1d100 なら50以上）。割り振り方式のときは「その他」にもダイス（例：1d10）を書けて、記述はそのまま、振った結果が合計に入ります（ダイスのボタンで振り直し）。<br>「基本技能を適用」から、クトゥルフ神話TRPGの基本技能をカテゴリ別に一覧表示し、まとめて、または1つずつ追加できます。</p><div class="btn-row"><button type="button" class="primary" id="openPresetDialog"><svg class="ic ic-l" data-ic="gear" viewBox="0 0 24 24" aria-hidden="true"></svg>基本技能を適用</button><button type="button" id="openSkillSets">★ お気に入りセット</button></div><label class="switch-label"><input type="checkbox" id="spMode">技能ポイント割り振り方式（職業P・興味P）</label>
@@ -4473,21 +4528,89 @@ document.getElementById("editorView").addEventListener("input", (e) => {
   if (e.target.matches(".derived-name,.extra-name")) refreshPaletteStatusOptions();
 });
 const statFormulas = { STR: "3d6", CON: "3d6", POW: "3d6", DEX: "3d6", APP: "3d6", SIZ: "2d6+6", INT: "2d6+6", EDU: "3d6+3" };
+// 増加分・その他は整数（+3、-2）。合計＝初期値＋増加分＋その他（初期値がダイス式のときは「3d6+2」の形）
+function statDelta(v) {
+  const t = String(v == null ? "" : v)
+    .normalize("NFKC")
+    .replace(/[\u2212\u2010-\u2015\u30fc]/g, "-")
+    .replace(/\s+/g, "");
+  if (t === "") return 0;
+  return /^[+-]?\d+$/.test(t) ? Number(t) : NaN;
+}
+function statTotal(b, a, o) {
+  const bs = String(b == null ? "" : b).trim(),
+    d = (statDelta(a) || 0) + (statDelta(o) || 0);
+  if (!d || bs === "") return bs;
+  if (/^\d+$/.test(bs)) return String(Math.max(0, Number(bs) + d));
+  return bs + (d > 0 ? "+" : "-") + Math.abs(d);
+}
+// 能力値の表：能力値 / 初期値 / 増加分 / その他 / 合計
+["能力値", "初期値", "増加分", "その他", "合計"].forEach((t, k) => {
+  const h = document.createElement("div");
+  h.className = "st-h" + (k === 0 ? " st-first" : "");
+  h.textContent = t;
+  base.append(h);
+});
 names.forEach((n) => {
-  let w = document.createElement("div"),
-    l = document.createElement("label"),
-    i = document.createElement("input");
+  const l = document.createElement("label"),
+    i = document.createElement("input"),
+    out = document.createElement("output");
   l.htmlFor = "base-" + n;
   l.textContent = n;
-  i.setAttribute("aria-label", n + "（値または式）");
+  l.className = "st-n";
+  i.setAttribute("aria-label", n + "の初期値（値または式）");
   i.id = "base-" + n;
   i.dataset.stat = n;
   i.value = statFormulas[n];
   i.placeholder = "例：2d6+5";
   i.addEventListener("input", refreshDBDisplay);
-  w.append(l, i);
-  base.append(w);
+  base.append(l, i);
+  [
+    ["add", "増加分"],
+    ["other", "その他"],
+  ].forEach(([key, label]) => {
+    const x = document.createElement("input");
+    x.type = "text";
+    x.inputMode = "text";
+    x.autocomplete = "off";
+    x.className = "st-d";
+    x.id = "base-" + key + "-" + n;
+    x.dataset.statKey = key;
+    x.dataset.statOf = n;
+    x.placeholder = "±0";
+    x.setAttribute("aria-label", n + "の" + label + "（整数。例：+2、-1）");
+    x.addEventListener("input", refreshDBDisplay);
+    base.append(x);
+  });
+  out.className = "st-total";
+  out.dataset.statTotal = n;
+  out.setAttribute("aria-label", n + "の合計");
+  base.append(out);
 });
+function statDeltaInput(n, key) {
+  return document.getElementById("base-" + key + "-" + n);
+}
+function clearStatDeltas() {
+  base.querySelectorAll("input[data-stat-key]").forEach((i) => (i.value = ""));
+}
+function updateStatTotals() {
+  names.forEach((n) => {
+    const b = document.getElementById("base-" + n),
+      a = statDeltaInput(n, "add"),
+      o = statDeltaInput(n, "other"),
+      out = base.querySelector('[data-stat-total="' + n + '"]');
+    if (!b || !out) return;
+    [a, o].forEach((x) => {
+      const bad = Number.isNaN(statDelta(x.value));
+      x.classList.toggle("inv", bad);
+      x.title = bad ? "整数で入力してください（例：+2、-1）" : "";
+    });
+    const t = statTotal(b.value, a.value, o.value);
+    out.textContent = t === "" ? "—" : t;
+    out.classList.toggle("changed", t !== b.value.trim());
+  });
+}
+base.addEventListener("input", updateStatTotals);
 function row(parent, cls, fields) {
   let r = document.createElement("div");
   r.className = cls;
@@ -6029,10 +6152,37 @@ function parseMemoText(text) {
   res.memo = freeLines.join("\n").trim();
   return res;
 }
-function readBase() {
+// 入力そのまま（初期値の欄）。保存用
+function readBaseRaw() {
   const obj = {};
-  base.querySelectorAll("input").forEach((i) => (obj[i.dataset.stat] = i.value.trim()));
+  base.querySelectorAll("input[data-stat]").forEach((i) => (obj[i.dataset.stat] = i.value.trim()));
   return obj;
+}
+// 計算・出力に使う値（初期値＋増加分＋その他）
+function readBase() {
+  const obj = readBaseRaw();
+  names.forEach((n) => {
+    const a = statDeltaInput(n, "add"),
+      o = statDeltaInput(n, "other");
+    obj[n] = statTotal(obj[n], a && a.value, o && o.value);
+  });
+  return obj;
+}
+// 保存用：入力のあった能力値だけ { STR: "2" } の形で返す
+function statDeltaData() {
+  const out = {};
+  [
+    ["baseAdd", "add"],
+    ["baseOther", "other"],
+  ].forEach(([field, key]) => {
+    const o = {};
+    names.forEach((n) => {
+      const i = statDeltaInput(n, key);
+      if (i && i.value.trim()) o[n] = i.value.trim();
+    });
+    if (Object.keys(o).length) out[field] = o;
+  });
+  return out;
 }
 // 検索・誤字予想用：全角半角・大文字小文字・カタカナ/ひらがなの違いを無視する。
 function fmtDate(v) {
@@ -6104,7 +6254,7 @@ function resolveExpr(raw, baseValues) {
 }
 document.getElementById("rollStats").onclick = () => {
   try {
-    base.querySelectorAll("input").forEach((i) => (i.value = String(rollFormula(statFormulas[i.dataset.stat]))));
+    base.querySelectorAll("input[data-stat]").forEach((i) => (i.value = String(rollFormula(statFormulas[i.dataset.stat]))));
     refreshDBDisplay();
     updateDerivedPreviews();
   } catch (e) {
@@ -6112,7 +6262,8 @@ document.getElementById("rollStats").onclick = () => {
   }
 };
 document.getElementById("resetStats").onclick = () => {
-  base.querySelectorAll("input").forEach((i) => (i.value = "0"));
+  base.querySelectorAll("input[data-stat]").forEach((i) => (i.value = "0"));
+  clearStatDeltas();
   refreshDBDisplay();
   updateDerivedPreviews();
 };
@@ -6217,6 +6368,7 @@ function literalizeNames(raw, values) {
     .join("");
 }
 function refreshDBDisplay() {
+  updateStatTotals();
   const raw = readBase();
   const out = document.getElementById("dbDisplay");
   const override = document.getElementById("dbOverride");
@@ -6984,6 +7136,7 @@ function importCharacterJSON() {
     params.forEach((x) => {
       if (x && x.label != null) byName[String(x.label).toUpperCase()] = x.value;
     });
+    clearStatDeltas();
     names.forEach((n) => {
       if (byName[n] != null) {
         const el = document.getElementById("base-" + n);
@@ -7529,7 +7682,8 @@ function persistManagerData() {
 }
 function captureForm() {
   return {
-    base: readBase(),
+    base: readBaseRaw(),
+    ...statDeltaData(),
     dbOverride: document.getElementById("dbOverride").value,
     derived: [...derivedStatuses.querySelectorAll(".derived-row")].map((r) => ({
       name: r.dataset.derivedName,
@@ -7590,7 +7744,12 @@ function restoreForm(d) {
   names.forEach((n) => {
     const el = document.getElementById("base-" + n);
     if (el) el.value = d.base && d.base[n] != null ? String(d.base[n]) : statFormulas[n];
+    const a = statDeltaInput(n, "add"),
+      o = statDeltaInput(n, "other");
+    if (a) a.value = d.baseAdd && d.baseAdd[n] != null ? String(d.baseAdd[n]) : "";
+    if (o) o.value = d.baseOther && d.baseOther[n] != null ? String(d.baseOther[n]) : "";
   });
+  updateStatTotals();
   document.getElementById("dbOverride").value = d.dbOverride || "";
   derivedStatuses.innerHTML = "";
   const derivedList = (d.derived || derivedDefinitions).slice();
@@ -8770,9 +8929,9 @@ function liveStatCtx() {
   return ctx;
 }
 function readBaseNumbers(ctx) {
+  const b = readBase();
   names.forEach((n) => {
-    const i = document.getElementById("base-" + n),
-      v = i ? i.value.trim() : "";
+    const v = String(b[n] || "").trim();
     if (/^\d+$/.test(v)) ctx[n] = Number(v);
   });
 }
@@ -8797,7 +8956,7 @@ function rollBatchFormDice(form) {
   // 「1dMP」のような名前入りダイスのために、このキャラの能力値と基本ステータスの値を先に用意する
   const ctx = {};
   names.forEach((n) => {
-    const v = String(form.base && form.base[n] != null ? form.base[n] : "").trim();
+    const v = statTotal(form.base && form.base[n], form.baseAdd && form.baseAdd[n], form.baseOther && form.baseOther[n]);
     if (/^\d+$/.test(v)) ctx[n] = Number(v);
   });
   const dl = Array.isArray(form.derived) && form.derived.length ? form.derived : derivedDefinitions;
@@ -11345,7 +11504,7 @@ const VW_DICE_RE = DICE_ANY_RE;
 function viewerCompute(f) {
   const nums = {};
   names.forEach((n) => {
-    const v = f.base && f.base[n] != null ? String(f.base[n]).trim() : "";
+    const v = statTotal(f.base && f.base[n], f.baseAdd && f.baseAdd[n], f.baseOther && f.baseOther[n]);
     if (/^\d+$/.test(v)) nums[n] = Number(v);
   });
   const ctx = { ...nums },
@@ -11646,8 +11805,18 @@ function renderViewer(c) {
   vwTapTiles(
     ab,
     names.map((n) => {
-      const v = f.base && f.base[n] != null && String(f.base[n]).trim() !== "" ? String(f.base[n]).trim() : "—";
-      const rows = [["値", v]];
+      const b0 = f.base && f.base[n] != null ? String(f.base[n]).trim() : "",
+        ad = f.baseAdd && f.baseAdd[n],
+        ot = f.baseOther && f.baseOther[n];
+      const tot = statTotal(b0, ad, ot);
+      const v = tot !== "" ? tot : "—";
+      const rows = [];
+      if (statTotal(b0, ad, ot) !== b0) {
+        rows.push(["初期値", b0]);
+        if (statDelta(ad)) rows.push(["増加分", (statDelta(ad) > 0 ? "＋" : "−") + Math.abs(statDelta(ad))]);
+        if (statDelta(ot)) rows.push(["その他", (statDelta(ot) > 0 ? "＋" : "−") + Math.abs(statDelta(ot))]);
+        rows.push(["合計", v]);
+      } else rows.push(["値", v]);
       if (k.nums[n] != null) rows.push(["×5", String(k.nums[n] * 5)]);
       return { label: n, val: v, rows, growth: vwGrowthRows(f, n) };
     }),
@@ -12298,6 +12467,7 @@ function importIacharaText(text) {
   // 能力値（現在値）
   // 何も振っていない（能力値が全部0）白紙のテキストなら、能力値・派生値・DB・ポイント上限は触らず、既定のダイス式のままにする
   const anyStat = names.some((n) => p.stats[n] && (p.stats[n].cur || p.stats[n].base));
+  clearStatDeltas();
   names.forEach((n) => {
     const s = p.stats[n],
       el = document.getElementById("base-" + n);
