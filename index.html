@@ -7864,6 +7864,16 @@ function importCharacterJSON() {
     const obj = JSON.parse(rawInput);
     const d = obj.data || obj.character || obj;
     if (!d || typeof d !== "object") throw Error("キャラクターJSONを読み取れません");
+    // 技能の「成功時に続けて出す行」は技能ごとの設定として戻すので、コマンドとしては二重に読み込まない
+    if (obj.toolExtra && Array.isArray(obj.toolExtra.skills) && typeof d.commands === "string") {
+      const follow = new Set();
+      obj.toolExtra.skills.forEach((e) => textLines(e && e.osLines, true).forEach((l) => follow.add(l.trim().toLowerCase())));
+      if (follow.size)
+        d.commands = d.commands
+          .split(/\r?\n/)
+          .filter((l) => !follow.has(l.trim().toLowerCase()))
+          .join("\n");
+    }
     const params = Array.isArray(d.params) ? d.params : [];
     const status = Array.isArray(d.status) ? d.status : [];
     const byName = {};
@@ -7990,6 +8000,7 @@ function importCharacterJSON() {
     paletteOrderApplied = false;
     paletteOrderOverride = null;
     document.getElementById("output").value = JSON.stringify(obj, null, 2);
+    applyToolExtra(obj.toolExtra);
     refreshDBDisplay();
     updateDerivedPreviews();
     refreshPaletteStatusOptions();
@@ -9770,6 +9781,77 @@ function iconFields() {
 }
 // ===== v98：画像つき共有。ツール同士で渡すためのファイル（ココフォリア用のJSONに、小さくした画像を同梱）。ココフォリア用のJSONとは別に作る =====
 const SHARE_IMG_SIDE = 512;
+// ===== 共有データに載せる、このツール独自の情報（分類・成功時の処理・能力値と技能の内訳）。成長記録・秘密メモは載せない =====
+function collectShareExtra() {
+  const f = captureForm(),
+    out = {};
+  if (f.baseAdd || f.baseOther) {
+    out.base = f.base;
+    if (f.baseAdd) out.baseAdd = f.baseAdd;
+    if (f.baseOther) out.baseOther = f.baseOther;
+  }
+  const sk = [];
+  (f.skills || []).forEach((x) => {
+    const n = String(x.name || "").trim();
+    if (!n) return;
+    const e = { name: n };
+    if (x.cats) e.cats = x.cats;
+    if (x.osMemo) e.osMemo = x.osMemo;
+    if (x.osLines) e.osLines = x.osLines;
+    const used =
+      x.occ ||
+      x.int ||
+      (x.other !== undefined && String(x.other).trim() !== "") ||
+      (x.base !== undefined && String(x.base) !== String(x.value));
+    if (x.base !== undefined && used) e.pts = { base: x.base, occ: x.occ, int: x.int, other: x.other, otherRoll: x.otherRoll };
+    if (Object.keys(e).length > 1) sk.push(e);
+  });
+  if (sk.length) out.skills = sk;
+  if (f.spMode && sk.some((e) => e.pts)) out.spMode = true;
+  return Object.keys(out).length ? out : null;
+}
+// 受け取った共有データの独自情報を、読み込んだ直後のフォームに当てる（名前が一致する技能・能力値だけ）
+function applyToolExtra(ex) {
+  if (!ex || typeof ex !== "object") return;
+  if (ex.baseAdd || ex.baseOther) {
+    names.forEach((n) => {
+      const el = document.getElementById("base-" + n);
+      if (el && ex.base && ex.base[n] != null) el.value = String(ex.base[n]);
+      const a = statDeltaInput(n, "add"),
+        o = statDeltaInput(n, "other");
+      if (a) a.value = ex.baseAdd && ex.baseAdd[n] != null ? String(ex.baseAdd[n]) : "";
+      if (o) o.value = ex.baseOther && ex.baseOther[n] != null ? String(ex.baseOther[n]) : "";
+    });
+    updateStatTotals();
+  }
+  const rows = [...skills.querySelectorAll(".row")];
+  (Array.isArray(ex.skills) ? ex.skills : []).forEach((e) => {
+    const r = rows.find((x) => nameKey(x.querySelector(".skill-name").value) === nameKey(e.name || ""));
+    if (!r) return;
+    const cur = rowMoreData(r);
+    setRowMore(r, {
+      ...cur,
+      cats: Array.isArray(e.cats) ? e.cats.map(String) : cur.cats,
+      osMemo: typeof e.osMemo === "string" ? e.osMemo : cur.osMemo,
+      osLines: typeof e.osLines === "string" ? e.osLines : cur.osLines,
+    });
+    if (e.pts && typeof e.pts === "object") {
+      const set = (c, v) => {
+        const i = r.querySelector(c);
+        if (i && v != null) i.value = String(v);
+      };
+      set(".skill-base", e.pts.base);
+      set(".skill-occ", e.pts.occ);
+      set(".skill-int", e.pts.int);
+      set(".skill-other", e.pts.other);
+      if (e.pts.otherRoll !== undefined && e.pts.otherRoll !== null && e.pts.otherRoll !== "") {
+        r.dataset.otherRoll = String(e.pts.otherRoll);
+        r.dataset.otherSrc = String(e.pts.other == null ? "" : e.pts.other).trim();
+      }
+    }
+  });
+  if (ex.spMode) setSkillPointMode(true);
+}
 async function buildShareObject(side = SHARE_IMG_SIDE, onlyActive = false) {
   if (!generateJSON()) throw Error("JSONを作れませんでした。入力を確認してください");
   const obj = JSON.parse(output.value);
@@ -9796,6 +9878,8 @@ async function buildShareObject(side = SHARE_IMG_SIDE, onlyActive = false) {
     obj.toolImages = list;
     obj.toolImageActive = active;
   }
+  const extra = collectShareExtra();
+  if (extra) obj.toolExtra = extra;
   return obj;
 }
 async function shareWithImages() {
@@ -10000,6 +10084,11 @@ async function shareLink() {
       delete obj.toolImageActive;
       withImg = false;
       link = base + "#c=" + (await packShare(JSON.stringify(obj)));
+    }
+    if (link.length > SHARE_LINK_MAX && obj.toolExtra) {
+      delete obj.toolExtra;
+      link = base + "#c=" + (await packShare(JSON.stringify(obj)));
+      uploadNote += "（長いため、分類・メモ・内訳は含めていません）";
     }
     if (!(await copyText(link))) {
       toast("コピーできませんでした");
