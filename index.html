@@ -8672,7 +8672,7 @@ function duplicateCharacter() {
 }
 // 標準の prompt/confirm はアプリ内ブラウザ等で無言でキャンセルされるため、ページ内ダイアログで代替する。
 // value を渡すと入力欄付き（OKで文字列、キャンセルでnull）。value省略時は確認のみ（OKでtrue、キャンセルでnull）。
-function askDialog({ title, desc = "", value = null, okText = "OK", danger = false }) {
+function askDialog({ title, desc = "", value = null, okText = "OK", danger = false, cancelText = "キャンセル" }) {
   return new Promise((resolve) => {
     const dlg = document.getElementById("inputDialog"),
       field = document.getElementById("inputDialogField"),
@@ -8685,6 +8685,7 @@ function askDialog({ title, desc = "", value = null, okText = "OK", danger = fal
     field.classList.toggle("hidden", value === null);
     field.value = value === null ? "" : value;
     ok.textContent = okText;
+    cancel.textContent = cancelText;
     ok.classList.toggle("danger", !!danger);
     ok.classList.toggle("primary", !danger);
     const done = (r) => {
@@ -9807,6 +9808,7 @@ function collectShareExtra() {
     if (Object.keys(e).length > 1) sk.push(e);
   });
   if (sk.length) out.skills = sk;
+  if (Array.isArray(f.growthLog) && f.growthLog.length) out.growthLog = JSON.parse(JSON.stringify(f.growthLog));
   if (f.spMode && sk.some((e) => e.pts)) out.spMode = true;
   return Object.keys(out).length ? out : null;
 }
@@ -9851,6 +9853,42 @@ function applyToolExtra(ex) {
     }
   });
   if (ex.spMode) setSkillPointMode(true);
+  if (Array.isArray(ex.growthLog)) {
+    const str = (v) => (v == null ? "" : String(v)).slice(0, 2000);
+    growthLog = ex.growthLog
+      .filter((e) => e && typeof e === "object")
+      .slice(0, 300)
+      .map((e) => ({
+        id: str(e.id) || "g" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        date: str(e.date),
+        scenario: str(e.scenario),
+        memo: str(e.memo),
+        applied: !!e.applied,
+        growth: (Array.isArray(e.growth) ? e.growth : [])
+          .filter((x) => x && typeof x === "object")
+          .map((x) => {
+            const g = { skill: str(x.skill) };
+            if (typeof x.delta === "number" && Number.isFinite(x.delta)) g.delta = x.delta;
+            if (x.amount != null) g.amount = str(x.amount);
+            return g;
+          }),
+        gains: (Array.isArray(e.gains) ? e.gains : []).filter((x) => x && typeof x === "object").map((x) => ({ ...x, name: str(x.name) })),
+      }));
+  }
+}
+// 共有にロックメモ（パスワードで暗号化済み）を含めるか。持っていなければ聞かずに true
+let shareIncludeSecret = true;
+async function askShareSecret() {
+  shareIncludeSecret = true;
+  if (!(secretBlob && secretBlob.c)) return true;
+  const r = await askDialog({
+    title: "ロックメモも共有しますか？",
+    desc: "ロックメモはパスワードで暗号化されています。「含める」で暗号文ごと共有します（パスワードを知る人だけが読めます）。「含めない」ではロックメモを外して共有します。",
+    okText: "含める",
+    cancelText: "含めない",
+  });
+  shareIncludeSecret = r !== null;
+  return true;
 }
 async function buildShareObject(side = SHARE_IMG_SIDE, onlyActive = false) {
   if (!generateJSON()) throw Error("JSONを作れませんでした。入力を確認してください");
@@ -9880,10 +9918,13 @@ async function buildShareObject(side = SHARE_IMG_SIDE, onlyActive = false) {
   }
   const extra = collectShareExtra();
   if (extra) obj.toolExtra = extra;
+  if (!shareIncludeSecret && obj.data && typeof obj.data.memo === "string")
+    obj.data.memo = obj.data.memo.replace(/\n*【ロックメモ】\s*\nSM1:\S*/g, "").replace(/^\n+/, "");
   return obj;
 }
 async function shareWithImages() {
   try {
+    await askShareSecret();
     const obj = await buildShareObject();
     const text = JSON.stringify(obj);
     const nm = (document.getElementById("charName").value.trim() || "character").replace(/[\\/:*?"<>|\s]+/g, "_");
@@ -10059,6 +10100,7 @@ async function copyText(t) {
 const SHARE_LINK_MAX = 9000;
 async function shareLink() {
   try {
+    await askShareSecret();
     const base = location.href.split("#")[0];
     // 画像：未公開のものがあれば、確認してアップロード→公開URLで共有（リンクが短く、全部の画像が入る）。しなければ、小さい1枚だけ付ける
     let uploadNote = "";
@@ -10086,9 +10128,16 @@ async function shareLink() {
       link = base + "#c=" + (await packShare(JSON.stringify(obj)));
     }
     if (link.length > SHARE_LINK_MAX && obj.toolExtra) {
-      delete obj.toolExtra;
+      const gl = obj.toolExtra.growthLog;
+      if (gl) obj.toolExtra = { growthLog: gl };
+      else delete obj.toolExtra;
       link = base + "#c=" + (await packShare(JSON.stringify(obj)));
       uploadNote += "（長いため、分類・メモ・内訳は含めていません）";
+      if (link.length > SHARE_LINK_MAX && obj.toolExtra) {
+        delete obj.toolExtra;
+        link = base + "#c=" + (await packShare(JSON.stringify(obj)));
+        uploadNote += "（成長記録も含められませんでした。「画像つきで共有（ファイル）」なら全部送れます）";
+      }
     }
     if (!(await copyText(link))) {
       toast("コピーできませんでした");
