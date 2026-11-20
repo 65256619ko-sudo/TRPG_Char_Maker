@@ -4358,6 +4358,16 @@ textarea {
   margin-top: 3px;
   padding: 5px 8px;
 }
+/* 技能ポイント割り振り中：入力欄の見出しを小さくして、1技能あたりの高さを抑える */
+body.sp-on #skills .skill-points label {
+  font-size: 0.58rem;
+  line-height: 1.1;
+  margin: 0 0 1px;
+}
+body.sp-on #skills .skill-points input,
+body.sp-on #skills .row > div:nth-child(2) {
+  height: 30px;
+}
 </style></head><body><main>
 <h1 id="appTitle">TRPG キャラクター管理・作成ツール</h1>
 <p class="hint" id="appSub">キャラクターの作成・保存・複製・グループ管理ができます。</p>
