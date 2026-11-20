@@ -4338,14 +4338,12 @@ textarea {
 /* 技能ポイントの使用／上限／残り：小さめの文字で1行に並べる */
 #spOccLine,
 #spIntLine {
-  display: inline-block;
-  width: calc(50% - 4px);
-  margin: 4px 0 0;
-  font-size: 0.8rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: top;
+  display: block;
+  width: auto;
+  margin: 3px 0 0;
+  font-size: 0.82rem;
+  white-space: normal;
+  overflow: visible;
 }
 .sm-main {
   margin: 4px 0;
@@ -6406,16 +6404,17 @@ function updatePointSummary() {
   const show = (id, label, used, lim) => {
     const el = document.getElementById(id);
     if (lim === null) {
-      el.textContent = label + " " + used + "／上限は確定後";
+      el.textContent = label + "：使用 " + used + "／上限は確定後に計算";
       el.classList.remove("over");
     } else {
       const rem = lim - used;
-      el.textContent = label + " " + used + "／" + lim + (rem < 0 ? " 超過" + -rem : " 残" + rem);
+      el.textContent = label + "：使用 " + used + "／" + lim + (rem < 0 ? "　超過 " + -rem : "　残り " + rem);
       el.classList.toggle("over", rem < 0);
     }
     const bar = document.getElementById(id === "spOccLine" ? "spBarOcc" : "spBarInt");
     if (bar) {
-      bar.textContent = (id === "spOccLine" ? "職 " : "興 ") + used + "/" + (lim === null ? "?" : lim);
+      bar.textContent =
+        (id === "spOccLine" ? "職 " : "興 ") + used + "/" + (lim === null ? "?" : lim) + (lim === null ? "" : lim - used < 0 ? " 超過" + (used - lim) : " 残" + (lim - used));
       bar.classList.toggle("over", lim !== null && lim - used < 0);
     }
   };
