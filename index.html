@@ -4331,6 +4331,33 @@ textarea {
   margin: 0;
   padding: 4px 8px;
 }
+/* 説明文は1行だけ見せて、タップで全文 */
+.hint.is-expandable {
+  -webkit-line-clamp: 1;
+}
+/* 技能ポイントの使用／上限／残り：小さめの文字で1行に並べる */
+#spOccLine,
+#spIntLine {
+  display: inline-block;
+  width: calc(50% - 4px);
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+.sm-main {
+  margin: 4px 0;
+}
+.sm-main label {
+  font-size: 0.78rem;
+}
+.sm-main select {
+  width: 100%;
+  margin-top: 3px;
+  padding: 5px 8px;
+}
 </style></head><body><main>
 <h1 id="appTitle">TRPG キャラクター管理・作成ツール</h1>
 <p class="hint" id="appSub">キャラクターの作成・保存・複製・グループ管理ができます。</p>
@@ -5198,7 +5225,7 @@ function setPaletteView(mode) {
 const PALETTE_VIEW_BTNS = { lines: "viewLines", cats: "viewCats", names: "viewNames" };
 const PALETTE_VIEW_HELP = {
   lines: "1行ずつ動かします。「ラベルごと」にすると、同じラベル（戦闘・探索など）の技能がひとかたまりになります。",
-  cats: "ラベルごとに1つのかたまり。かたまりごと動かせます。複数のラベルがある技能は、最初のラベルに入ります。「中身」で行を確認。",
+  cats: "ラベルごとに1つのかたまり。かたまりごと動かせます。複数のラベルがある技能は、★主ラベルに入ります（技能の🏷で変更）。「中身」で行を確認。",
   names: "同じ【名前】の行（例：【こぶし】の判定とダメージ）を1つにまとめます。",
 };
 function renderPaletteOrderList() {
@@ -5366,7 +5393,7 @@ function applyCatManager() {
     });
     if (next.length === cur.length && next.every((x, i) => x === cur[i])) return;
     const def = defaultSkillCats(r.querySelector(".skill-name").value.trim());
-    const same = next.length === def.length && next.every((x) => def.includes(x));
+    const same = next.length === def.length && next.every((x, i) => x === def[i]);
     setRowCats(r, same ? null : next);
     syncSkillMore(r);
     changed++;
@@ -6028,7 +6055,7 @@ function syncSkillMore(r) {
   if (b) {
     b.classList.toggle("has-os", has);
     const cats = rowCats(r);
-    b.title = "分類・成功時の処理" + (cats.length ? "（" + cats.join("・") + "）" : "");
+    b.title = "ラベル・成功時の処理" + (cats.length ? "（" + cats.join("・") + "）" : "");
   }
   renderSkillCatChips(r);
 }
@@ -6041,12 +6068,12 @@ function renderSkillCatChips(r) {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "cat-chip" + (cur.includes(c) ? " on" : "");
-    b.textContent = c;
+    b.textContent = (cur.length > 1 && cur[0] === c ? "★" : "") + c;
     b.setAttribute("aria-pressed", String(cur.includes(c)));
     b.onclick = () => {
       const next = cur.includes(c) ? cur.filter((x) => x !== c) : cur.concat(c);
       const def = defaultSkillCats(r.querySelector(".skill-name").value.trim());
-      const same = next.length === def.length && next.every((x) => def.includes(x));
+      const same = next.length === def.length && next.every((x, i) => x === def[i]);
       setRowCats(r, same ? null : next);
       syncSkillMore(r);
       r.dispatchEvent(new Event("input", { bubbles: true }));
@@ -6054,20 +6081,49 @@ function renderSkillCatChips(r) {
     };
     box.append(b);
   });
+  // 主ラベル：複数のラベルがあるときだけ選べる（先頭が主ラベル）
+  const wrap = r.querySelector(".sm-main"),
+    sel = r.querySelector(".skill-cat-primary");
+  if (wrap && sel) {
+    wrap.classList.toggle("hidden", cur.length < 2);
+    sel.textContent = "";
+    cur.forEach((c) => {
+      const o = document.createElement("option");
+      o.value = c;
+      o.textContent = c;
+      sel.append(o);
+    });
+    sel.value = cur[0] || "";
+  }
+}
+function setPrimaryCat(r, c) {
+  const cur = rowCats(r);
+  if (!cur.includes(c) || cur[0] === c) return;
+  const next = [c].concat(cur.filter((x) => x !== c));
+  const def = defaultSkillCats(r.querySelector(".skill-name").value.trim());
+  const same = next.length === def.length && next.every((x, i) => x === def[i]);
+  setRowCats(r, same ? null : next);
+  syncSkillMore(r);
+  renderSkillCatChips(r);
+  r.dispatchEvent(new Event("input", { bubbles: true }));
+  filterSkillRows();
+  if (typeof skillOrderPanel !== "undefined" && !skillOrderPanel.classList.contains("hidden")) renderSkillOrderList();
+  if (typeof prioritySwitch !== "undefined" && prioritySwitch.checked) renderPaletteOrderList();
 }
 function attachSkillMore(r, nameInput) {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "skill-more-btn";
   setIconText(btn, "tag");
-  btn.setAttribute("aria-label", "分類・成功時の処理");
+  btn.setAttribute("aria-label", "ラベル・成功時の処理");
   btn.setAttribute("aria-expanded", "false");
   nameInput.parentElement.append(btn);
   const panel = document.createElement("div");
   panel.className = "skill-more";
   panel.innerHTML =
-    '<div class="sm-h">分類（複数選べます）</div><div class="skill-cat-chips"></div>' +
-    '<div class="sm-add"><input type="text" class="skill-cat-new" maxlength="12" placeholder="新しい分類名" aria-label="新しい分類名" autocomplete="off"><button type="button" class="small-btn skill-cat-add">追加</button></div>' +
+    '<div class="sm-h">ラベル（複数選べます）</div><div class="skill-cat-chips"></div>' +
+    '<div class="sm-main hidden"><label>★主ラベル（並べ替え・まとめ表示でこのラベルに入ります）<select class="skill-cat-primary" aria-label="主ラベル"></select></label></div>' +
+    '<div class="sm-add"><input type="text" class="skill-cat-new" maxlength="12" placeholder="新しいラベル名" aria-label="新しいラベル名" autocomplete="off"><button type="button" class="small-btn skill-cat-add">追加</button></div>' +
     '<div class="sm-h">成功したときのメモ</div><textarea class="skill-os-memo" rows="2" placeholder="例：成功したら鍵開け道具の耐久を1減らす" aria-label="成功したときのメモ"></textarea>' +
     '<div class="sm-h">成功のあとに出すチャットパレット（1行に1コマンド）</div><textarea class="skill-os-lines" rows="2" placeholder="例：1d3 【鍵開け成功：道具消耗】" aria-label="成功のあとに出すチャットパレット"></textarea>' +
     '<div class="hint">パレットは、この技能の判定のすぐ後ろに並びます。</div>';
@@ -6090,6 +6146,7 @@ function attachSkillMore(r, nameInput) {
     filterSkillRows();
   };
   panel.querySelector(".skill-cat-add").onclick = addCat;
+  panel.querySelector(".skill-cat-primary").addEventListener("change", (e) => setPrimaryCat(r, e.target.value));
   panel.querySelector(".skill-cat-new").addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -6339,11 +6396,11 @@ function updatePointSummary() {
   const show = (id, label, used, lim) => {
     const el = document.getElementById(id);
     if (lim === null) {
-      el.textContent = label + "：使用 " + used + " ／ 上限は能力値の確定後に計算します";
+      el.textContent = label + " " + used + "／上限は確定後";
       el.classList.remove("over");
     } else {
       const rem = lim - used;
-      el.textContent = label + "：使用 " + used + " ／ " + lim + (rem < 0 ? "（" + -rem + " 超過）" : "（残り " + rem + "）");
+      el.textContent = label + " " + used + "／" + lim + (rem < 0 ? " 超過" + -rem : " 残" + rem);
       el.classList.toggle("over", rem < 0);
     }
     const bar = document.getElementById(id === "spOccLine" ? "spBarOcc" : "spBarInt");
@@ -6352,8 +6409,8 @@ function updatePointSummary() {
       bar.classList.toggle("over", lim !== null && lim - used < 0);
     }
   };
-  show("spOccLine", "職業技能P", sum("skill-occ"), limit("spOccFormula"));
-  show("spIntLine", "興味技能P", sum("skill-int"), limit("spIntFormula"));
+  show("spOccLine", "職業P", sum("skill-occ"), limit("spOccFormula"));
+  show("spIntLine", "興味P", sum("skill-int"), limit("spIntFormula"));
 }
 function setSkillPointMode(on) {
   document.body.classList.toggle("sp-on", on);
@@ -6590,7 +6647,7 @@ function skillOrderLabel(r) {
     d = (r.querySelector(".damage-value").value || "").trim();
   return (n || "（名前なし）") + (v ? "　" + v + (/^\d+$/.test(v) ? "%" : "") : "") + (d ? "　／　" + d : "") + skillCatText(r);
 }
-// 技能のかたまり：最初のラベルごとに1つ。ラベルのない技能は1件ずつ
+// 技能のかたまり：主ラベル（先頭のラベル）ごとに1つ。ラベルのない技能は1件ずつ
 let skillViewMode = "items";
 let skillBlocksCache = null;
 let expandedSkillBlocks = new Set();
@@ -6661,7 +6718,7 @@ function renderSkillOrderList() {
   document.getElementById("skillViewCats").setAttribute("aria-pressed", String(byCat));
   document.getElementById("skillShowCatsWrap").classList.toggle("hidden", byCat);
   document.getElementById("skillViewHelp").textContent = byCat
-    ? "ラベルごとに1つのかたまり。かたまりごと動かせます。複数のラベルがある技能は、最初のラベルに入ります。「中身」で技能を確認。"
+    ? "ラベルごとに1つのかたまり。かたまりごと動かせます。複数のラベルがある技能は、★主ラベルに入ります（技能の🏷で変更）。「中身」で技能を確認。"
     : "1件ずつ動かします。「ラベルごと」にすると、同じラベル（戦闘・探索など）の技能がひとかたまりになります。";
   if (byCat) {
     ensureSkillsGrouped();
@@ -12012,7 +12069,7 @@ function setupCollapsibleSections() {
   });
 }
 setupCollapsibleSections();
-// 2行を超える説明文だけ折りたたみ、タップで全文表示する。
+// 1行に収まらない説明文だけ折りたたみ（1行表示）、タップで全文表示する。警告・状況表示は常に全文。
 // 非表示の画面・折りたたみセクション内の説明文は測定できないため、表示されたタイミングで再計測する。
 function refreshHints() {
   document.querySelectorAll(".hint").forEach((el) => {
@@ -12035,7 +12092,7 @@ function refreshHints() {
     const wasOpen = el.classList.contains("is-expanded");
     el.classList.remove("is-expandable", "is-expanded");
     const lh = parseFloat(getComputedStyle(el).lineHeight) || 24;
-    if (el.scrollHeight > lh * 2 + 3) {
+    if (el.scrollHeight > lh + 3 && !el.classList.contains("warn") && !el.hasAttribute("aria-live")) {
       el.classList.add("is-expandable");
       if (wasOpen) el.classList.add("is-expanded");
       el.setAttribute("role", "button");
