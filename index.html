@@ -4018,7 +4018,7 @@ input.has-search-ic.has-search-ic {
 <section><h2>追加ステータス</h2><div id="extras"></div><button id="addExtra">＋ ステータスを追加</button></section>
 <section><h2>技能・ダメージ</h2><p class="hint">各行の「ダメージ式」に式（例：1d3+DB）を入れると、チャットパレットのダメージ判定になります。武器だけの行は、成功値を空のままにしてください。<br>成功値には 50+1d50 のほか、50&lt;1d100 のような最低保証も書けます（出目が50以下なら51。50&lt;=1d100 なら50以上）。割り振り方式のときは「その他」にもダイス（例：1d10）を書けて、記述はそのまま、振った結果が合計に入ります（ダイスのボタンで振り直し）。<br>「基本技能を適用」から、クトゥルフ神話TRPGの基本技能をカテゴリ別に一覧表示し、まとめて、または1つずつ追加できます。</p><div class="btn-row"><button type="button" class="primary" id="openPresetDialog"><svg class="ic ic-l" data-ic="gear" viewBox="0 0 24 24" aria-hidden="true"></svg>基本技能を適用</button><button type="button" id="openSkillSets">★ お気に入りセット</button></div><label class="switch-label"><input type="checkbox" id="spMode">技能ポイント割り振り方式（職業P・興味P）</label>
 <div id="spPanel" class="db-panel hidden"><div class="sp-formulas"><div><label for="spOccFormula">職業技能Pの上限（式）</label><input id="spOccFormula" value="EDU*20"></div><div><label for="spIntFormula">興味技能Pの上限（式）</label><input id="spIntFormula" value="INT*10"></div></div><div class="sp-line" id="spOccLine"></div><div class="sp-line" id="spIntLine"></div><p class="hint">各技能に「初期値＋職業P＋興味P＋その他」を入力すると、成功値が自動で合計されます。上限は能力値が数値に確定していると計算されます（「3d6で能力値を振る」の後など）。上限の式は版に合わせて書き換えられます。</p></div>
-<div class="skill-tools"><input id="skillSearch" type="search" class="has-search-ic" placeholder="技能名で絞り込み（例：回避、目星）" aria-label="技能を検索" autocomplete="off"><div id="skillCatBar" class="cat-bar hidden" aria-label="分類で絞り込み"></div><div class="opt-row"><label class="switch-label"><input type="checkbox" id="hideInitial">初期値のままを隠す</label><label class="switch-label priority-switch"><input type="checkbox" id="skillOrderSwitch">並べ替えを編集</label><button type="button" id="secretEditToggleSkills" class="small-btn secret-edit-btn" aria-pressed="false">シークレット設定：OFF</button></div></div><div id="skillOrderPanel" class="hidden"><div class="palette-selection-bar"><span class="palette-selection-count" id="skillSelectionCount">0件選択中</span><button type="button" id="clearSkillSelection">選択解除</button><span class="hint">チェックした項目はまとめて移動できます</span></div><div id="skillOrderList" class="palette-order-list"></div><button type="button" id="cancelSkillOrder">編集を取り消す</button><p class="hint">並べ替えは左端の⠿マークを長押しして上下にドラッグしてください。中央・文字部分・余白では普通に画面を上下スクロールできます。ドラッグ中に画面の上端・下端へ近づけると自動スクロールします。順番はチャットパレットとJSONにすぐ反映されます。</p></div><div class="skill-table"><div class="skill-head" aria-hidden="true"><span>技能名</span><span class="plain-col">成功値</span><span class="sp-col">初期</span><span class="sp-col">職業</span><span class="sp-col">興味</span><span class="sp-col">他</span><span class="sp-col">合計</span><span class="dmg-col" style="text-align:center;padding:0"><svg class="ic" data-ic="sword" viewBox="0 0 24 24" aria-hidden="true"></svg></span><span></span></div><div id="skills"></div></div><button id="addSkill">＋ 技能を追加</button></section>
+<div class="skill-tools"><input id="skillSearch" type="search" class="has-search-ic" placeholder="技能名で絞り込み（例：回避、目星）" aria-label="技能を検索" autocomplete="off"><div id="skillCatBar" class="cat-bar hidden" aria-label="分類で絞り込み"></div><div class="opt-row"><label class="switch-label"><input type="checkbox" id="hideInitial">初期値のままを隠す</label><label class="switch-label priority-switch"><input type="checkbox" id="skillOrderSwitch">並べ替えを編集</label><button type="button" id="secretEditToggleSkills" class="small-btn secret-edit-btn" aria-pressed="false">シークレット設定：OFF</button></div></div><div id="skillOrderPanel" class="hidden"><div class="palette-selection-bar"><span class="palette-selection-count" id="skillSelectionCount">0件選択中</span><button type="button" id="clearSkillSelection">選択解除</button><span class="hint">チェックした項目はまとめて移動できます</span></div><div class="label-bar"><label class="switch-label"><input type="checkbox" id="skillNameOnly">技能名だけを表示</label><button type="button" class="small-btn" id="groupSameSkills">同じ技能名を隣に集める</button></div><p class="hint" id="skillNameInfo" aria-live="polite"></p><div id="skillOrderList" class="palette-order-list"></div><button type="button" id="cancelSkillOrder">編集を取り消す</button><p class="hint">並べ替えは左端の⠿マークを長押しして上下にドラッグしてください。中央・文字部分・余白では普通に画面を上下スクロールできます。ドラッグ中に画面の上端・下端へ近づけると自動スクロールします。順番はチャットパレットとJSONにすぐ反映されます。</p></div><div class="skill-table"><div class="skill-head" aria-hidden="true"><span>技能名</span><span class="plain-col">成功値</span><span class="sp-col">初期</span><span class="sp-col">職業</span><span class="sp-col">興味</span><span class="sp-col">他</span><span class="sp-col">合計</span><span class="dmg-col" style="text-align:center;padding:0"><svg class="ic" data-ic="sword" viewBox="0 0 24 24" aria-hidden="true"></svg></span><span></span></div><div id="skills"></div></div><button id="addSkill">＋ 技能を追加</button></section>
 
 <section><h2>追加チャパレコマンド</h2><p class="hint">自由なコマンドを1行で追加するか、ステータスの増減を選んで追加できます。追加したコマンドは、あとから編集・並べ替えができます。</p><div class="free-cmd"><h3 class="sub-h">自由にコマンドを追加</h3><label for="freeCmdTemplate">テンプレ（選ぶと下の欄に入ります）</label><select id="freeCmdTemplate" aria-label="コマンドのテンプレ"></select><label for="freeCmdText">コマンド</label><input id="freeCmdText" type="text" placeholder="例：1d6+{DB個数}D{DB面}" autocomplete="off" spellcheck="false"><label for="freeCmdLabel">ラベル（任意。末尾に【ラベル】として付きます）</label><input id="freeCmdLabel" type="text" placeholder="例：ナイフの攻撃" autocomplete="off"><div class="free-prev"><span>出力される行</span><code id="freeCmdPreview">—</code></div><p class="hint warn" id="freeCmdWarn" aria-live="polite"></p><button type="button" class="primary" id="addFreeCommand">＋ 追加</button></div><h3 class="sub-h">ステータスを増減するコマンド</h3><p class="hint">ステータスを検索・選択し、現在値か最大値（:HP.max+3 のような形）に対する増減・設定を追加できます。カテゴリ別に表示され、技能名でも検索できます。独自のステータスは、上の「追加ステータス」欄で名前を登録すると選択肢に出ます。</p><label class="switch-label" style="margin:4px 0"><input type="checkbox" id="includeIndefinite" checked>不定の判定「C({SAN}*0.8)」をチャットパレットの先頭に入れる</label><div class="palette-builder"><div class="palette-status-picker"><label for="paletteStatusSearch" class="sr-only">対象ステータスを検索</label><input id="paletteStatusSearch" type="search" class="has-search-ic" placeholder="検索" autocomplete="off"><label for="paletteStatusSelect" class="sr-only">ステータスを選択</label><select id="paletteStatusSelect"></select><p class="hint" id="paletteStatusCount" aria-live="polite"></p></div><div><label for="paletteTarget">対象の値</label><select id="paletteTarget"><option value="">現在値</option><option value=".max">最大値（.max）</option></select></div><div><label for="paletteOperator">操作</label><select id="paletteOperator"><option value="-">減らす（−）</option><option value="+">増やす（＋）</option><option value="=">設定する（＝）</option></select></div><div><label for="paletteAmount">数字</label><input id="paletteAmount" type="number" min="0" step="1" value="1" inputmode="numeric"></div><button type="button" class="primary" id="addPaletteCommand">＋ 追加</button></div><p class="hint">追加したコマンド</p><div id="paletteCommandList" class="palette-command-list"></div><textarea id="extraPaletteCommands" class="hidden" aria-label="追加チャパレコマンド（保存用）"></textarea></section>
 <section><div class="palette-heading"><h2>チャットパレット単体</h2><div class="palette-heading-actions"><button type="button" id="rollModeToggle" class="small-btn" aria-pressed="true">判定方式：CCB</button><button type="button" id="autoUpdateToggle" class="small-btn" aria-pressed="true">自動更新：ON</button><label class="switch-label priority-switch"><input type="checkbox" id="priorityEditSwitch">優先順位を編集</label></div></div><div id="autoUpdateStatus" class="hint" style="margin:4px 0 0;min-height:1.4em"></div><p class="hint">JSONとは別に、チャットパレットのコマンドだけを出力・コピーできます。判定方式・自動更新・「計算式をそのままJSONに出力」の設定は、キャラクターごとに保存されます。優先順位編集をオンにすると、左端の⠿マークを長押しして上下へドラッグすると順番を変更できます。中央・文字部分・余白は通常どおり画面スクロールできます。編集内容はチャットパレット欄にすぐ反映されます。生成し直して数値や式が変わっても、【コマンド名】を基準に並び順を維持します。チャットパレット単体では、入力したステータス（SANなど）は参照のまま、技能の成功値とダメージボーナスはラベルを作らず数値の式で出力します（JSONは技能ごとのステータスを自動作成して参照します）。</p><div class="btn-row"><button class="primary" id="generatePalette">生成</button><button id="reflectPalette" title="チャットパレットの内容をフォームへ反映します">フォームへ反映</button><button id="copyPalette">コピー</button><button type="button" id="openLabelOrganize" title="ラベル名だけの一覧・同じラベルをまとめる・一括置換や削除">ラベルを整理</button></div><div id="paletteOrderPanel" class="hidden"><div class="palette-selection-bar"><span class="palette-selection-count" id="paletteSelectionCount">0件選択中</span><button type="button" id="clearPaletteSelection">選択解除</button><span class="hint">チェックした項目はまとめて移動できます</span></div><div class="label-bar"><label class="switch-label"><input type="checkbox" id="paletteLabelOnly">ラベル名だけを表示</label><button type="button" class="small-btn" id="groupSameLabels">同じラベルを隣に集める</button><button type="button" class="small-btn" id="toggleLabelTools" aria-expanded="false">ラベルを整理…</button></div><p class="hint" id="paletteLabelInfo" aria-live="polite"></p><div id="labelTools" class="hidden"><p class="hint">ラベルの名前を変える／外す（出力するすべての行に反映）。同じ名前に変えると、ラベルがひとつにまとまります。</p><div id="labelToolsList" class="lt-list"></div><div class="btn-row"><button type="button" class="primary small-btn" id="applyLabelTools">適用</button><button type="button" class="small-btn" id="resetLabelTools">すべて元に戻す</button></div></div><div id="paletteOrderList" class="palette-order-list"></div><button type="button" id="cancelPaletteOrder">編集を取り消す</button><p class="hint">並べ替えは左端の⠿マークを長押しして上下にドラッグしてください。中央・文字部分・余白では普通に画面を上下スクロールできます。ドラッグ中に画面の上端・下端へ近づけると自動スクロールします。編集をオフにすると順番が保存されます。生成し直したときも【コマンド名】を基準に順番を引き継ぎます。上の「チャパレをフォームへ反映」で他の変更と一緒にフォームへ反映できます。</p></div><textarea id="paletteOutput" placeholder="ここにチャットパレットが表示されます" aria-label="チャットパレット出力"></textarea><button type="button" class="danger small-btn" data-clear-field="paletteOutput">クリア</button></section><section><h2>出力</h2><label class="switch-label"><input type="checkbox" id="numbering">JSON生成時にキャラクター名へ連番を付ける（例：NPC1、NPC2…）</label><label class="switch-label"><input type="checkbox" id="preserveFormulas">計算式をそのままJSONに出力する（ダイスを振らない）</label><div class="ss-box"><label for="skillStatusMode" class="ss-l">技能の成功値をステータスに出す</label><select id="skillStatusMode" aria-label="技能の成功値をステータスに出す範囲"><option value="all">全部（既定）</option><option value="pick">選んだ技能だけ</option><option value="none">出さない（数値で出力）</option></select><p class="hint" id="skillStatusHint">技能ごとにステータスを作り、チャパレは {技能名} を参照します。</p><div id="skillStatusPanel" class="hidden"><div class="ss-tools"><input id="skillStatusSearch" type="search" class="has-search-ic" placeholder="技能名で絞り込み" aria-label="ステータスに出す技能を絞り込み" autocomplete="off"><button type="button" class="small-btn" id="skillStatusAll">全部ON</button><button type="button" class="small-btn" id="skillStatusNone">全部OFF</button></div><div id="skillStatusList" class="ss-list"></div></div></div><div class="btn-row"><button class="primary" id="generate">JSON生成</button><button class="primary" id="copy">JSONコピー</button><button id="download">ファイル保存</button></div><textarea id="output" placeholder="ここにJSONが表示されます" aria-label="JSON出力"></textarea><button type="button" class="danger small-btn" data-clear-field="output">クリア</button></section>
@@ -6007,7 +6007,38 @@ let selectedSkillIdx = new Set();
 const skillOrderSwitch = document.getElementById("skillOrderSwitch");
 const skillOrderPanel = document.getElementById("skillOrderPanel");
 const skillOrderList = document.getElementById("skillOrderList");
+function skillNameOnly() {
+  const c = document.getElementById("skillNameOnly");
+  return !!(c && c.checked);
+}
+function skillNameKey(r) {
+  return (r.querySelector(".skill-name").value || "").trim().replace(/\s+/g, " ").toLocaleLowerCase();
+}
+function skillNameCounts() {
+  const m = new Map();
+  skillOrderDraft.forEach((r) => {
+    const k = skillNameKey(r);
+    if (k) m.set(k, (m.get(k) || 0) + 1);
+  });
+  return m;
+}
+function updateSkillNameInfo() {
+  const info = document.getElementById("skillNameInfo");
+  if (!info) return;
+  const dup = [...skillNameCounts()].filter(([, n]) => n > 1);
+  info.textContent = dup.length
+    ? "同じ技能名が複数ある行：" +
+      dup
+        .map(([k, n]) => {
+          const r = skillOrderDraft.find((x) => skillNameKey(x) === k);
+          return "「" + (r.querySelector(".skill-name").value || "").trim() + "」" + n + "行";
+        })
+        .join("、") +
+      "。"
+    : "同じ技能名の行はありません。";
+}
 function skillOrderLabel(r) {
+  if (skillNameOnly()) return (r.querySelector(".skill-name").value || "").trim() || "（名前なし）";
   const n = (r.querySelector(".skill-name").value || "").trim(),
     v = (r.querySelector(".skill-value").value || "").trim(),
     d = (r.querySelector(".damage-value").value || "").trim();
@@ -6036,6 +6067,7 @@ function updateSkillSelectionCount() {
   document.getElementById("skillSelectionCount").textContent = selectedSkillIdx.size + "件選択中";
 }
 function renderSkillOrderList() {
+  updateSkillNameInfo();
   renderOrderList({
     list: skillOrderList,
     getDraft: () => skillOrderDraft,
@@ -6047,6 +6079,15 @@ function renderSkillOrderList() {
       const name = document.createElement("div");
       name.className = "skill-order-name";
       name.textContent = skillOrderLabel(rowEl);
+      const k = skillNameKey(rowEl),
+        dup = k ? skillNameCounts().get(k) : 0;
+      if (dup > 1) {
+        const b = document.createElement("span");
+        b.className = "pl-dup";
+        b.textContent = "同名×" + dup;
+        b.title = "同じ技能名の行が" + dup + "行あります";
+        name.append(" ", b);
+      }
       return name;
     },
     previewOf: skillOrderLabel,
@@ -6055,6 +6096,32 @@ function renderSkillOrderList() {
     emptyText: "並べ替える技能がありません。",
   });
 }
+document.getElementById("skillNameOnly").addEventListener("change", renderSkillOrderList);
+document.getElementById("groupSameSkills").onclick = () => {
+  const seen = new Map(),
+    order = [];
+  skillOrderDraft.forEach((r) => {
+    const k = skillNameKey(r);
+    if (!k) return order.push([r]);
+    if (seen.has(k)) seen.get(k).push(r);
+    else {
+      const g = [r];
+      seen.set(k, g);
+      order.push(g);
+    }
+  });
+  const next = order.flat();
+  if (next.every((r, i) => r === skillOrderDraft[i])) {
+    message.textContent = "同じ技能名は、すでに隣り合っています。";
+    return;
+  }
+  skillOrderDraft = next;
+  selectedSkillIdx.clear();
+  syncSkillDraft();
+  onSkillOrderChanged();
+  renderSkillOrderList();
+  message.textContent = "同じ技能名の行を隣に集めました。";
+};
 document.getElementById("clearSkillSelection").onclick = () => {
   selectedSkillIdx.clear();
   renderSkillOrderList();
@@ -6093,6 +6160,7 @@ skills.addEventListener("input", () => {
     const n = el.querySelector(".skill-order-name");
     if (r && n) n.textContent = skillOrderLabel(r);
   });
+  updateSkillNameInfo();
 });
 // ===== 技能名・判定名の予測入力：基本技能カタログから候補を出し、値が空なら初期値も自動入力 =====
 (function () {
