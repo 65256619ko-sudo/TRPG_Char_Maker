@@ -4366,6 +4366,112 @@ body.sp-on #skills .skill-points input,
 body.sp-on #skills .row > div:nth-child(2) {
   height: 30px;
 }
+/* ===== 編集画面のタブと、右下のクイックメニュー ===== */
+#editorTabs {
+  display: none;
+}
+body.tabs-on.editor-mode #editorTabs {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  gap: 4px;
+  margin: 0 -8px 6px;
+  padding: 6px 8px;
+  background: #151a24f2;
+  border-bottom: 1px solid #2c3446;
+  backdrop-filter: blur(6px);
+}
+#editorTabs button {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 4px;
+  font-size: 0.92rem;
+  background: #1e2533;
+  border: 1px solid #323c52;
+  color: #b8c3de;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+#editorTabs button.on {
+  background: #5568e0;
+  border-color: #7a8cff;
+  color: #fff;
+  font-weight: 700;
+}
+#editorTabs .tab-n {
+  font-size: 0.72rem;
+  opacity: 0.85;
+  margin-left: 3px;
+}
+body.tabs-on.editor-mode #editorView section.tab-off {
+  display: none !important;
+}
+#quickDock {
+  display: none;
+  position: fixed;
+  right: 10px;
+  bottom: calc(74px + env(safe-area-inset-bottom));
+  z-index: 71;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+body.tabs-on.editor-mode #quickDock {
+  display: flex;
+}
+body.sp-on.editor-mode #quickDock {
+  bottom: calc(124px + env(safe-area-inset-bottom));
+}
+#quickFab {
+  width: 48px;
+  height: 48px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  background: #5568e0;
+  border: 1px solid #8fa0ff;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+#quickPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+  min-width: 190px;
+  max-width: min(260px, 80vw);
+  padding: 8px;
+  background: #1b2233f7;
+  border: 1px solid #3b4666;
+  border-radius: 12px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55);
+}
+#quickPanel.hidden {
+  display: none;
+}
+#quickPanel .qk-h {
+  font-size: 0.72rem;
+  color: #9aa7c4;
+  margin: 2px 2px 0;
+}
+#quickPanel button {
+  margin: 0;
+  text-align: left;
+  padding: 9px 10px;
+  background: #242d44;
+  border: 1px solid #36425f;
+  border-radius: 9px;
+  color: #e7ecfa;
+}
+#quickPanel button.primary {
+  background: #5568e0;
+  border-color: #8fa0ff;
+  font-weight: 700;
+}
 </style></head><body><main>
 <h1 id="appTitle">TRPG キャラクター管理・作成ツール</h1>
 <p class="hint" id="appSub">キャラクターの作成・保存・複製・グループ管理ができます。</p>
@@ -4419,7 +4525,7 @@ body.sp-on #skills .row > div:nth-child(2) {
  <button type="button" id="editorMore" aria-expanded="false" aria-controls="editorMenu">その他 ▴</button>
  <button type="button" id="saveStay" title="画面を移動せず、ここまでを保存"><svg class="ic ic-l" data-ic="save" viewBox="0 0 24 24" aria-hidden="true"></svg>保存</button>
  <button type="button" id="saveCharacter" class="primary">保存してホームへ</button>
- <div id="editorMenu" class="hidden" role="menu" aria-label="その他の操作"><div class="mn-h">育てる</div><button type="button" id="openGrowth" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="growth" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>成長記録</b><small>通ったシナリオ・成長・獲得物を記録して、シートに反映</small></span></button><div class="mn-h">見る・試す</div><button type="button" id="openViewerFromEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="eye" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>閲覧で見る</b><small>いまの入力内容を読み取り専用で表示</small></span></button><button type="button" id="openDice" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="dice" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>ダイスを振る</b><small>式を入れて自由に振る（1d100、2d6+3 など）</small></span></button><div class="mn-h">取り込む・書き出す</div><button type="button" id="openJsonImport" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="import" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>JSON・テキストを反映</b><small>ココフォリアのJSON／いあきゃらのテキスト</small></span></button><button type="button" id="copyJsonEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="clipboard" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>JSONをコピー</b><small>ココフォリア用のキャラクターJSON</small></span></button><button type="button" id="shareWithImages" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="share" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>画像つきで共有（ファイル）</b><small>友達のこのツールに、画像ごと渡せる。LINE・Discordなどに送る</small></span></button><button type="button" id="shareLink" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="link" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>共有リンクをコピー</b><small>開くだけで取り込める。画像はアップロード設定があれば全部、なければ小さい1枚</small></span></button><div class="mn-h">増やす</div><button type="button" id="openBatch" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="users" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>連続生成</b><small>能力値を振り直して、まとめて作る</small></span></button><button type="button" id="deriveCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="derive" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>元に新規作成</b><small>技能の設定は引き継ぎ、能力値は振り直す</small></span></button><button type="button" id="duplicateCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="copy" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>このキャラを複製</b><small>そのままコピーして、新規キャラとして開く</small></span></button></div>
+ <div id="editorMenu" class="hidden" role="menu" aria-label="その他の操作"><div class="mn-h">育てる</div><button type="button" id="openGrowth" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="growth" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>成長記録</b><small>通ったシナリオ・成長・獲得物を記録して、シートに反映</small></span></button><div class="mn-h">見る・試す</div><button type="button" id="openViewerFromEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="eye" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>閲覧で見る</b><small>いまの入力内容を読み取り専用で表示</small></span></button><button type="button" id="openDice" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="dice" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>ダイスを振る</b><small>式を入れて自由に振る（1d100、2d6+3 など）</small></span></button><div class="mn-h">取り込む・書き出す</div><button type="button" id="openJsonImport" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="import" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>JSON・テキストを反映</b><small>ココフォリアのJSON／いあきゃらのテキスト</small></span></button><button type="button" id="copyJsonEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="clipboard" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>JSONをコピー</b><small>ココフォリア用のキャラクターJSON</small></span></button><button type="button" id="shareWithImages" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="share" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>画像つきで共有（ファイル）</b><small>友達のこのツールに、画像ごと渡せる。LINE・Discordなどに送る</small></span></button><button type="button" id="shareLink" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="link" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>共有リンクをコピー</b><small>開くだけで取り込める。画像はアップロード設定があれば全部、なければ小さい1枚</small></span></button><div class="mn-h">増やす</div><button type="button" id="openBatch" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="users" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>連続生成</b><small>能力値を振り直して、まとめて作る</small></span></button><button type="button" id="deriveCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="derive" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>元に新規作成</b><small>技能の設定は引き継ぎ、能力値は振り直す</small></span></button><button type="button" id="duplicateCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="copy" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>このキャラを複製</b><small>そのままコピーして、新規キャラとして開く</small></span></button><div class="mn-h">表示</div><button type="button" id="editorTabsToggle" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">▦</i><span class="mn-tx"><b id="editorTabsToggleLabel">タブ表示：ON</b><small>基本・能力値・技能・出力を、タブで切り替えて編集</small></span></button></div>
 </div>
 <div id="viewerBar" role="toolbar" aria-label="閲覧操作">
  <button type="button" id="viewerBack">← ホーム</button>
@@ -5342,6 +5448,201 @@ function renderPaletteOrderList() {
     emptyText: "並べ替えるコマンドがありません。先にチャットパレットを生成してください。",
   });
 }
+// ===== 編集画面のタブ（基本／能力値／技能／出力）と、右下のクイックメニュー =====
+const EDITOR_TABS = [
+  { id: "basic", label: "基本", heads: ["所属グループ", "基本キャラ情報"] },
+  { id: "stats", label: "能力値", heads: ["基本能力値", "基本ステータス", "追加ステータス"] },
+  { id: "skills", label: "技能", heads: ["技能・ダメージ"] },
+  { id: "out", label: "出力", heads: ["追加チャパレコマンド", "チャットパレット単体", "出力"] },
+];
+let editorTab = "basic";
+function editorTabsOn() {
+  try {
+    return localStorage.getItem("trpg_editor_tabs") !== "0";
+  } catch (e) {
+    return true;
+  }
+}
+function tabOfSection(sec) {
+  const h = sec.querySelector("h2"),
+    t = h ? h.textContent.trim() : "";
+  const f = EDITOR_TABS.find((x) => x.heads.some((k) => t.startsWith(k)));
+  return f ? f.id : "";
+}
+function editorSections() {
+  return [...document.querySelectorAll("#editorView > section")];
+}
+function updateEditorTabCounts() {
+  const b = document.querySelector('#editorTabs button[data-tab="skills"] .tab-n');
+  if (b) b.textContent = String(document.getElementById("skills").querySelectorAll(".row").length);
+}
+function applyEditorTabs() {
+  const on = editorTabsOn();
+  document.body.classList.toggle("tabs-on", on);
+  const lab = document.getElementById("editorTabsToggleLabel");
+  if (lab) lab.textContent = on ? "タブ表示：ON" : "タブ表示：OFF";
+  editorSections().forEach((sec) => sec.classList.toggle("tab-off", on && tabOfSection(sec) !== editorTab));
+  document.querySelectorAll("#editorTabs button").forEach((b) => {
+    b.classList.toggle("on", b.dataset.tab === editorTab);
+    b.setAttribute("aria-selected", String(b.dataset.tab === editorTab));
+  });
+  updateEditorTabCounts();
+  closeQuickPanel();
+  renderQuickPanel();
+}
+function showEditorTab(id, keepScroll) {
+  if (!EDITOR_TABS.some((t) => t.id === id)) return;
+  editorTab = id;
+  applyEditorTabs();
+  if (!keepScroll) window.scrollTo({ top: 0 });
+}
+// 別のタブにある場所へ移動しようとしたら、そのタブを先に開く（エラーからの移動・検索ジャンプなど）
+function ensureTabFor(el) {
+  if (!document.body.classList.contains("tabs-on") || !document.body.classList.contains("editor-mode")) return;
+  const sec = el && el.closest ? el.closest("#editorView > section") : null;
+  if (sec && sec.classList.contains("tab-off")) showEditorTab(tabOfSection(sec), true);
+}
+(() => {
+  const sv = Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView = function (...a) {
+    ensureTabFor(this);
+    return sv.apply(this, a);
+  };
+  const fc = HTMLElement.prototype.focus;
+  HTMLElement.prototype.focus = function (...a) {
+    ensureTabFor(this);
+    return fc.apply(this, a);
+  };
+})();
+(() => {
+  const nav = document.createElement("nav");
+  nav.id = "editorTabs";
+  nav.setAttribute("role", "tablist");
+  nav.setAttribute("aria-label", "編集する内容");
+  EDITOR_TABS.forEach((t) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.dataset.tab = t.id;
+    b.setAttribute("role", "tab");
+    b.append(t.label);
+    if (t.id === "skills") {
+      const n = document.createElement("span");
+      n.className = "tab-n";
+      b.append(n);
+    }
+    b.onclick = () => showEditorTab(t.id);
+    nav.append(b);
+  });
+  const view = document.getElementById("editorView");
+  view.insertBefore(nav, document.getElementById("editingBar").nextSibling);
+  new MutationObserver(updateEditorTabCounts).observe(document.getElementById("skills"), { childList: true });
+  document.getElementById("editorTabsToggle").onclick = () => {
+    try {
+      localStorage.setItem("trpg_editor_tabs", editorTabsOn() ? "0" : "1");
+    } catch (e) {}
+    applyEditorTabs();
+    document.getElementById("editorMenu").classList.add("hidden");
+    document.getElementById("editorMore").setAttribute("aria-expanded", "false");
+    message.textContent = editorTabsOn() ? "タブ表示にしました。" : "タブをやめて、1画面にまとめて表示します。";
+  };
+})();
+
+// 右下のクイックメニュー：いま開いているタブに合う操作を並べる
+function quickClick(id) {
+  const el = document.getElementById(id);
+  if (el) el.click();
+}
+function quickFocus(el) {
+  if (!el) return;
+  el.scrollIntoView({ block: "center", behavior: "smooth" });
+  setTimeout(() => el.focus({ preventScroll: true }), 250);
+}
+function quickActions() {
+  const out = [];
+  if (editorTab === "skills") {
+    out.push({
+      label: "＋ 技能を追加",
+      primary: true,
+      run: () => {
+        addSkill();
+        const rows = skills.querySelectorAll(".row"),
+          last = rows[rows.length - 1];
+        if (last) quickFocus(last.querySelector(".skill-name"));
+      },
+    });
+    out.push({ label: "🔍 技能を探す", run: () => quickFocus(document.getElementById("skillSearch")) });
+    out.push({ label: "↕ 並べ替えを編集", run: () => {
+      const sw = document.getElementById("skillOrderSwitch");
+      if (sw) {
+        sw.checked = !sw.checked;
+        sw.dispatchEvent(new Event("change"));
+        if (sw.checked) document.getElementById("skillOrderPanel").scrollIntoView({ block: "start", behavior: "smooth" });
+      }
+    } });
+  } else if (editorTab === "stats") {
+    out.push({ label: "🎲 3d6で能力値を振る", primary: true, run: () => quickClick("rollStats") });
+    out.push({ label: "＋ ステータスを追加", run: () => quickClick("addExtra") });
+    out.push({ label: "⟳ まとめて適用", run: () => quickClick("applyDerived") });
+  } else if (editorTab === "out") {
+    out.push({ label: "JSON生成", primary: true, run: () => quickClick("generate") });
+    out.push({ label: "JSONコピー", run: () => quickClick("copy") });
+    out.push({ label: "チャパレ生成", run: () => quickClick("generatePalette") });
+  }
+  out.push({ label: "👁 閲覧で見る", run: () => quickClick("openViewerFromEditor") });
+  out.push({ label: "↑ 先頭へ", run: () => window.scrollTo({ top: 0, behavior: "smooth" }) });
+  return out;
+}
+function closeQuickPanel() {
+  const pnl = document.getElementById("quickPanel"),
+    fab = document.getElementById("quickFab");
+  if (pnl) pnl.classList.add("hidden");
+  if (fab) {
+    fab.textContent = "☰";
+    fab.setAttribute("aria-expanded", "false");
+  }
+}
+function renderQuickPanel() {
+  const pnl = document.getElementById("quickPanel");
+  if (!pnl) return;
+  pnl.textContent = "";
+  const t = EDITOR_TABS.find((x) => x.id === editorTab);
+  const h = document.createElement("div");
+  h.className = "qk-h";
+  h.textContent = "「" + (t ? t.label : "") + "」でよく使う操作";
+  pnl.append(h);
+  quickActions().forEach((a) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = a.label;
+    if (a.primary) b.className = "primary";
+    b.onclick = () => {
+      closeQuickPanel();
+      a.run();
+    };
+    pnl.append(b);
+  });
+}
+(() => {
+  const dock = document.createElement("div");
+  dock.id = "quickDock";
+  dock.innerHTML =
+    '<div id="quickPanel" class="hidden" role="menu" aria-label="クイック操作"></div><button type="button" id="quickFab" aria-expanded="false" aria-controls="quickPanel" aria-label="クイック操作を開く">☰</button>';
+  document.body.append(dock);
+  const fab = document.getElementById("quickFab"),
+    pnl = document.getElementById("quickPanel");
+  fab.onclick = () => {
+    const open = pnl.classList.contains("hidden");
+    if (open) renderQuickPanel();
+    pnl.classList.toggle("hidden", !open);
+    fab.textContent = open ? "✕" : "☰";
+    fab.setAttribute("aria-expanded", String(open));
+  };
+  document.addEventListener("click", (e) => {
+    if (!dock.contains(e.target)) closeQuickPanel();
+  });
+  renderQuickPanel();
+})();
+
 // ===== ラベル（分類）の名前変更・削除 =====
 function catUsage() {
   const m = new Map();
@@ -9368,6 +9669,7 @@ function showEditor() {
     document.getElementById("editingLabel").textContent || "キャラクター編集",
     "能力値・技能・出力などを編集します。ホームとは色と画面構成が変わります。",
   );
+  applyEditorTabs();
   window.scrollTo(0, 0);
   markBaseline();
   requestAnimationFrame(() => refreshAutoGrow());
