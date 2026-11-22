@@ -6479,6 +6479,22 @@ let ctxState = null;
 let ctxSuppress = false;
 let ctxSuppressTimer = 0;
 const CTX_DEAD = 34;
+const CTX_ARM = 24; // 押した場所からこれだけ動くまでは、何も選ばない
+const CTX_TOL = 40; // 向きがこの角度より離れた方向は、選ばない（空きの位置）
+// 12方向の固定の位置（時計の文字盤：0＝真上）。どのタブでも、共通の操作は同じ向きに出る
+const CTX_COMMON_SLOT = { "先頭へ": 0, "閲覧で見る": 4, "やりたいこと一覧": 6, "成長記録": 8 };
+const CTX_SPECIFIC_SLOTS = [1, 2, 3, 11, 10, 9, 5, 7]; // タブごとの操作は、ここから順に使う
+function ctxLayout(acts) {
+  const used = new Set(Object.values(CTX_COMMON_SLOT));
+  const free = CTX_SPECIFIC_SLOTS.filter((x) => !used.has(x));
+  let k = 0;
+  const items = [];
+  acts.forEach((a) => {
+    if (a.label in CTX_COMMON_SLOT) items.push({ a, slot: CTX_COMMON_SLOT[a.label] });
+    else if (k < free.length) items.push({ a, slot: free[k++] });
+  });
+  return items;
+}
 function ctxRemove() {
   const c = document.getElementById("ctxRadial");
   if (c) c.remove();
@@ -6492,16 +6508,20 @@ function closeCtxRadial() {
 function ctxPick(px, py) {
   const st = ctxState;
   if (!st) return -1;
-  const dx = px - st.x,
-    dy = py - st.y;
+  if (!st.armed) {
+    if (Math.hypot(px - st.x, py - st.y) < CTX_ARM) return -1;
+    st.armed = true;
+  }
+  // 向きは、メニューの中心から見る（画面の端で中心が内側に寄っていても、全方向に届く）
+  const dx = px - st.cx,
+    dy = py - st.cy;
   if (Math.hypot(dx, dy) < CTX_DEAD) return -1;
   const a = Math.atan2(dy, dx);
   let best = -1,
-    bd = 9;
+    bd = (CTX_TOL * Math.PI) / 180;
   st.angles.forEach((th, i) => {
-    let d = Math.abs(a - th);
-    d = Math.min(d, 2 * Math.PI - d);
-    if (d < bd) {
+    const d = Math.abs(((a - th + 3 * Math.PI) % (2 * Math.PI)) - Math.PI);
+    if (d <= bd) {
       bd = d;
       best = i;
     }
@@ -6515,7 +6535,7 @@ function ctxSetHot(i) {
   st.btns.forEach((b, k) => b.classList.toggle("hot", k === i));
   st.cap.textContent = i >= 0 ? st.acts[i].label : st.defCap;
   if (i >= 0) {
-    const half = 180 / st.acts.length,
+    const half = 15,
       deg = (st.angles[i] * 180) / Math.PI + 90;
     st.wedge.style.background = "conic-gradient(from " + (deg - half) + "deg, rgba(143,160,255,0.5) 0 " + half * 2 + "deg, transparent 0)";
     st.wedge.style.opacity = "1";
@@ -6546,9 +6566,9 @@ function ctxUp(e) {
 }
 function openCtxRadial(x, y, tabId, held) {
   ctxRemove();
-  const acts = quickActions(tabId);
-  const n = acts.length;
-  const R = n <= 6 ? 84 : n <= 8 ? 96 : 106,
+  const items = ctxLayout(quickActions(tabId));
+  const acts = items.map((x) => x.a);
+  const R = 100,
     BTN = 46,
     M = R + BTN / 2 + 8;
   const cx = Math.min(Math.max(x, M), window.innerWidth - M),
@@ -6575,8 +6595,8 @@ function openCtxRadial(x, y, tabId, held) {
   root.append(disc);
   const angles = [],
     btns = [];
-  acts.forEach((a, i) => {
-    const th = (-90 + (i * 360) / n) * (Math.PI / 180);
+  items.forEach(({ a, slot }, i) => {
+    const th = (-90 + slot * 30) * (Math.PI / 180);
     angles.push(th);
     const b = document.createElement("button");
     b.type = "button";
@@ -6599,7 +6619,7 @@ function openCtxRadial(x, y, tabId, held) {
     btns.push(b);
     root.append(b);
   });
-  ctxState = { x, y, cx, cy, acts, angles, btns, cap, defCap, wedge, root, hot: -2, held: !!held };
+  ctxState = { x, y, cx, cy, acts, angles, btns, cap, defCap, wedge, root, hot: -2, held: !!held, armed: !held };
   ctxSetHot(-1);
   // 開いたあと（中央で離した状態）：向きをクリックして選ぶ。中央・外側すぎない場所をクリックすると閉じる
   root.addEventListener("mousedown", (e) => {
