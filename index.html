@@ -5134,6 +5134,80 @@ h2 {
 #message:empty {
   display: none;
 }
+
+/* 右クリックの円形メニュー：向きで選ぶ（ボタンの上でなくてよい）。押している間は強調、離すと決定 */
+#ctxRadial button.rd {
+  pointer-events: none;
+  animation-fill-mode: backwards;
+}
+#ctxRadial button.rd.hot {
+  transform: translate(var(--x), var(--y)) scale(1.2);
+  background: #4a5cc0;
+  border-color: #c3ceff;
+  box-shadow: 0 0 0 3px #8fa0ff88, 0 6px 16px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+#ctxRadial .rd-wedge {
+  position: absolute;
+  left: -150px;
+  top: -150px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask: radial-gradient(circle, transparent 38px, #000 39px, #000 148px, transparent 150px);
+  mask: radial-gradient(circle, transparent 38px, #000 39px, #000 148px, transparent 150px);
+  transition: opacity 0.08s;
+}
+#ctxRadial .rd-hub {
+  position: absolute;
+  left: -34px;
+  top: -34px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 1px dashed rgba(160, 175, 255, 0.45);
+  pointer-events: none;
+}
+#ctxRadial .rd-cap {
+  z-index: 1;
+  text-shadow: 0 1px 3px #000;
+}
+/* 選択バー：並べ替えの長いリストでも、選択解除をいつでも押せるよう上に張り付く */
+.palette-selection-bar {
+  position: sticky;
+  top: 0;
+  z-index: 55;
+  background: #151c34;
+  border-bottom: 1px solid #4a5a9a;
+  padding: 5px 4px;
+  margin-bottom: 4px;
+}
+body.tabs-on.editor-mode .palette-selection-bar {
+  top: var(--tabs-h, 56px);
+}
+.palette-selection-bar.has-sel {
+  background: #4a3410;
+  border-bottom-color: #ffc46b;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+.palette-selection-bar.has-sel .palette-selection-count {
+  color: #ffe0a6;
+  font-weight: 800;
+}
+.palette-selection-bar button {
+  margin: 0;
+}
+.palette-selection-bar.has-sel button {
+  background: #ffb03a;
+  border-color: #ffd58a;
+  color: #2b1800;
+  font-weight: 800;
+}
+.palette-selection-bar button:disabled {
+  opacity: 0.45;
+}
 </style></head><body><main>
 <h1 id="appTitle">TRPG キャラクター管理・作成ツール</h1>
 <p class="hint" id="appSub">キャラクターの作成・保存・複製・グループ管理ができます。</p>
@@ -5712,7 +5786,8 @@ function renderPaletteCommandList() {
   }
 }
 // 並べ替え（チャパレ・技能で共通）。draft の indices を束にして insertionIndex の位置へ移した結果を返す（動かせないときは null）
-function reorderGroup(draft, indices, insertionIndex) {
+// keep を渡すと、動かした項目を選択状態にせず、元の選択（keep）を新しい位置に付け替えて返す
+function reorderGroup(draft, indices, insertionIndex, keep) {
   const valid = [...indices].filter((i) => i >= 0 && i < draft.length).sort((a, b) => a - b);
   if (!valid.length) return null;
   const moving = valid.map((i) => draft[i]);
@@ -5720,12 +5795,25 @@ function reorderGroup(draft, indices, insertionIndex) {
   const beforeCount = valid.filter((i) => i < insertionIndex).length;
   const insertAt = Math.max(0, Math.min(remaining.length, insertionIndex - beforeCount));
   remaining.splice(insertAt, 0, ...moving);
+  if (keep) {
+    const order = draft.map((_, i) => i).filter((i) => !valid.includes(i));
+    order.splice(insertAt, 0, ...valid);
+    return { draft: remaining, selected: new Set(order.map((o, j) => (keep.has(o) ? j : -1)).filter((j) => j >= 0)) };
+  }
   return { draft: remaining, selected: new Set(moving.map((_, i) => insertAt + i)) };
 }
-// 1件だけ from → to へ動かす（↑↓ボタン用）
-function moveOneLine(length, from, to, moveGroup) {
+// 選択バー：選択中は色を変え、「選択解除」を押せる状態にする（バーは画面上部に張り付く）
+function markSelectionBar(countEl, n) {
+  const bar = countEl.closest(".palette-selection-bar");
+  if (!bar) return;
+  bar.classList.toggle("has-sel", n > 0);
+  const b = bar.querySelector("button");
+  if (b) b.disabled = n === 0;
+}
+// 1件だけ from → to へ動かす（↑↓ボタン用）。選択状態は変えない
+function moveOneLine(length, from, to, moveGroup, sel) {
   if (from < 0 || to < 0 || from >= length || to >= length || from === to) return;
-  moveGroup(new Set([from]), to > from ? to + 1 : to);
+  moveGroup(new Set([from]), to > from ? to + 1 : to, sel || new Set());
 }
 // 並べ替えリストの描画。各行に「選択・つかむ印・本文・↑↓」を並べ、つかんで束ごと動かせるようにする。
 // o: { list, getDraft, getSelected, updateCount, render, itemName, makeBody, previewOf, moveLine, moveGroup, emptyText }
@@ -5957,9 +6045,10 @@ function syncPaletteDraft() {
 }
 function updatePaletteSelectionCount() {
   paletteSelectionCount.textContent = selectedPaletteIndices.size + "件選択中";
+  markSelectionBar(paletteSelectionCount, selectedPaletteIndices.size);
 }
-function movePaletteGroup(indices, insertionIndex) {
-  const r = reorderGroup(paletteOrderDraft, indices, insertionIndex);
+function movePaletteGroup(indices, insertionIndex, keep) {
+  const r = reorderGroup(paletteOrderDraft, indices, insertionIndex, keep);
   if (!r) return;
   const seqBefore = paletteSkillSeq(paletteOrderDraft);
   paletteOrderDraft = r.draft;
@@ -5971,7 +6060,7 @@ function movePaletteGroup(indices, insertionIndex) {
   renderPaletteOrderList();
 }
 function movePaletteLine(from, to) {
-  moveOneLine(paletteOrderDraft.length, from, to, movePaletteGroup);
+  moveOneLine(paletteOrderDraft.length, from, to, movePaletteGroup, selectedPaletteIndices);
 }
 // 並べ替えの単位：lines＝1行ずつ / cats＝技能のラベル（分類）ごと / names＝同じ【名前】ごと
 let paletteViewMode = "lines";
@@ -6064,9 +6153,9 @@ function ensurePaletteGrouped() {
   if (before.some((x, i) => x !== after[i])) applySkillSeqToSkills(after);
   return true;
 }
-function movePaletteBlocks(indices, insertionIndex) {
+function movePaletteBlocks(indices, insertionIndex, keep) {
   const blocks = paletteBlocks(),
-    r = reorderGroup(blocks, indices, insertionIndex);
+    r = reorderGroup(blocks, indices, insertionIndex, keep);
   if (!r) return;
   const before = paletteSkillSeq(paletteOrderDraft);
   paletteOrderDraft = flattenBlocks(r.draft);
@@ -6156,7 +6245,7 @@ function renderPaletteOrderList() {
         return wrap;
       },
       previewOf: (b) => (b.label ? (b.isCat ? "［" + b.label + "］" : "【" + b.label + "】") + (b.lines.length > 1 ? " " + b.lines.length + "行" : "") : b.lines[0]),
-      moveLine: (from, to) => moveOneLine(paletteBlocksCache.length, from, to, movePaletteBlocks),
+      moveLine: (from, to) => moveOneLine(paletteBlocksCache.length, from, to, movePaletteBlocks, selectedPaletteIndices),
       moveGroup: movePaletteBlocks,
       emptyText: "並べ替えるコマンドがありません。先にチャットパレットを生成してください。",
     });
@@ -6221,6 +6310,11 @@ function updateEditorTabCounts() {
   const b = document.querySelector('#editorTabs button[data-tab="skills"] .tab-n');
   if (b) b.textContent = String(document.getElementById("skills").querySelectorAll(".row").length);
 }
+function updateTabsH() {
+  const t = document.getElementById("editorTabs");
+  if (t && t.offsetHeight) document.documentElement.style.setProperty("--tabs-h", t.offsetHeight + "px");
+}
+window.addEventListener("resize", updateTabsH);
 function applyEditorTabs() {
   const on = editorTabsOn();
   document.body.classList.toggle("tabs-on", on);
@@ -6235,6 +6329,7 @@ function applyEditorTabs() {
   closeQuickPanel();
   renderQuickPanel();
   updateQuickFabState();
+  updateTabsH();
 }
 function showEditorTab(id, keepScroll) {
   if (!EDITOR_TABS.some((t) => t.id === id)) return;
@@ -6378,12 +6473,79 @@ function quickRadialOn() {
     return false;
   }
 }
-function closeCtxRadial() {
+// 押している間だけメニューが出て、離した向きの項目が選ばれる（中央の小さな円の中は「選ばない」）。
+// 中央で離すと開いたままになり、あとから向きをクリックしても選べる。
+let ctxState = null;
+let ctxSuppress = false;
+let ctxSuppressTimer = 0;
+const CTX_DEAD = 34;
+function ctxRemove() {
   const c = document.getElementById("ctxRadial");
   if (c) c.remove();
+  window.removeEventListener("mousemove", ctxMove, true);
+  window.removeEventListener("mouseup", ctxUp, true);
+  ctxState = null;
 }
-function openCtxRadial(x, y, tabId) {
-  closeCtxRadial();
+function closeCtxRadial() {
+  ctxRemove();
+}
+function ctxPick(px, py) {
+  const st = ctxState;
+  if (!st) return -1;
+  const dx = px - st.x,
+    dy = py - st.y;
+  if (Math.hypot(dx, dy) < CTX_DEAD) return -1;
+  const a = Math.atan2(dy, dx);
+  let best = -1,
+    bd = 9;
+  st.angles.forEach((th, i) => {
+    let d = Math.abs(a - th);
+    d = Math.min(d, 2 * Math.PI - d);
+    if (d < bd) {
+      bd = d;
+      best = i;
+    }
+  });
+  return best;
+}
+function ctxSetHot(i) {
+  const st = ctxState;
+  if (!st || st.hot === i) return;
+  st.hot = i;
+  st.btns.forEach((b, k) => b.classList.toggle("hot", k === i));
+  st.cap.textContent = i >= 0 ? st.acts[i].label : st.defCap;
+  if (i >= 0) {
+    const half = 180 / st.acts.length,
+      deg = (st.angles[i] * 180) / Math.PI + 90;
+    st.wedge.style.background = "conic-gradient(from " + (deg - half) + "deg, rgba(143,160,255,0.5) 0 " + half * 2 + "deg, transparent 0)";
+    st.wedge.style.opacity = "1";
+  } else st.wedge.style.opacity = "0";
+}
+function ctxChoose(i) {
+  const st = ctxState;
+  if (!st) return;
+  const a = i >= 0 ? st.acts[i] : null;
+  ctxRemove();
+  if (a) a.run();
+}
+function ctxMove(e) {
+  if (ctxState) ctxSetHot(ctxPick(e.clientX, e.clientY));
+}
+function ctxUp(e) {
+  const st = ctxState;
+  if (!st || e.button !== 2 || !st.held) return;
+  st.held = false;
+  clearTimeout(ctxSuppressTimer);
+  ctxSuppressTimer = setTimeout(() => (ctxSuppress = false), 700);
+  const i = ctxPick(e.clientX, e.clientY);
+  if (i >= 0) ctxChoose(i);
+  else {
+    st.root.classList.add("is-open");
+    ctxSetHot(-1);
+  }
+}
+function openCtxRadial(x, y, tabId, held) {
+  ctxRemove();
   const acts = quickActions(tabId);
   const n = acts.length;
   const R = n <= 6 ? 84 : n <= 8 ? 96 : 106,
@@ -6402,13 +6564,20 @@ function openCtxRadial(x, y, tabId) {
   disc.className = "rd-disc";
   disc.style.left = cx + "px";
   disc.style.top = cy + "px";
+  const wedge = document.createElement("div");
+  wedge.className = "rd-wedge";
+  const hub = document.createElement("div");
+  hub.className = "rd-hub";
   const cap = document.createElement("div");
   cap.className = "rd-cap";
   cap.textContent = defCap;
-  disc.append(cap);
+  disc.append(wedge, hub, cap);
   root.append(disc);
+  const angles = [],
+    btns = [];
   acts.forEach((a, i) => {
     const th = (-90 + (i * 360) / n) * (Math.PI / 180);
+    angles.push(th);
     const b = document.createElement("button");
     b.type = "button";
     b.setAttribute("role", "menuitem");
@@ -6421,43 +6590,77 @@ function openCtxRadial(x, y, tabId) {
     b.style.setProperty("--x", (R * Math.cos(th)).toFixed(1) + "px");
     b.style.setProperty("--y", (R * Math.sin(th)).toFixed(1) + "px");
     b.style.setProperty("--d", i * 18 + "ms");
-    const show = () => (cap.textContent = a.label);
-    b.addEventListener("mouseenter", show);
-    b.addEventListener("focus", show);
-    b.addEventListener("mouseleave", () => (cap.textContent = defCap));
-    b.addEventListener("blur", () => (cap.textContent = defCap));
     b.onclick = (e) => {
+      // キーボード（Enter）で選んだとき
       e.stopPropagation();
-      closeCtxRadial();
+      ctxRemove();
       a.run();
     };
+    btns.push(b);
     root.append(b);
   });
-  // 外側を左クリック・右クリックしたら閉じる
+  ctxState = { x, y, cx, cy, acts, angles, btns, cap, defCap, wedge, root, hot: -2, held: !!held };
+  ctxSetHot(-1);
+  // 開いたあと（中央で離した状態）：向きをクリックして選ぶ。中央・外側すぎない場所をクリックすると閉じる
   root.addEventListener("mousedown", (e) => {
-    if (e.target === root) closeCtxRadial();
-  });
-  root.addEventListener("contextmenu", (e) => {
+    if (!ctxState || ctxState.held) return;
     e.preventDefault();
-    closeCtxRadial();
+    const i = ctxPick(e.clientX, e.clientY);
+    if (e.button === 2) {
+      ctxSuppress = true;
+      clearTimeout(ctxSuppressTimer);
+      ctxSuppressTimer = setTimeout(() => (ctxSuppress = false), 700);
+    }
+    if (i >= 0) ctxChoose(i);
+    else ctxRemove();
   });
+  root.addEventListener("contextmenu", (e) => e.preventDefault());
   document.body.append(root);
-  const first = root.querySelector("button.rd");
-  if (first) first.focus({ preventScroll: true });
+  if (held) root.classList.add("is-held");
+  window.addEventListener("mousemove", ctxMove, true);
+  window.addEventListener("mouseup", ctxUp, true);
+  if (!held) root.querySelector("button.rd").focus({ preventScroll: true });
 }
-document.addEventListener("contextmenu", (e) => {
-  if (!quickRadialOn() || !document.body.classList.contains("editor-mode")) return;
-  if (e.shiftKey || document.querySelector("dialog[open]")) return; // Shift+右クリックは、ふつうのメニュー
+function ctxAllowed(e) {
+  if (!quickRadialOn() || !document.body.classList.contains("editor-mode")) return false;
+  if (e.shiftKey || document.querySelector("dialog[open]")) return false; // Shift+右クリックは、ふつうのメニュー
+  if (!document.getElementById("guideDialog").classList.contains("hidden")) return false;
   const t = e.target;
-  if (!(t instanceof Element) || t.closest("input,textarea,select,a,[contenteditable],#quickDock,#ctxRadial,.preset-card")) return;
-  const sel = window.getSelection && window.getSelection().toString();
-  if (sel) return;
-  const sec = t.closest("#editorView > section");
-  if (!sec) return;
-  e.preventDefault();
-  const tabId = document.body.classList.contains("tabs-on") ? editorTab : tabOfSection(sec) || editorTab;
-  openCtxRadial(e.clientX, e.clientY, tabId);
-});
+  if (!(t instanceof Element)) return false;
+  if (t.closest("input,textarea,select,a,[contenteditable],#quickDock,#ctxRadial,.preset-card,#guideBar,#catDialog,#presetDialog,#editorMenu")) return false;
+  if (window.getSelection && window.getSelection().toString()) return false;
+  return true;
+}
+function ctxTab(t) {
+  const sec = t.closest ? t.closest("#editorView > section") : null;
+  return document.body.classList.contains("tabs-on") ? editorTab : (sec && tabOfSection(sec)) || editorTab;
+}
+// 右ボタンを押した瞬間に開く（欄の外でも、編集画面のどこでも）
+document.addEventListener(
+  "mousedown",
+  (e) => {
+    if (e.button !== 2 || ctxState || !ctxAllowed(e)) return;
+    ctxSuppress = true;
+    clearTimeout(ctxSuppressTimer);
+    e.preventDefault();
+    openCtxRadial(e.clientX, e.clientY, ctxTab(e.target), true);
+  },
+  true,
+);
+document.addEventListener(
+  "contextmenu",
+  (e) => {
+    if (ctxSuppress || ctxState) {
+      e.preventDefault();
+      return;
+    }
+    if (ctxAllowed(e)) {
+      e.preventDefault();
+      openCtxRadial(e.clientX, e.clientY, ctxTab(e.target), false);
+    }
+  },
+  true,
+);
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeCtxRadial();
 });
@@ -7905,8 +8108,8 @@ function ensureSkillsGrouped() {
   onSkillOrderChanged();
   return true;
 }
-function moveSkillBlocks(indices, insertionIndex) {
-  const r = reorderGroup(skillBlocks(), indices, insertionIndex);
+function moveSkillBlocks(indices, insertionIndex, keep) {
+  const r = reorderGroup(skillBlocks(), indices, insertionIndex, keep);
   if (!r) return;
   skillOrderDraft = [].concat(...r.draft.map((b) => b.rows));
   selectedSkillIdx = r.selected;
@@ -7921,8 +8124,8 @@ function skillDraftMatchesDom() {
   const cur = [...skills.children];
   return cur.length === skillOrderDraft.length && cur.every((r, i) => r === skillOrderDraft[i]);
 }
-function moveSkillGroup(indices, insertionIndex) {
-  const r = reorderGroup(skillOrderDraft, indices, insertionIndex);
+function moveSkillGroup(indices, insertionIndex, keep) {
+  const r = reorderGroup(skillOrderDraft, indices, insertionIndex, keep);
   if (!r) return;
   skillOrderDraft = r.draft;
   selectedSkillIdx = r.selected;
@@ -7931,10 +8134,11 @@ function moveSkillGroup(indices, insertionIndex) {
   renderSkillOrderList();
 }
 function moveSkillLine(from, to) {
-  moveOneLine(skillOrderDraft.length, from, to, moveSkillGroup);
+  moveOneLine(skillOrderDraft.length, from, to, moveSkillGroup, selectedSkillIdx);
 }
 function updateSkillSelectionCount() {
   document.getElementById("skillSelectionCount").textContent = selectedSkillIdx.size + "件選択中";
+  markSelectionBar(document.getElementById("skillSelectionCount"), selectedSkillIdx.size);
 }
 function setSkillView(mode) {
   skillViewMode = mode;
@@ -8008,7 +8212,7 @@ function renderSkillOrderList() {
         return wrap;
       },
       previewOf: (b) => (b.isCat ? "［" + b.label + "］ " + b.rows.length + "技能" : skillOrderLabel(b.rows[0])),
-      moveLine: (from, to) => moveOneLine(skillBlocksCache.length, from, to, moveSkillBlocks),
+      moveLine: (from, to) => moveOneLine(skillBlocksCache.length, from, to, moveSkillBlocks, selectedSkillIdx),
       moveGroup: moveSkillBlocks,
       emptyText: "並べ替える技能がありません。",
     });
