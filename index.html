@@ -5288,6 +5288,26 @@ body.tabs-on.editor-mode .palette-selection-bar {
   background: #17583c;
   border-color: #62f0b0;
 }
+
+/* スマホの長押し円形メニュー：指で隠れないよう、名前は上（入らなければ下）に出す。長押し中は文字選択を止める */
+body.ctx-nosel,
+body.ctx-nosel * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+#ctxRadial.is-touch .rd-cap {
+  left: -105px;
+  top: var(--capy, -168px);
+  width: 210px;
+  height: 32px;
+  background: rgba(10, 14, 30, 0.92);
+  border: 1px solid rgba(143, 160, 255, 0.5);
+  border-radius: 16px;
+}
+#ctxRadial.is-touch .rd-hub {
+  border-color: rgba(160, 175, 255, 0.7);
+}
 </style></head><body><main>
 <h1 id="appTitle">TRPG キャラクター管理・作成ツール</h1>
 <p class="hint" id="appSub">キャラクターの作成・保存・複製・グループ管理ができます。</p>
@@ -5295,7 +5315,7 @@ body.tabs-on.editor-mode .palette-selection-bar {
 <div id="spBar" role="status" aria-label="技能ポイントの上限"><span id="spBarOcc">職 -/-</span><span id="spBarInt">興 -/-</span></div>
 <div id="homeView">
 <section id="sec-home"><h2>ホーム</h2>
- <div class="toolbar"><button id="backupAll" title="全キャラクター・グループ・画像をファイルに保存します">バックアップ</button><button id="restoreAll" title="バックアップファイルから復元します">読み込み</button><button class="primary" id="newCharacter">＋ 新規キャラクター</button><input id="backupFile" type="file" accept=".json,application/json" class="hidden"></div>
+ <div class="toolbar"><button id="backupAll" title="全キャラクター・グループ・画像・設定をファイルに保存します">バックアップ</button><button id="restoreAll" title="バックアップファイルから復元します">読み込み</button><button class="primary" id="newCharacter">＋ 新規キャラクター</button><input id="backupFile" type="file" accept=".json,application/json" class="hidden"></div>
  <div class="home-fine"><button type="button" id="imgUploadSettingHome"><svg class="ic ic-l" data-ic="gear" viewBox="0 0 24 24" aria-hidden="true"></svg>画像アップロード設定</button></div>
  <p class="muted" id="storageInfo">このブラウザ内に保存されます。</p>
  <div class="searchbox"><input id="homeSearch" type="search" class="has-search-ic" placeholder="名前・ふりがな・グループ名で検索" aria-label="検索（キャラクター名・ふりがな・グループ名）" autocomplete="off"></div>
@@ -5341,7 +5361,7 @@ body.tabs-on.editor-mode .palette-selection-bar {
  <button type="button" id="editorMore" aria-expanded="false" aria-controls="editorMenu">その他 ▴</button>
  <button type="button" id="saveStay" title="画面を移動せず、ここまでを保存"><svg class="ic ic-l" data-ic="save" viewBox="0 0 24 24" aria-hidden="true"></svg>保存</button>
  <button type="button" id="saveCharacter" class="primary">保存してホームへ</button>
- <div id="editorMenu" class="hidden" role="menu" aria-label="その他の操作"><div class="mn-h">育てる</div><button type="button" id="openGrowth" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="growth" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>成長記録</b><small>通ったシナリオ・成長・獲得物を記録して、シートに反映</small></span></button><div class="mn-h">見る・試す</div><button type="button" id="openGuide" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="compass" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>やりたいこと一覧</b><small>やりたいことを選ぶと、場所まで案内します</small></span></button><button type="button" id="openViewerFromEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="eye" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>閲覧で見る</b><small>いまの入力内容を読み取り専用で表示</small></span></button><button type="button" id="openDice" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="dice" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>ダイスを振る</b><small>式を入れて自由に振る（1d100、2d6+3 など）</small></span></button><div class="mn-h">取り込む・書き出す</div><button type="button" id="openJsonImport" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="import" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>JSON・テキストを反映</b><small>ココフォリアのJSON／いあきゃらのテキスト</small></span></button><button type="button" id="copyJsonEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="clipboard" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>JSONをコピー</b><small>ココフォリア用のキャラクターJSON</small></span></button><button type="button" id="shareWithImages" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="share" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>画像つきで共有（ファイル）</b><small>友達のこのツールに、画像ごと渡せる。LINE・Discordなどに送る</small></span></button><button type="button" id="shareLink" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="link" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>共有リンクをコピー</b><small>開くだけで取り込める。画像はアップロード設定があれば全部、なければ小さい1枚</small></span></button><div class="mn-h">増やす</div><button type="button" id="openBatch" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="users" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>連続生成</b><small>能力値を振り直して、まとめて作る</small></span></button><button type="button" id="deriveCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="derive" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>元に新規作成</b><small>技能の設定は引き継ぎ、能力値は振り直す</small></span></button><button type="button" id="duplicateCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="copy" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>このキャラを複製</b><small>そのままコピーして、新規キャラとして開く</small></span></button><div class="mn-h">表示</div><button type="button" id="openRadialSettings" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="compass" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>円形メニューの設定</b><small>右クリックの円形メニューの並びを変える</small></span></button><button type="button" id="hintsAllToggle" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">？</i><span class="mn-tx"><b id="hintsAllLabel">ヒントを全部表示：OFF</b><small>各セクションの説明文を、ずっと出したままにする</small></span></button><button type="button" id="editorTabsToggle" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">▦</i><span class="mn-tx"><b id="editorTabsToggleLabel">タブ表示：ON</b><small>基本・能力値・技能・出力を、タブで切り替えて編集</small></span></button></div>
+ <div id="editorMenu" class="hidden" role="menu" aria-label="その他の操作"><div class="mn-h">育てる</div><button type="button" id="openGrowth" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="growth" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>成長記録</b><small>通ったシナリオ・成長・獲得物を記録して、シートに反映</small></span></button><div class="mn-h">見る・試す</div><button type="button" id="openGuide" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="compass" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>やりたいこと一覧</b><small>やりたいことを選ぶと、場所まで案内します</small></span></button><button type="button" id="openViewerFromEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="eye" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>閲覧で見る</b><small>いまの入力内容を読み取り専用で表示</small></span></button><button type="button" id="openDice" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="dice" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>ダイスを振る</b><small>式を入れて自由に振る（1d100、2d6+3 など）</small></span></button><div class="mn-h">取り込む・書き出す</div><button type="button" id="openJsonImport" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="import" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>JSON・テキストを反映</b><small>ココフォリアのJSON／いあきゃらのテキスト</small></span></button><button type="button" id="copyJsonEditor" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="clipboard" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>JSONをコピー</b><small>ココフォリア用のキャラクターJSON</small></span></button><button type="button" id="shareWithImages" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="share" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>画像つきで共有（ファイル）</b><small>友達のこのツールに、画像ごと渡せる。LINE・Discordなどに送る</small></span></button><button type="button" id="shareLink" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="link" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>共有リンクをコピー</b><small>開くだけで取り込める。画像はアップロード設定があれば全部、なければ小さい1枚</small></span></button><div class="mn-h">増やす</div><button type="button" id="openBatch" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="users" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>連続生成</b><small>能力値を振り直して、まとめて作る</small></span></button><button type="button" id="deriveCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="derive" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>元に新規作成</b><small>技能の設定は引き継ぎ、能力値は振り直す</small></span></button><button type="button" id="duplicateCharacter" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="copy" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>このキャラを複製</b><small>そのままコピーして、新規キャラとして開く</small></span></button><div class="mn-h">表示</div><button type="button" id="openRadialSettings" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true"><svg class="ic" data-ic="compass" viewBox="0 0 24 24" aria-hidden="true"></svg></i><span class="mn-tx"><b>円形メニューの設定</b><small>右クリック・長押しで出る円形メニューの並びを変える</small></span></button><button type="button" id="hintsAllToggle" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">？</i><span class="mn-tx"><b id="hintsAllLabel">ヒントを全部表示：OFF</b><small>各セクションの説明文を、ずっと出したままにする</small></span></button><button type="button" id="editorTabsToggle" class="mn-item" role="menuitem"><i class="mn-ic" aria-hidden="true">▦</i><span class="mn-tx"><b id="editorTabsToggleLabel">タブ表示：ON</b><small>基本・能力値・技能・出力を、タブで切り替えて編集</small></span></button></div>
 </div>
 <div id="viewerBar" role="toolbar" aria-label="閲覧操作">
  <button type="button" id="viewerBack">← ホーム</button>
@@ -5379,7 +5399,7 @@ body.tabs-on.editor-mode .palette-selection-bar {
 <div id="guideBar" class="hidden" role="status" aria-live="polite"><div class="gb-head"><b id="guideBarTitle"></b><button type="button" id="guideBarClose" aria-label="案内を閉じる">×</button></div><ol id="guideBarSteps"></ol><div class="gb-act"><button type="button" id="guideBarRun" class="primary"></button><button type="button" id="guideBarList">一覧へ戻る</button></div></div>
 <div id="radialDialog" class="hidden" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
  <div class="preset-card"><div class="preset-foot" style="justify-content:flex-start;margin:0 0 6px"><button type="button" id="rsClose">← 戻る（自動で保存）</button></div><h2 id="rsTitle">円形メニューの設定</h2>
-  <p class="hint">パソコンで右クリックしたときに出る円形メニューの並びを、タブごとに変えられます。位置を選んでから、入れたい操作を押してください。</p>
+  <p class="hint">パソコンの右クリック（押している間だけ出る）／スマホの長押し（0.5秒、空いている所）で出る円形メニューの並びを、タブごとに変えられます。位置を選んでから、入れたい操作を押してください。</p>
   <div id="rsTabs" class="label-bar" role="group" aria-label="設定するタブ"></div>
   <div id="rsStage" aria-label="12方向の位置"></div>
   <div id="rsPool"></div>
@@ -6398,6 +6418,21 @@ function tabOfSection(sec) {
 function editorSections() {
   return [...document.querySelectorAll("#editorView > section")];
 }
+// いま操作の対象になっているタブ。タブ表示ONなら開いているタブ、OFFなら画面の上のほうに見えているセクションのタブ
+function activeTab() {
+  if (document.body.classList.contains("tabs-on")) return editorTab;
+  const probe = window.innerHeight * 0.3;
+  let cur = "",
+    first = "";
+  for (const sec of editorSections()) {
+    const id = tabOfSection(sec);
+    if (!id || !sec.offsetParent) continue;
+    if (!first) first = id;
+    if (sec.getBoundingClientRect().top <= probe) cur = id;
+    else break;
+  }
+  return cur || first || editorTab;
+}
 function updateEditorTabCounts() {
   const b = document.querySelector('#editorTabs button[data-tab="skills"] .tab-n');
   if (b) b.textContent = String(document.getElementById("skills").querySelectorAll(".row").length);
@@ -6492,7 +6527,7 @@ function quickFocus(el) {
 }
 function quickActions(tabId) {
   const out = [];
-  const tb = tabId || editorTab;
+  const tb = tabId || activeTab();
   if (tb === "skills") {
     out.push({
       id: "add",
@@ -6664,6 +6699,7 @@ function ctxRemove() {
   if (c) c.remove();
   window.removeEventListener("mousemove", ctxMove, true);
   window.removeEventListener("mouseup", ctxUp, true);
+  document.body.classList.remove("ctx-nosel");
   ctxState = null;
 }
 function closeCtxRadial() {
@@ -6719,12 +6755,15 @@ function ctxMove(e) {
   if (ctxState) ctxSetHot(ctxPick(e.clientX, e.clientY));
 }
 function ctxUp(e) {
+  if (e.button === 2) ctxRelease(e.clientX, e.clientY);
+}
+function ctxRelease(x, y) {
   const st = ctxState;
-  if (!st || e.button !== 2 || !st.held) return;
+  if (!st || !st.held) return;
   st.held = false;
   clearTimeout(ctxSuppressTimer);
   ctxSuppressTimer = setTimeout(() => (ctxSuppress = false), 700);
-  const i = ctxPick(e.clientX, e.clientY);
+  const i = ctxPick(x, y);
   if (i >= 0) ctxChoose(i);
   else {
     st.root.classList.add("is-open");
@@ -6803,6 +6842,18 @@ function openCtxRadial(x, y, tabId, held) {
     if (i >= 0) ctxChoose(i);
     else ctxRemove();
   });
+  root.addEventListener(
+    "touchstart",
+    (e) => {
+      if (!ctxState || ctxState.held) return;
+      e.preventDefault();
+      const t = e.touches[0],
+        i = ctxPick(t.clientX, t.clientY);
+      if (i >= 0) ctxChoose(i);
+      else ctxRemove();
+    },
+    { passive: false },
+  );
   root.addEventListener("contextmenu", (e) => e.preventDefault());
   document.body.append(root);
   if (held) root.classList.add("is-held");
@@ -6822,7 +6873,7 @@ function ctxAllowed(e) {
 }
 function ctxTab(t) {
   const sec = t.closest ? t.closest("#editorView > section") : null;
-  return document.body.classList.contains("tabs-on") ? editorTab : (sec && tabOfSection(sec)) || editorTab;
+  return document.body.classList.contains("tabs-on") ? editorTab : (sec && tabOfSection(sec)) || activeTab();
 }
 // 右ボタンを押した瞬間に開く（欄の外でも、編集画面のどこでも）
 document.addEventListener(
@@ -6855,6 +6906,107 @@ document.addEventListener("keydown", (e) => {
 });
 window.addEventListener("scroll", closeCtxRadial, { passive: true });
 window.addEventListener("resize", closeCtxRadial);
+
+// ===== スマホ：空いている所を0.5秒長押しすると、同じ円形メニューが出る（押したまま向きへ動かして離すと決定） =====
+(() => {
+  const HOLD_MS = 500,
+    SLOP = 10;
+  let timer = 0,
+    sx = 0,
+    sy = 0,
+    pressing = false,
+    target = null;
+  const touchCapable = () => "ontouchstart" in window || (navigator.maxTouchPoints || 0) > 0;
+  function okTarget(t) {
+    if (!document.body.classList.contains("editor-mode") || document.querySelector("dialog[open]")) return false;
+    if (!document.getElementById("guideDialog").classList.contains("hidden")) return false;
+    if (!(t instanceof Element)) return false;
+    if (t.closest('input,textarea,select,a,button,label,summary,[contenteditable],[role="button"],[draggable="true"],#quickDock,#ctxRadial,.preset-card,#guideBar,#editorMenu,[id$="Dialog"]')) return false;
+    return true;
+  }
+  function endPress(keepSel) {
+    clearTimeout(timer);
+    timer = 0;
+    pressing = false;
+    target = null;
+    if (!keepSel && !ctxState) document.body.classList.remove("ctx-nosel");
+  }
+  function fire() {
+    if (!pressing || ctxState) return;
+    const t = target;
+    clearTimeout(timer);
+    timer = 0;
+    pressing = false;
+    ctxSuppress = true;
+    clearTimeout(ctxSuppressTimer);
+    ctxSuppressTimer = setTimeout(() => (ctxSuppress = false), 4000);
+    try {
+      window.getSelection().removeAllRanges();
+    } catch (e) {}
+    try {
+      navigator.vibrate && navigator.vibrate(12);
+    } catch (e) {}
+    openCtxRadial(sx, sy, ctxTab(t), true);
+    if (ctxState) {
+      ctxState.touch = true;
+      ctxState.root.classList.add("is-touch");
+      const above = ctxState.cy - 168 >= 6;
+      ctxState.root.style.setProperty("--capy", (above ? -168 : 140) + "px");
+      document.body.classList.add("ctx-nosel");
+    }
+  }
+  document.addEventListener(
+    "touchstart",
+    (e) => {
+      endPress();
+      if (ctxState || !touchCapable() || e.touches.length !== 1 || !okTarget(e.target)) return;
+      const t = e.touches[0];
+      sx = t.clientX;
+      sy = t.clientY;
+      target = e.target;
+      pressing = true;
+      document.body.classList.add("ctx-nosel");
+      timer = setTimeout(fire, HOLD_MS);
+    },
+    { capture: true, passive: true },
+  );
+  window.addEventListener(
+    "touchmove",
+    (e) => {
+      const t = e.touches[0];
+      if (ctxState && ctxState.touch && ctxState.held) {
+        if (e.cancelable) e.preventDefault();
+        if (t) ctxSetHot(ctxPick(t.clientX, t.clientY));
+        return;
+      }
+      if (pressing && (e.touches.length !== 1 || (t && Math.hypot(t.clientX - sx, t.clientY - sy) > SLOP))) endPress();
+    },
+    { capture: true, passive: false },
+  );
+  function touchEnd(e) {
+    if (ctxState && ctxState.touch && ctxState.held) {
+      if (e.cancelable) e.preventDefault();
+      const t = e.changedTouches[0];
+      if (e.type === "touchcancel") ctxRemove();
+      else if (t) ctxRelease(t.clientX, t.clientY);
+      return;
+    }
+    endPress();
+  }
+  window.addEventListener("touchend", touchEnd, { capture: true, passive: false });
+  window.addEventListener("touchcancel", touchEnd, { capture: true, passive: false });
+  // Android などは、長押しで先に「長押しメニュー」(contextmenu) が来る。その場合もここで円形メニューに切り替える
+  document.addEventListener(
+    "contextmenu",
+    (e) => {
+      if (pressing) {
+        e.preventDefault();
+        fire();
+      }
+    },
+    true,
+  );
+})();
 function renderQuickPanel(sub) {
   const pnl = document.getElementById("quickPanel");
   if (!pnl) return;
@@ -6897,7 +7049,7 @@ function renderQuickPanel(sub) {
     if (!count.size) pnl.append(Object.assign(document.createElement("div"), { className: "qk-h", textContent: "ラベルのついた技能がありません。" }));
     return;
   }
-  const t = EDITOR_TABS.find((x) => x.id === editorTab);
+  const t = EDITOR_TABS.find((x) => x.id === activeTab());
   const h = document.createElement("div");
   h.className = "qk-h";
   h.textContent = "「" + (t ? t.label : "") + "」でよく使う操作";
@@ -13637,10 +13789,49 @@ document.addEventListener("keydown", (e) => {
 document.getElementById("addCustomDerived").onclick = () => {
   addDerivedStatus({ name: "", formula: "0", custom: true });
 };
+// この端末だけの設定（円形メニューの並び・タブ表示・ヒント表示など）もバックアップに入れる。画像アップロードの設定（鍵を含みうる）は入れない
+const BACKUP_SETTING_KEYS = [
+  "trpg_ctx_layout",
+  "trpg_editor_tabs",
+  "trpg_hints_all",
+  "trpgCharmakerCollapsedSections_v1",
+  "trpgCharmakerAutoUpdate_v1",
+  "trpgCharmakerRollMode_v1",
+  "trpgCharmakerHomeSort_v1",
+];
+function collectBackupSettings() {
+  const o = {};
+  BACKUP_SETTING_KEYS.forEach((k) => {
+    try {
+      const v = localStorage.getItem(k);
+      if (v !== null) o[k] = v;
+    } catch (e) {}
+  });
+  return o;
+}
+function restoreBackupSettings(st) {
+  if (!st || typeof st !== "object") return 0;
+  let n = 0;
+  BACKUP_SETTING_KEYS.forEach((k) => {
+    if (typeof st[k] !== "string") return;
+    try {
+      localStorage.setItem(k, st[k]);
+      n++;
+    } catch (e) {}
+  });
+  try {
+    rollMode = localStorage.getItem("trpgCharmakerRollMode_v1") === "CC" ? "CC" : "CCB";
+    autoUpdate = localStorage.getItem("trpgCharmakerAutoUpdate_v1") !== "0";
+    homeSort = localStorage.getItem("trpgCharmakerHomeSort_v1") || "updated";
+    applyEditorTabs();
+    applyHintsAll();
+  } catch (e) {}
+  return n;
+}
 document.getElementById("backupAll").onclick = async () => {
   const images = await collectBackupImages();
   const blob = new Blob(
-    [JSON.stringify({ format: "trpg-character-manager", version: 1, ...JSON.parse(serializeManager()), images }, null, 2)],
+    [JSON.stringify({ format: "trpg-character-manager", version: 1, ...JSON.parse(serializeManager()), images, settings: collectBackupSettings() }, null, 2)],
     { type: "application/json;charset=utf-8" },
   );
   const a = document.createElement("a");
@@ -13668,7 +13859,9 @@ document.getElementById("backupFile").addEventListener("change", async (e) => {
     await restoreBackupImages(obj.images);
     managerData = { characters: obj.characters, groups: obj.groups, skillSets: Array.isArray(obj.skillSets) ? obj.skillSets : [] };
     persistManagerData();
+    const nSet = restoreBackupSettings(obj.settings);
     renderHome();
+    if (nSet) message.textContent = "復元しました（この端末の設定も戻しました）。";
   } catch (err) {
     message.textContent = "復元エラー：" + err.message;
   }
@@ -13848,7 +14041,7 @@ const GUIDE_GOALS = [
   { g: "遊ぶ・育てる", t: "閲覧画面で見たい", d: "読み取り専用の見やすい表示", tab: "", sel: "#editorMore", steps: ["「閲覧で見る」を押す", "技能をタップするとダイスも振れます"], act: ["開く", () => quickClick("openViewerFromEditor")], k: "閲覧 見る ビューア" },
   { g: "遊ぶ・育てる", t: "ダイスを振りたい", d: "1d100、2d6+3 など", tab: "", sel: "#editorMore", steps: ["「ダイスを振る」を開く", "式を入れて「振る」"], act: ["開く", () => quickClick("openDice")], k: "ダイス 振る" },
   { g: "遊ぶ・育てる", t: "同じ設定でNPCを何体も作りたい", d: "能力値を振り直してまとめて作る", tab: "", sel: "#editorMore", steps: ["「連続生成」を開く", "名前と体数を決めて作成"], act: ["開く", () => quickClick("openBatch")], k: "連続生成 NPC まとめて" },
-  { g: "遊ぶ・育てる", t: "右クリックの円形メニューを自分用に並べ替えたい", d: "パソコンで使う。よく使う操作を好きな向きへ", tab: "", sel: "#editorMore", steps: ["「その他」→「円形メニューの設定」", "位置を選んで、入れたい操作を押す", "タブごとに変えられます"], act: ["開く", () => openRadialSettings()], k: "円形 右クリック メニュー カスタム 設定" },
+  { g: "遊ぶ・育てる", t: "右クリック・長押しの円形メニューを自分用に並べ替えたい", d: "パソコンは右クリック、スマホは空いている所を0.5秒長押し。よく使う操作を好きな向きへ", tab: "", sel: "#editorMore", steps: ["「その他」→「円形メニューの設定」", "位置を選んで、入れたい操作を押す", "タブごとに変えられます"], act: ["開く", () => openRadialSettings()], k: "円形 右クリック メニュー カスタム 設定" },
   { g: "保存", t: "保存したい", d: "いまの内容を残す", tab: "", sel: "#saveStay", steps: ["「保存」で、この画面のまま保存", "「保存してホームへ」で保存して戻る"], act: ["保存する", () => quickClick("saveStay")], k: "保存 セーブ" },
 ];
 let guideCurrent = null;
@@ -14064,7 +14257,7 @@ function rsAssign(id) {
   rsRender();
 }
 function openRadialSettings() {
-  rsTab = document.body.classList.contains("editor-mode") ? editorTab : "skills";
+  rsTab = document.body.classList.contains("editor-mode") ? activeTab() : "skills";
   rsMap = Object.assign({}, ctxMapFor(rsTab));
   rsSel = 1;
   rsRender();
