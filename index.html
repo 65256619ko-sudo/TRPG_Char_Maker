@@ -4427,7 +4427,9 @@ body.tabs-on.editor-mode #editorView section.tab-off {
   align-items: flex-end;
   gap: 8px;
 }
-body.tabs-on.editor-mode #quickDock {
+body.tabs-on.editor-mode:not(.quick-never) #quickDock,
+body.editor-mode.quick-always #quickDock,
+body.editor-mode #quickDock.is-open {
   display: flex;
 }
 body.sp-on.editor-mode #quickDock {
@@ -5416,6 +5418,7 @@ body.ctx-nosel * {
  <div class="preset-card"><div class="preset-foot" style="justify-content:flex-start;margin:0 0 6px"><button type="button" id="rsClose">← 戻る（自動で保存）</button></div><h2 id="rsTitle">円形メニューの設定</h2>
   <p class="hint">パソコンの右クリック（押している間だけ出る）／スマホの長押し（標準0.5秒。下で変えられます）で出る円形メニューの並びを、タブごとに変えられます。位置を選んでから、入れたい操作を押してください。</p>
   <div class="rs-hold"><label for="rsHold">スマホの長押しの長さ</label><select id="rsHold"><option value="0">長押しで出さない</option><option value="300">0.3秒</option><option value="400">0.4秒</option><option value="500">0.5秒（標準）</option><option value="600">0.6秒</option><option value="700">0.7秒</option><option value="800">0.8秒</option><option value="1000">1.0秒</option><option value="1200">1.2秒</option><option value="1500">1.5秒</option></select></div>
+  <div class="rs-hold"><label for="rsFab">右下の☰（クイック操作）</label><select id="rsFab"><option value="auto">タブ表示のときだけ出す（標準）</option><option value="always">いつも出す</option><option value="never">出さない</option></select></div>
   <div id="rsTabs" class="label-bar" role="group" aria-label="設定するタブ"></div>
   <div id="rsStage" aria-label="12方向の位置"></div>
   <div id="rsPool"></div>
@@ -13826,6 +13829,7 @@ document.getElementById("addCustomDerived").onclick = () => {
 const BACKUP_SETTING_KEYS = [
   "trpg_ctx_layout",
   "trpg_ctx_hold",
+  "trpg_quick_fab",
   "trpg_editor_tabs",
   "trpg_hints_all",
   "trpgCharmakerCollapsedSections_v1",
@@ -13859,6 +13863,7 @@ function restoreBackupSettings(st) {
     homeSort = localStorage.getItem("trpgCharmakerHomeSort_v1") || "updated";
     applyEditorTabs();
     applyHintsAll();
+    applyQuickFabMode();
   } catch (e) {}
   return n;
 }
@@ -14296,8 +14301,32 @@ function openRadialSettings() {
   rsSel = 1;
   rsRender();
   syncRsHold();
+  applyQuickFabMode();
   document.getElementById("radialDialog").classList.remove("hidden");
 }
+function quickFabMode() {
+  try {
+    const v = localStorage.getItem("trpg_quick_fab");
+    if (v === "always" || v === "never") return v;
+  } catch (e) {}
+  return "auto";
+}
+function applyQuickFabMode() {
+  const m = quickFabMode();
+  document.body.classList.toggle("quick-always", m === "always");
+  document.body.classList.toggle("quick-never", m === "never");
+  const sel = document.getElementById("rsFab");
+  if (sel) sel.value = m;
+  if (m === "never") closeQuickPanel();
+}
+applyQuickFabMode();
+document.getElementById("rsFab").addEventListener("change", (e) => {
+  try {
+    localStorage.setItem("trpg_quick_fab", e.target.value);
+  } catch (err) {}
+  applyQuickFabMode();
+  message.textContent = { auto: "☰はタブ表示のときだけ出します。", always: "☰をいつも出します。", never: "☰を出さないようにしました（円形メニューは使えます）。" }[e.target.value];
+});
 function syncRsHold() {
   const sel = document.getElementById("rsHold");
   if (!sel) return;
