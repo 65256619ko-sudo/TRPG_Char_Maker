@@ -6921,9 +6921,16 @@ window.addEventListener("resize", closeCtxRadial);
     if (!document.body.classList.contains("editor-mode") || document.querySelector("dialog[open]")) return false;
     if (!document.getElementById("guideDialog").classList.contains("hidden")) return false;
     if (!(t instanceof Element)) return false;
-    if (t.closest('input,textarea,select,a,button,label,summary,[contenteditable],[role="button"],[draggable="true"],#quickDock,#ctxRadial,.preset-card,#guideBar,#editorMenu,[id$="Dialog"]')) return false;
+    // 画面が詰まっていて空きが少ないので、入力欄・ボタン・見出しの上でも出す。ただし文字を入力中の欄と、文字を選択中のときは、ふつうの長押しを優先する
+    if (t.closest('select,input[type="range"],input[type="file"],input[type="color"],[draggable="true"],#quickDock,#ctxRadial,.preset-card,#guideBar,#editorMenu,[id$="Dialog"]')) return false;
+    const ae = document.activeElement;
+    if (ae && ae !== document.body && ae.matches && ae.matches("input,textarea,[contenteditable]") && (ae === t || ae.contains(t))) return false;
+    try {
+      if (window.getSelection().toString()) return false;
+    } catch (e) {}
     return true;
   }
+  const isField = (t) => !!(t && t.closest && t.closest("input,textarea,[contenteditable]"));
   function endPress(keepSel) {
     clearTimeout(timer);
     timer = 0;
@@ -6942,6 +6949,8 @@ window.addEventListener("resize", closeCtxRadial);
     ctxSuppressTimer = setTimeout(() => (ctxSuppress = false), 4000);
     try {
       window.getSelection().removeAllRanges();
+      const ae = document.activeElement;
+      if (isField(t) && ae && ae.blur) ae.blur(); // 長押しで入力欄にカーソルが入って、キーボードが出るのを防ぐ
     } catch (e) {}
     try {
       navigator.vibrate && navigator.vibrate(12);
@@ -6965,7 +6974,7 @@ window.addEventListener("resize", closeCtxRadial);
       sy = t.clientY;
       target = e.target;
       pressing = true;
-      document.body.classList.add("ctx-nosel");
+      if (!isField(e.target)) document.body.classList.add("ctx-nosel"); // 入力欄は、タップで入力できなくならないよう、長押しが成立してから止める
       timer = setTimeout(fire, HOLD_MS);
     },
     { capture: true, passive: true },
