@@ -5358,6 +5358,47 @@ body.ctx-nosel * {
   padding: 2px 4px;
   min-height: 0;
 }
+.card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 2px;
+}
+.cs-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1px solid #3a4468;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.cs-chip b {
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.75;
+}
+.home-tutorial {
+  border: 1px dashed #4a5a8a;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 6px 0;
+}
+.home-tutorial h3 {
+  margin: 0 0 6px;
+}
+.home-tutorial ol {
+  margin: 0 0 8px;
+  padding-left: 1.3em;
+  line-height: 1.6;
+}
+.home-tutorial li {
+  margin: 3px 0;
+}
+.home-tutorial button {
+  width: 100%;
+}
 </style></head><body><main>
 <h1 id="appTitle">TRPG キャラクター管理・作成ツール</h1>
 <p class="hint" id="appSub">キャラクターの作成・保存・複製・グループ管理ができます。</p>
@@ -5368,6 +5409,7 @@ body.ctx-nosel * {
  <div class="toolbar"><button id="backupAll" title="全キャラクター・グループ・画像・設定をファイルに保存します">バックアップ</button><button id="restoreAll" title="バックアップファイルから復元します">読み込み</button><button class="primary" id="newCharacter">＋ 新規キャラクター</button><input id="backupFile" type="file" accept=".json,application/json" class="hidden"></div>
  <div class="home-fine"><button type="button" id="imgUploadSettingHome"><svg class="ic ic-l" data-ic="gear" viewBox="0 0 24 24" aria-hidden="true"></svg>画像アップロード設定</button></div>
 <div class="home-hold"><label for="homeHoldSec">円形メニューの長押し</label><input type="number" id="homeHoldSec" class="hold-sec" min="0.1" max="5" step="0.05" inputmode="decimal" aria-label="長押しの長さ（秒）"><span>秒</span><label class="hold-off"><input type="checkbox" id="homeHoldOff">出さない</label></div>
+<div class="home-hold"><label class="hold-off"><input type="checkbox" id="homeStatsOn">カードにHP・MP・SANを表示</label></div>
  <p class="muted" id="storageInfo">このブラウザ内に保存されます。</p>
  <div class="searchbox"><input id="homeSearch" type="search" class="has-search-ic" placeholder="名前・ふりがな・グループ名で検索" aria-label="検索（キャラクター名・ふりがな・グループ名）" autocomplete="off"></div>
 </section>
@@ -6578,7 +6620,21 @@ function quickFocus(el) {
   el.scrollIntoView({ block: "center", behavior: "smooth" });
   setTimeout(() => el.focus({ preventScroll: true }), 250);
 }
+// ホーム画面用の円形メニュー（配置の変更は未対応。初期配置のみ）
+function homeActions() {
+  return [
+    { id: "h-new", label: "新規キャラクター", ic: "plus", primary: true, run: () => quickClick("newCharacter") },
+    { id: "h-find", label: "検索", ic: "search", run: () => quickFocus(document.getElementById("homeSearch")) },
+    { id: "h-group", label: "グループを作成", ic: "users", run: () => quickClick("homeCreateGroup") },
+    { id: "h-backup", label: "バックアップ", ic: "save", run: () => quickClick("backupAll") },
+    { id: "h-restore", label: "読み込み", ic: "import", run: () => quickClick("restoreAll") },
+    { id: "h-bulk", label: "まとめて選択", ic: "check", run: () => quickClick("bulkToggle") },
+    { id: "h-radial", label: "円形メニューの設定", ic: "gear", run: () => openRadialSettings() },
+    { id: "top", label: "先頭へ", ic: "arrowUp", run: () => window.scrollTo({ top: 0, behavior: "smooth" }) },
+  ];
+}
 function quickActions(tabId) {
+  if (tabId === "home") return homeActions();
   const out = [];
   const tb = tabId || activeTab();
   if (tb === "skills") {
@@ -6737,6 +6793,7 @@ function ctxMapFor(tabId) {
   return c && typeof c === "object" ? c : ctxDefaultMap(tabId);
 }
 function ctxItemsFor(tabId) {
+  if (tabId === "home") return ctxLayout(homeActions());
   const { map } = allQuickActions();
   const m = ctxMapFor(tabId);
   const items = [];
@@ -6834,7 +6891,7 @@ function openCtxRadial(x, y, tabId, held) {
   const cx = Math.min(Math.max(x, M), window.innerWidth - M),
     cy = Math.min(Math.max(y, M), window.innerHeight - M);
   const t = EDITOR_TABS.find((e) => e.id === tabId);
-  const defCap = "「" + (t ? t.label : "") + "」の操作";
+  const defCap = tabId === "home" ? "ホームの操作" : "「" + (t ? t.label : "") + "」の操作";
   const root = document.createElement("div");
   root.id = "ctxRadial";
   root.className = "rdmenu";
@@ -6914,17 +6971,21 @@ function openCtxRadial(x, y, tabId, held) {
   window.addEventListener("mouseup", ctxUp, true);
   if (!held) root.querySelector("button.rd").focus({ preventScroll: true });
 }
+function ctxScreenOk() {
+  return document.body.classList.contains("editor-mode") || document.body.classList.contains("home-mode");
+}
 function ctxAllowed(e) {
-  if (!quickRadialOn() || !document.body.classList.contains("editor-mode")) return false;
+  if (!quickRadialOn() || !ctxScreenOk()) return false;
   if (e.shiftKey || document.querySelector("dialog[open]")) return false; // Shift+右クリックは、ふつうのメニュー
   if (!document.getElementById("guideDialog").classList.contains("hidden")) return false;
   const t = e.target;
   if (!(t instanceof Element)) return false;
-  if (t.closest("input,textarea,select,a,[contenteditable],#quickDock,#ctxRadial,.preset-card,#guideBar,#catDialog,#presetDialog,#editorMenu")) return false;
+  if (t.closest("input,textarea,select,a,[contenteditable],#quickDock,#ctxRadial,.preset-card,#guideBar,#catDialog,#presetDialog,#editorMenu,[id$=\"Dialog\"]")) return false;
   if (window.getSelection && window.getSelection().toString()) return false;
   return true;
 }
 function ctxTab(t) {
+  if (document.body.classList.contains("home-mode")) return "home";
   const sec = t.closest ? t.closest("#editorView > section") : null;
   return document.body.classList.contains("tabs-on") ? editorTab : (sec && tabOfSection(sec)) || activeTab();
 }
@@ -6978,7 +7039,7 @@ window.addEventListener("resize", closeCtxRadial);
     target = null;
   const touchCapable = () => "ontouchstart" in window || (navigator.maxTouchPoints || 0) > 0;
   function okTarget(t) {
-    if (!document.body.classList.contains("editor-mode") || document.querySelector("dialog[open]")) return false;
+    if (!ctxScreenOk() || document.querySelector("dialog[open]")) return false;
     if (!document.getElementById("guideDialog").classList.contains("hidden")) return false;
     if (!(t instanceof Element)) return false;
     // 画面が詰まっていて空きが少ないので、入力欄・ボタン・見出しの上でも出す。ただし文字を入力中の欄と、文字を選択中のときは、ふつうの長押しを優先する
@@ -11739,8 +11800,7 @@ function renderHome() {
     t.className = "muted";
     t.textContent = "検索結果：" + items.length + "件";
     cl.append(t);
-  } else if (!managerData.characters.length)
-    cl.innerHTML = '<p class="muted">保存済みキャラクターはありません。「新規キャラクター」から作成してください。</p>';
+  } else if (!managerData.characters.length) cl.append(makeHomeTutorial());
   else {
     const gname =
       homeFilter === "all"
@@ -11794,6 +11854,54 @@ async function copyCharacterJSON(c) {
     currentGroupIds = oldGroupIds;
     document.getElementById("editingLabel").textContent = oldLabel;
   }
+}
+function makeHomeTutorial() {
+  const box = document.createElement("div");
+  box.className = "home-tutorial";
+  box.innerHTML =
+    "<h3>はじめての方へ</h3>" +
+    '<ol><li><b>＋ 新規キャラクター</b>を押して、名前と能力値を入れます（「3d6で能力値を振る」も使えます）。</li>' +
+    "<li><b>技能</b>のタブで「基本技能を適用」を押し、割り振りを入力します。</li>" +
+    "<li><b>出力</b>のタブでJSONやチャットパレットを作り、ココフォリアなどに貼り付けます。</li>" +
+    "<li>「保存してホームへ」で、ここにキャラが並びます。「閲覧」でステータスを見られます。</li></ol>" +
+    '<p class="muted">データはこの端末のブラウザ内に保存されます。ときどき「バックアップ」でファイルに残しておくと安心です。画面の空いた所を長押し（パソコンは右クリック）すると、円形メニューが出ます。</p>';
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "primary";
+  b.textContent = "＋ 最初のキャラクターを作る";
+  b.onclick = () => quickClick("newCharacter");
+  box.append(b);
+  return box;
+}
+function homeStatsOn() {
+  try {
+    return localStorage.getItem("trpg_home_stats") !== "0";
+  } catch (e) {
+    return true;
+  }
+}
+// ホームのカードに、HP・MP・SAN などの基本ステータスを小さく出す（閲覧画面と同じ計算）
+function makeHomeStats(c) {
+  if (!homeStatsOn() || !c.form) return null;
+  let k;
+  try {
+    k = viewerCompute(c.form);
+  } catch (e) {
+    return null;
+  }
+  const wrap = document.createElement("div");
+  wrap.className = "card-stats";
+  ["HP", "MP", "SAN"].forEach((n) => {
+    const d = k.derived.find((x) => x.name === n);
+    if (!d || d.value === "—") return;
+    const sp = document.createElement("span");
+    sp.className = "cs-chip";
+    const b = document.createElement("b");
+    b.textContent = n;
+    sp.append(b, document.createTextNode(d.value));
+    wrap.append(sp);
+  });
+  return wrap.children.length ? wrap : null;
 }
 function makeCharacterCard(c, opts) {
   opts = opts || {};
@@ -11894,6 +12002,8 @@ function makeCharacterCard(c, opts) {
     inf.textContent = infoParts.join("　");
     card.append(inf);
   }
+  const hs = makeHomeStats(c);
+  if (hs) card.append(hs);
   card.append(p, actions);
   return card;
 }
@@ -13864,6 +13974,7 @@ const BACKUP_SETTING_KEYS = [
   "trpg_ctx_layout",
   "trpg_ctx_hold",
   "trpg_quick_fab",
+  "trpg_home_stats",
   "trpg_editor_tabs",
   "trpg_hints_all",
   "trpgCharmakerCollapsedSections_v1",
@@ -14370,6 +14481,8 @@ function holdLast() {
   return 500;
 }
 function syncHoldUi() {
+  const hs = document.getElementById("homeStatsOn");
+  if (hs) hs.checked = homeStatsOn();
   const ms = window.ctxHoldMs();
   const shown = ms > 0 ? ms : holdLast();
   ["rsHold", "homeHold"].forEach((id) => {
@@ -14398,6 +14511,12 @@ function setHoldMs(ms) {
   document.getElementById(id + "Off").addEventListener("change", (e) => {
     setHoldMs(e.target.checked ? 0 : holdLast());
   });
+});
+document.getElementById("homeStatsOn").addEventListener("change", (e) => {
+  try {
+    localStorage.setItem("trpg_home_stats", e.target.checked ? "1" : "0");
+  } catch (err) {}
+  renderHome();
 });
 function syncRsHold() {
   syncHoldUi();
