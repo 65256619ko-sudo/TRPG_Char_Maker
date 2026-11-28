@@ -390,7 +390,10 @@ function generateJSON() {
 }
 document.getElementById("generate").type = "button";
 document.getElementById("generate").onclick = () => {
-  if (generateJSON()) output.scrollIntoView({ behavior: "smooth", block: "center" });
+  if (generateJSON()) {
+    if (outBoxHidden("json")) toast("生成しました。「表示」で中身を確認、「コピー」でコピーできます");
+    else output.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 };
 // ボタンを押した直後（ユーザー操作の中）に、同期コピーを先に試す。スマホのfile://表示やWebViewでは
 // Clipboard APIが無効なことがあるため、一時テキスト欄を使う旧式手段を先に使い、だめなら標準APIを試す。成功なら true

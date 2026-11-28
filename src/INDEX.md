@@ -13,24 +13,25 @@
 - `css/09-compact-ui.css`（512行）: 【画面のコンパクト化：余白・文字・ボタンを詰めて、】 【編集画面のタブと、右下のクイックメニュー】 【パソコン用：右クリックで出る円形（放射状）メニュ】
 - `css/10-colors-images.css`（511行）: 【色の差をはっきりさせる・画像を大きく】 【チェック項目は、押せるボタン（ON＝緑、OFF＝】 【ヒントは「？ヒント」ボタンで開く】 【全体を、はっきりした色に。タブごとに色分け】 【密度：余白を詰める】 【やりたいこと一覧・案内】
 - `css/11-radial-menu.css`（260行）: 
+- `css/12-card-output.css`（111行）: 【ホームのカードの「⋯」メニューと、かんたん出力ダ】
 
 ## JS
 
 - `js/01-icons-roll-basics.js`（461行）: 【アイコン（24x24の線画。色は文字色に従う）】 icon setIconText fillIcons rollCommandPrefix updateRollModeButton textLines mapLines
 - `js/02-palette-reorder.js`（495行）: reorderGroup markSelectionBar moveOneLine renderOrderList jsonizePalette generatedPaletteText regeneratePaletteOutput manualPaletteCommands
-- `js/03-editor-tabs.js`（482行）: 【編集画面のタブ（基本／能力値／技能／出力）と、右】 editorTabsOn tabOfSection editorSections activeTab updateEditorTabCounts updateTabsH applyEditorTabs
-- `js/04-radial-menu-labels.js`（434行）: ctxScreenOk ctxAllowed ctxTab 【スマホ：空いている所を0.5秒長押しすると、同じ】 renderQuickPanel 【ラベル（分類）の名前変更・削除】 catUsage openCatManager
+- `js/03-editor-tabs.js`（483行）: 【編集画面のタブ（基本／能力値／技能／出力）と、右】 editorTabsOn tabOfSection editorSections activeTab updateEditorTabCounts updateTabsH applyEditorTabs
+- `js/04-radial-menu-labels.js`（437行）: ctxScreenOk ctxAllowed ctxTab 【スマホ：空いている所を0.5秒長押しすると、同じ】 renderQuickPanel 【ラベル（分類）の名前変更・削除】 catUsage openCatManager
 - `js/05-free-commands-stats.js`（421行）: commitPaletteOrder knownRefNames freeCommandLine freeCommandWarnings updateFreeCommandPreview statDelta statTotal statDeltaInput
 - `js/06-skill-status-cats.js`（437行）: 【JSON出力：技能の成功値をステータスにするか】 skillStatusExcluded setSkillStatusMode renderSkillStatusPanel skillBaseName defaultSkillCats effectiveSkillCats rowCatsExplicit
 - `js/07-skill-rows-presets.js`（447行）: recalcSkillRow updatePointSummary setSkillPointMode addDamage 【基本技能（定番技能・戦闘機能）のカタログ】 【技能欄の並べ替えとチャパレの並べ替えを連動させる】 skillLineOwners paletteSkillSeq
 - `js/08-skill-autocomplete-lists.js`（486行）: 【技能名・判定名の予測入力：基本技能カタログから候】 findRowByName removeBlankSkillRows applyDodge applyPresetItem applyPresetItems allPresetItems presetDesc
 - `js/09-profile-lists-memo.js`（439行）: readProfile writeProfile 【v67：装備品・呪文・魔導書の追加リスト（メモに】 addListRow readLists writeLists secretMemoBlock listMemoBlocks
 - `js/10-derived-status-db.js`（434行）: updateDerivedPreviews calculateDB dbLabelParts replaceDBWithLabels restoreDBLabels currentDBNeg pushDBStatuses literalizeNames
-- `js/11-make-data-json.js`（432行）: makeData prepareGeneratedName collectSkillReferenceIssues closeSkillFix openSkillFixDialog applySkillFix offerSkillFix generateJSON
-- `js/12-import-palette-autoupdate.js`（429行）: importCharacterJSON generatePaletteAfterFix 【自動更新（ライブプレビュー）：フォームを編集する】 setAutoStatus updateAutoButton formHasDice runAutoUpdate scheduleAutoUpdate
+- `js/11-make-data-json.js`（435行）: makeData prepareGeneratedName collectSkillReferenceIssues closeSkillFix openSkillFixDialog applySkillFix offerSkillFix generateJSON
+- `js/12-import-palette-autoupdate.js`（431行）: importCharacterJSON generatePaletteAfterFix 【自動更新（ライブプレビュー）：フォームを編集する】 setAutoStatus updateAutoButton formHasDice runAutoUpdate scheduleAutoUpdate
 - `js/13-storage-lz.js`（430行）: 【キャラクター保存・ホーム・グループ管理】 characterGroupIds uid 【保存の圧縮（LZW：バイト列→1文字1コード、辞】 lzEncode lzDecode packStore unpackStore
 - `js/14-home-groups-filter.js`（463行）: askDialog 【ホームの整理：グループ絞り込み・並び順・まとめて】 sortCharacters setCharacterGroups renderFilterChips visibleHomeCharacters batchGroupItems updateBulkBar
-- `js/15-home-cards-batch.js`（466行）: copyCharacterJSON makeHomeTutorial homeStatsOn makeHomeStats makeCharacterCard setBatchImage renderBatchImage makeBatchRow
+- `js/15-home-cards-batch.js`（459行）: copyCharacterJSON makeHomeTutorial homeStatsOn makeHomeStats makeCharacterCard setBatchImage renderBatchImage makeBatchRow
 - `js/16-group-select-batch.js`（424行）: refreshCharacterGroupSelect createGroupFromCharacterSelect confirmCreateCharacterGroup refreshBatchSelect batchMsg closeBatchDialog substDiceNames liveStatCtx
 - `js/17-images-share.js`（427行）: setImgUrl uploadOneImage ensureImagesUploaded configureImageUpload 【v99：共有リンク。キャラクターを圧縮して、リン】 b64urlEncode b64urlDecode streamBytes
 - `js/18-growth-record.js`（712行）: rollDetailed 【v92：成長記録（通ったシナリオ・技能の成長・獲】
@@ -40,3 +41,4 @@
 - `js/22-portraits.js`（423行）: portraitStep portraitFull scheduleImageGc formImageIds allSavedImageIds gcImages collectBackupImages restoreBackupImages
 - `js/23-viewer.js`（551行）: viewerCompute vwSec vwTile vwSubst vwGrowthRows vwDetailBody vwTapTiles vwSkillDetail
 - `js/24-viewer-nav-presets.js`（549行）: viewerBarMode showViewer showViewerFromEditor returnToEditorFromViewer 【v85：他ツールから来たキャラの標準ダメージ／い】 presetDamageFor applyDefaultDamage iaLooksLike
+- `js/25-card-output.js`（393行）: 【ホームのカードの「⋯」メニューと、ホームから使え】 cardRecord removeCharacterFromGroup cardActionList cardRadialActions closeCardMenu openCardMenu cardLoadBackground

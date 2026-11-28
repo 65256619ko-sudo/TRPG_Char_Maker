@@ -128,45 +128,38 @@ function makeCharacterCard(c, opts) {
   h.classList.add("vw-open");
   h.title = "タップで閲覧";
   h.onclick = () => showViewer(c.id);
-  const dup = document.createElement("button");
-  dup.textContent = "複製";
-  dup.onclick = () => {
-    openCharacter(c.id);
-    duplicateCharacter();
+  const acts = cardActionList(c, opts.removeFrom);
+  const mk = (id) => {
+    const a = acts.find((x) => x.id === id);
+    const bt = document.createElement("button");
+    bt.type = "button";
+    bt.textContent = a.label;
+    bt.className = "pc-act" + (a.danger ? " danger" : "");
+    bt.onclick = a.run;
+    return bt;
   };
-  const del = document.createElement("button");
-  del.textContent = "削除";
-  del.className = "danger";
-  del.onclick = () => deleteCharacter(c.id);
-  const der = document.createElement("button");
-  der.textContent = "元に新規";
+  const rm = opts.removeFrom ? mk("remove") : null;
+  if (rm) rm.title = "キャラクターは削除せず、このグループへの所属だけを外します";
+  const der = mk("derive");
   der.title = "このキャラを元に、能力値を振り直して新規作成";
-  der.onclick = () => {
-    openCharacter(c.id);
-    deriveNewCharacter();
-  };
   // v90：右利きで親指が届きやすいよう、よく使う「閲覧」「編集」は右下にまとめ、たまに使うボタンは上の段に右寄せで並べる
+  // スマホ幅では、たまに使うボタンを「⋯」メニューにまとめる（CSSで切り替え）
   const sub = document.createElement("div");
   sub.className = "act-sub";
   const mainRow = document.createElement("div");
   mainRow.className = "act-main";
-  if (opts.removeFrom) {
-    const rm = document.createElement("button");
-    rm.textContent = "この場所から外す";
-    rm.title = "キャラクターは削除せず、このグループへの所属だけを外します";
-    rm.onclick = () => {
-      const ids = characterGroupIds(c).filter((x) => x !== opts.removeFrom);
-      c.groupIds = ids;
-      c.groupId = ids[0] || null;
-      persistManagerData();
-      renderGroupView();
-      renderHome();
-      toast("このグループから外しました（キャラクターは残っています）");
-    };
-    sub.append(del, rm, der, dup);
-  } else sub.append(del, der, dup);
+  const more = document.createElement("button");
+  more.type = "button";
+  more.className = "card-more";
+  more.textContent = "⋯";
+  more.setAttribute("aria-label", "その他の操作");
+  more.setAttribute("aria-haspopup", "menu");
+  more.onclick = () => openCardMenu(more, c, opts.removeFrom);
+  sub.append(...[mk("del"), rm, der, mk("dup"), mk("output"), mk("growth"), more].filter(Boolean));
   mainRow.append(vwb, edit);
   actions.append(sub, mainRow);
+  card.dataset.cid = c.id;
+  card.dataset.rmfrom = opts.removeFrom || "";
   const pf = (c.form && c.form.profile) || {},
     infoParts = [pf.job ? "職業：" + pf.job : "", pf.tags ? "タグ：" + pf.tags : ""].filter(Boolean);
   card.append(top);

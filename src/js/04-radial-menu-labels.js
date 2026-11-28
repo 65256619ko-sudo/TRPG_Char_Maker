@@ -12,7 +12,10 @@ function ctxAllowed(e) {
   return true;
 }
 function ctxTab(t) {
-  if (document.body.classList.contains("home-mode")) return "home";
+  if (document.body.classList.contains("home-mode")) {
+    const card = t && t.closest ? t.closest(".home-card[data-cid]") : null;
+    return card ? "card:" + card.dataset.cid : "home";
+  }
   const sec = t.closest ? t.closest("#editorView > section") : null;
   return document.body.classList.contains("tabs-on") ? editorTab : (sec && tabOfSection(sec)) || activeTab();
 }

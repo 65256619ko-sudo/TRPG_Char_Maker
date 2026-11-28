@@ -1,0 +1,111 @@
+/* ===== ホームのカードの「⋯」メニューと、かんたん出力ダイアログ ===== */
+.home-card .card-more {
+  display: none;
+}
+@media (max-width: 699px) {
+  /* スマホ幅：たまに使うボタンは「⋯」にまとめる（閲覧・編集は残す） */
+  .home-card .act-sub .pc-act,
+  .home-card .copy-json {
+    display: none !important;
+  }
+  .home-card .card-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    margin: 0;
+    padding: 5px 12px;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+}
+.card-menu {
+  position: fixed;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 190px;
+  max-width: calc(100vw - 16px);
+  padding: 6px;
+  border: 1px solid #3d4a68;
+  border-radius: 12px;
+  background: #1b2436;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+}
+.card-menu button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 0.95rem;
+}
+.card-menu button.danger {
+  margin-top: 4px;
+}
+
+/* かんたん出力ダイアログ（z-index は技能修正ダイアログ(1000)より下） */
+#outDialog {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  background: rgba(4, 7, 14, 0.78);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12px;
+  overflow: auto;
+}
+#outDialog.hidden {
+  display: none !important;
+}
+.out-card {
+  width: min(100%, 520px);
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  margin: auto;
+}
+.out-who {
+  margin: 0 0 10px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.out-sec {
+  margin: 0 0 12px;
+}
+.out-h {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #9fb4d9;
+}
+.out-sec select {
+  width: 100%;
+  margin-top: 4px;
+}
+.out-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+.out-actions button {
+  width: 100%;
+  margin: 0;
+  padding: 12px 14px;
+}
+#outPreview {
+  width: 100%;
+  min-height: 180px;
+  max-height: 45vh;
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+.out-box-note {
+  margin: 0 0 6px;
+}

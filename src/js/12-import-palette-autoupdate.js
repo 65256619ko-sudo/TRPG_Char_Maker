@@ -222,7 +222,9 @@ function generatePaletteAfterFix() {
     return false;
   }
 }
-document.getElementById("generatePalette").onclick = () => generatePaletteAfterFix();
+document.getElementById("generatePalette").onclick = () => {
+  if (generatePaletteAfterFix() && outBoxHidden("pal")) toast("生成しました。「表示」で中身を確認、「コピー」でコピーできます");
+};
 
 // ===== 自動更新（ライブプレビュー）：フォームを編集すると、チャットパレットとJSONを自動で作り直す =====
 let autoUpdate = true;
@@ -424,6 +426,6 @@ document.getElementById("copyPalette").onclick = async () => {
   }
   message.textContent = (await copyTextInGesture(addPaletteHeadings(paletteOutput.value)))
     ? "コピーしました"
-    : "コピーできませんでした。チャットパレット欄を長押ししてコピーしてください。";
+    : "コピーできませんでした。「表示」を押して、チャットパレット欄を長押ししてコピーしてください。";
 };
 

@@ -302,6 +302,7 @@ function ctxMapFor(tabId) {
   return c && typeof c === "object" ? c : ctxDefaultMap(tabId);
 }
 function ctxItemsFor(tabId) {
+  if (String(tabId).indexOf("card:") === 0) return ctxLayout(cardRadialActions(String(tabId).slice(5)));
   if (tabId === "home") return ctxLayout(homeActions());
   const { map } = allQuickActions();
   const m = ctxMapFor(tabId);
@@ -400,7 +401,7 @@ function openCtxRadial(x, y, tabId, held) {
   const cx = Math.min(Math.max(x, M), window.innerWidth - M),
     cy = Math.min(Math.max(y, M), window.innerHeight - M);
   const t = EDITOR_TABS.find((e) => e.id === tabId);
-  const defCap = tabId === "home" ? "ホームの操作" : "「" + (t ? t.label : "") + "」の操作";
+  const defCap = String(tabId).indexOf("card:") === 0 ? "カードの操作" : tabId === "home" ? "ホームの操作" : "「" + (t ? t.label : "") + "」の操作";
   const root = document.createElement("div");
   root.id = "ctxRadial";
   root.className = "rdmenu";
