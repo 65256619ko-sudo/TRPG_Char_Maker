@@ -1,0 +1,516 @@
+/* v65 */
+.profile-short {
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 5px !important;
+}
+.pf-top {
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 5px !important;
+}
+.pf-pair {
+  grid-column: span var(--sp, 3);
+  min-width: 0;
+}
+.pf-pair > label {
+  flex: 0 0 auto !important;
+  padding: 3px 7px !important;
+  white-space: nowrap;
+  font-size: 0.74rem !important;
+}
+.pf-pair > input {
+  height: 34px;
+  min-height: 0;
+  padding: 0 6px;
+  font-size: 14px;
+}
+.profile-block {
+  margin: 6px 0;
+}
+.profile-block > .grid,
+.profile-block > .profile-long,
+.profile-block > textarea {
+  margin: 0 8px 8px;
+}
+.profile-long {
+  gap: 5px;
+}
+#sec-profile .hint {
+  margin: 4px 0;
+}
+/* ダメージ：⚔で開閉、DBチップ */
+.skill-head,
+#skills .row {
+  grid-template-columns: minmax(0, 1fr) 52px 30px 22px;
+}
+#skills .row > div.dmg-wrap,
+.row > div.dmg-wrap {
+  display: contents;
+}
+#skills .dmg-toggle {
+  height: 32px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1;
+  background: #232c3c;
+  border: 1px solid #3a4660;
+  color: #9aa8c2;
+}
+#skills .dmg-toggle.has-dmg {
+  background: #5a2d36;
+  border-color: #c0606e;
+  color: #fff;
+}
+#skills .dmg-line {
+  display: none;
+  grid-column: 1/-1;
+  order: 15;
+  gap: 4px;
+  align-items: center;
+}
+#skills .row.dmg-open .dmg-line {
+  display: flex;
+}
+#skills .row.dmg-open .dmg-toggle {
+  border-color: #e8a0aa;
+  color: #fff;
+}
+#skills .dmg-line .damage-value {
+  flex: 1;
+  min-width: 0;
+}
+#skills .db-chip {
+  flex: none;
+  width: auto;
+  height: 32px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 9px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: #161c27;
+  border: 1px solid #3d4b63;
+  color: #8794ad;
+}
+#skills .db-chip.on {
+  background: #27476b;
+  border-color: #5aa7e8;
+  color: #fff;
+}
+body.sp-on .skill-head {
+  grid-template-columns: minmax(0, 4fr) minmax(0, 1fr) 22px;
+}
+body.sp-on #skills .row > div:nth-child(1) {
+  grid-column: 1/5;
+}
+body.sp-on #skills .dmg-toggle {
+  order: 2;
+  grid-column: 5;
+}
+/* 技能ポイント上限バー（割り振り方式のときだけ） */
+#spBar {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(62px + env(safe-area-inset-bottom));
+  z-index: 69;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #111a2bf2;
+  border-top: 1px solid #34425f;
+  justify-content: center;
+}
+body.sp-on.editor-mode #spBar {
+  display: flex;
+}
+body.sp-on.editor-mode main {
+  padding-bottom: 48px;
+}
+#spBar span {
+  flex: 1;
+  max-width: 220px;
+  text-align: center;
+  font-weight: 700;
+  background: #1c2536;
+  border: 1px solid #34425f;
+  border-radius: 8px;
+  padding: 5px 8px;
+}
+#spBar span.over {
+  color: #ff8f9a;
+  border-color: #a04a56;
+}
+/* v67 追加リスト */
+.list-row {
+  display: grid;
+  grid-template-columns: var(--cols);
+  gap: 4px;
+  margin: 3px 8px;
+  align-items: center;
+}
+.list-row input {
+  height: 32px;
+  min-height: 0;
+  padding: 0 6px;
+  font-size: 14px;
+  min-width: 0;
+  width: 100%;
+}
+.list-row button.danger {
+  font-size: 0;
+  padding: 0;
+  width: 24px;
+  height: 32px;
+  min-height: 0;
+  border-radius: 6px;
+  margin: 0;
+}
+.list-row button.danger::before {
+  content: "×";
+  font-size: 15px;
+}
+.list-head {
+  display: grid;
+  grid-template-columns: var(--cols);
+  gap: 4px;
+  margin: 4px 8px 0;
+  font-size: 0.7rem;
+  color: #9fb0c9;
+  font-weight: 700;
+}
+.list-add {
+  margin: 4px 8px 10px !important;
+}
+.list-row {
+  padding: 6px 0;
+  border-bottom: 1px dashed #2f3a4d;
+}
+.list-row .list-note {
+  grid-column: 1/-1;
+  width: 100%;
+  min-height: 54px;
+  resize: vertical;
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+#secretBody .small-btn {
+  margin: 4px 6px 0 0;
+}
+#secretMemoText {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+}
+.secret-state {
+  margin: 4px 0;
+  font-weight: 700;
+}
+/* v70 立ち絵 */
+.portrait-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 6px 0 8px;
+}
+.portrait-stage {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.portrait-frame {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.portrait-box .portrait-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(72vh, 540px);
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid #3a4660;
+  background: #0b0f16;
+}
+.portrait-empty {
+  width: 100%;
+  max-width: 260px;
+  padding: 28px 10px;
+  text-align: center;
+  border: 1px dashed #3a4660;
+  border-radius: 12px;
+  color: #8fa0bd;
+  font-size: 0.9rem;
+  background: #0b0f16;
+}
+.portrait-empty.hidden {
+  display: none;
+}
+.portrait-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 38px;
+  min-width: 0;
+  height: 68px;
+  margin: 0;
+  padding: 0 0 3px;
+  font-size: 2rem;
+  line-height: 1;
+  border-radius: 12px;
+  background: rgba(10, 14, 22, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  box-shadow: 0 2px 8px #0006;
+}
+#portraitPrev {
+  left: 6px;
+}
+#portraitNext {
+  right: 6px;
+}
+.portrait-count {
+  text-align: center;
+  font-size: 0.86rem;
+  color: #9fb0cc;
+  margin: -2px 0 0;
+}
+.portrait-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+.portrait-actions button {
+  margin: 0;
+}
+/* v72 カードの立ち絵：正方形よりわずかに低い枠に全体を収め、情報とボタンは下に並べる */
+.home-card .card-portrait {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1/0.85;
+  height: auto;
+  object-fit: contain;
+  margin: 8px auto;
+  border-radius: 8px;
+  background: #0b0f16;
+  border: 1px solid #2a3446;
+}
+.home-card .card-info {
+  color: #d9e2f2;
+  font-weight: 700;
+}
+/* v73 未保存の表示 */
+#saveCharacter.unsaved::before,
+#saveStay.unsaved::before {
+  content: "● ";
+  color: #ffd37a;
+}
+#saveCharacter.unsaved,
+#saveStay.unsaved {
+  animation: unsavedShake 2.4s ease-in-out infinite;
+  box-shadow: 0 0 0 2px #ffd37a66;
+}
+@keyframes unsavedShake {
+  0%,
+  86%,
+  100% {
+    transform: translateX(0);
+  }
+  88% {
+    transform: translateX(-3px);
+  }
+  92% {
+    transform: translateX(3px);
+  }
+  96% {
+    transform: translateX(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #saveCharacter.unsaved,
+  #saveStay.unsaved {
+    animation: none;
+  }
+}
+/* v74 入れ子グループ */
+#groupMoveDialog.hidden {
+  display: none !important;
+}
+.crumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+.crumb button {
+  background: none;
+  border: 0;
+  color: #7db8ff;
+  padding: 2px 4px;
+  margin: 0;
+  min-height: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.crumb .sep {
+  color: #6b7a92;
+}
+.move-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 5px 0;
+}
+/* ===== v75 見た目の整理 ===== */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* ヘッダーは1行に。説明文はホームだけ */
+h1 {
+  font-size: 1.12rem;
+  margin: 4px 2px 2px;
+  line-height: 1.35;
+}
+#appSub {
+  margin: 0 2px 8px;
+  font-size: 0.78rem;
+}
+body.editor-mode #appSub,
+body.group-mode #appSub {
+  display: none;
+}
+section {
+  padding: 12px;
+  margin: 10px 0;
+}
+h2 {
+  font-size: 1.02rem;
+  margin: 0 0 8px;
+}
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+.btn-row > button {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 8px 10px;
+}
+/* --- ホーム --- */
+#sec-home .toolbar {
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin: 6px 0 4px;
+}
+#sec-home .toolbar button {
+  flex: 1 1 0;
+  margin: 0;
+  padding: 9px 4px;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+#sec-home .toolbar #newCharacter {
+  flex: 2 1 0;
+}
+#storageInfo {
+  font-size: 0.76rem;
+  margin: 6px 2px 8px;
+  color: #8fa0bb;
+}
+.searchbox {
+  margin: 4px 0 2px;
+}
+.searchbox input {
+  height: 40px;
+  padding: 0 12px;
+}
+.home-card {
+  padding: 10px 12px;
+  margin: 7px 0;
+}
+.home-card h3 {
+  margin: 0 0 3px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.home-card p {
+  margin: 2px 0;
+  font-size: 0.8rem;
+}
+.home-card .card-info {
+  font-size: 0.86rem;
+}
+.home-card .actions {
+  gap: 6px;
+  margin-top: 8px;
+}
+.home-card .actions button {
+  flex: 1 1 auto;
+  padding: 7px 6px;
+  font-size: 0.86rem;
+}
+.home-card .actions button.primary {
+  flex: 1.5 1 auto;
+}
+.home-card .actions button.danger {
+  flex: 0 0 auto;
+}
+.home-card .copy-json {
+  font-size: 0.74rem;
+  padding: 4px 8px;
+  background: #1d2636;
+  border-color: #3b4a66;
+  color: #b9c8e6;
+}
+.home-card .card-portrait {
+  margin: 6px auto;
+}
+.group-card .card-top {
+  align-items: center;
+}
+.group-card .reorder {
+  margin: 0;
+  gap: 3px;
+}
+.group-card .reorder button {
+  padding: 1px 9px;
+  font-size: 0.85rem;
+  min-height: 26px;
+}
+.group-card .preview {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#groupViewHead h2 {
+  margin: 6px 0 2px;
+  font-size: 1.2rem;
+}
+#groupViewInfo {
+  margin: 2px 0 0;
+  font-size: 0.84rem;
+}

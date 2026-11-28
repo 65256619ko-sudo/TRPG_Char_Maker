@@ -1,0 +1,512 @@
+/* ===== 画面のコンパクト化：余白・文字・ボタンを詰めて、1画面に出る情報を増やす ===== */
+body {
+  padding: 8px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+section {
+  padding: 9px 10px;
+  margin: 8px 0;
+  border-radius: 10px;
+}
+h1 {
+  font-size: 1.22rem;
+  margin: 0.3em 0;
+}
+h2 {
+  font-size: 1rem;
+  margin: 0 0 6px;
+}
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 7px;
+}
+label {
+  font-size: 0.84rem;
+  margin-bottom: 3px;
+}
+input,
+textarea,
+button {
+  padding: 6px 8px;
+}
+button {
+  margin: 2px 3px 2px 0;
+}
+.row {
+  gap: 6px;
+  margin: 6px 0;
+}
+.derived-row {
+  gap: 6px;
+  margin: 6px 0;
+}
+.derived-row output {
+  min-height: 34px;
+  padding: 6px 8px;
+}
+textarea {
+  min-height: 110px;
+  margin-top: 6px;
+}
+.switch-label {
+  margin: 5px 0;
+  gap: 6px;
+}
+.small-btn {
+  padding: 4px 9px;
+  font-size: 0.86rem;
+}
+.hint {
+  font-size: 0.82rem;
+  margin: 4px 0;
+}
+.result {
+  padding: 8px;
+  margin-top: 6px;
+}
+/* 立ち絵：大きな1枚を縦に置かず、小さな画像を左・操作を右に並べる */
+.portrait-box {
+  display: grid;
+  grid-template-columns: minmax(0, 150px) 1fr;
+  grid-template-areas: "stage actions" "stage count";
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  gap: 4px 10px;
+  margin: 4px 0 6px;
+}
+.portrait-stage {
+  grid-area: stage;
+  max-width: 150px;
+  margin: 0;
+}
+.portrait-box .portrait-frame img {
+  max-height: 200px;
+  border-radius: 10px;
+}
+.portrait-empty {
+  padding: 18px 6px;
+  font-size: 0.8rem;
+}
+.portrait-nav {
+  width: 28px;
+  height: 52px;
+  font-size: 1.5rem;
+}
+#portraitPrev {
+  left: 2px;
+}
+#portraitNext {
+  right: 2px;
+}
+.portrait-count {
+  grid-area: count;
+  text-align: left;
+  margin: 0;
+}
+.portrait-actions {
+  grid-area: actions;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 4px;
+}
+#base input {
+  height: 32px;
+}
+#base .st-total {
+  padding: 4px 2px;
+  font-size: 0.9rem;
+}
+#base {
+  gap: 5px 5px;
+}
+.derived-row input {
+  height: 30px;
+}
+.derived-row output {
+  min-height: 30px;
+  padding: 4px 8px;
+}
+.skill-tools input[type="search"] {
+  height: 34px;
+}
+.palette-builder button,
+.palette-builder select {
+  height: 36px;
+}
+.palette-heading-actions {
+  gap: 4px 6px;
+}
+.palette-heading-actions .small-btn {
+  padding: 4px 7px;
+  font-size: 0.82rem;
+  margin: 0;
+}
+.palette-heading-actions .switch-label {
+  margin: 0;
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+/* ホームのカード：ボタンは1段（入りきらないときだけ折り返す）。立ち絵の枠は低めに */
+.home-card {
+  padding: 9px 10px;
+  margin: 6px 0;
+}
+.home-card .actions.act-tiers {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 6px;
+  margin-top: 6px;
+}
+.home-card .act-sub {
+  gap: 4px;
+  justify-content: flex-start;
+}
+.home-card .act-sub button {
+  padding: 5px 9px;
+  margin: 0;
+}
+.home-card .act-main {
+  gap: 4px;
+  margin-left: auto;
+}
+.home-card .act-main button {
+  min-width: 0;
+  padding: 8px 14px;
+  font-size: 0.92rem;
+  margin: 0;
+}
+.home-card .card-portrait {
+  max-width: 300px;
+  aspect-ratio: 1/0.62;
+}
+.home-tools-row {
+  gap: 6px;
+  margin: 2px 0 6px;
+}
+.home-card .act-main button.primary {
+  min-width: 76px;
+}
+.home-card .act-sub button {
+  padding: 5px 8px;
+}
+.free-cmd {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 5px 8px;
+  align-items: center;
+  padding: 8px;
+  margin: 6px 0 8px;
+}
+.free-cmd > .sub-h,
+.free-cmd > .free-prev,
+.free-cmd > .hint,
+.free-cmd > button {
+  grid-column: 1 / -1;
+}
+.free-cmd label {
+  margin: 0;
+}
+.free-cmd > button {
+  margin: 0;
+}
+.free-prev {
+  margin: 0;
+  padding: 4px 8px;
+}
+/* 説明文は1行だけ見せて、タップで全文 */
+.hint.is-expandable {
+  -webkit-line-clamp: 1;
+}
+/* 技能ポイントの使用／上限／残り：小さめの文字で1行に並べる */
+#spOccLine,
+#spIntLine {
+  display: block;
+  width: auto;
+  margin: 3px 0 0;
+  font-size: 0.82rem;
+  white-space: normal;
+  overflow: visible;
+}
+.sm-main {
+  margin: 4px 0;
+}
+.sm-main label {
+  font-size: 0.78rem;
+}
+.sm-main select {
+  width: 100%;
+  margin-top: 3px;
+  padding: 5px 8px;
+}
+/* 技能ポイント割り振り中：入力欄の見出しを小さくして、1技能あたりの高さを抑える */
+body.sp-on #skills .skill-points label {
+  font-size: 0.58rem;
+  line-height: 1.1;
+  margin: 0 0 1px;
+}
+body.sp-on #skills .skill-points input,
+body.sp-on #skills .row > div:nth-child(2) input.skill-value {
+  height: 30px;
+}
+/* 合計欄：見出し（::before）を含めた高さにして、入力欄が下へはみ出して次の行にめり込まないようにする */
+body.sp-on #skills .row > div:nth-child(2) {
+  height: auto;
+  align-self: end;
+}
+/* ===== 編集画面のタブと、右下のクイックメニュー ===== */
+#editorTabs {
+  display: none;
+}
+body.tabs-on.editor-mode #editorTabs {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  gap: 4px;
+  margin: 0 -8px 6px;
+  padding: 6px 8px;
+  background: #151a24f2;
+  border-bottom: 1px solid #2c3446;
+  backdrop-filter: blur(6px);
+}
+#editorTabs button {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 4px;
+  font-size: 0.92rem;
+  background: #1e2533;
+  border: 1px solid #323c52;
+  color: #b8c3de;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+#editorTabs button.on {
+  background: #5568e0;
+  border-color: #7a8cff;
+  color: #fff;
+  font-weight: 700;
+}
+#editorTabs .tab-n {
+  font-size: 0.72rem;
+  opacity: 0.85;
+  margin-left: 3px;
+}
+body.tabs-on.editor-mode #editorView section.tab-off {
+  display: none !important;
+}
+#quickDock {
+  display: none;
+  position: fixed;
+  right: 10px;
+  bottom: calc(74px + env(safe-area-inset-bottom));
+  z-index: 71;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+body.tabs-on.editor-mode:not(.quick-never) #quickDock,
+body.editor-mode.quick-always #quickDock,
+body.editor-mode #quickDock.is-open {
+  display: flex;
+}
+body.sp-on.editor-mode #quickDock {
+  bottom: calc(124px + env(safe-area-inset-bottom));
+}
+#quickFab {
+  width: 48px;
+  height: 48px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  background: #5568e0;
+  border: 1px solid #8fa0ff;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+#quickPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+  min-width: 190px;
+  max-width: min(260px, 80vw);
+  padding: 8px;
+  background: #1b2233f7;
+  border: 1px solid #3b4666;
+  border-radius: 12px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55);
+}
+#quickPanel.hidden {
+  display: none;
+}
+#quickPanel .qk-h {
+  font-size: 0.72rem;
+  color: #9aa7c4;
+  margin: 2px 2px 0;
+}
+#quickPanel button {
+  margin: 0;
+  text-align: left;
+  padding: 9px 10px;
+  background: #242d44;
+  border: 1px solid #36425f;
+  border-radius: 9px;
+  color: #e7ecfa;
+}
+#quickPanel button.primary {
+  background: #5568e0;
+  border-color: #8fa0ff;
+  font-weight: 700;
+}
+#quickPanel {
+  max-height: calc(100vh - 190px);
+  overflow-y: auto;
+}
+#quickPanel button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#quickPanel button .ic {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+#quickPanel button.active {
+  background: #8a5a12;
+  border-color: #ffc46b;
+  color: #fff3d6;
+  font-weight: 700;
+}
+#quickFab.mode-on {
+  background: #c8751a;
+  border-color: #ffc46b;
+  box-shadow: 0 0 0 3px #ffc46b66, 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+#quickFab.mode-on::after {
+  content: "↕";
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  background: #ffc46b;
+  color: #3a2200;
+}
+#quickFab {
+  position: relative;
+}
+.pal-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 2px 0 0;
+}
+
+/* ===== パソコン用：右クリックで出る円形（放射状）メニュー ===== */
+#ctxRadial {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(4, 7, 16, 0.28);
+}
+#ctxRadial .rd-disc {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+#ctxRadial .rd-disc::before {
+  content: "";
+  position: absolute;
+  left: -150px;
+  top: -150px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(10, 14, 30, 0.95) 0, rgba(10, 14, 30, 0.9) 62%, rgba(10, 14, 30, 0) 100%);
+}
+#ctxRadial .rd-cap {
+  position: absolute;
+  left: -52px;
+  top: -24px;
+  width: 104px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #e7ecfa;
+}
+#ctxRadial button.rd {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #242d44;
+  border: 1px solid #4a5a82;
+  color: #e7ecfa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
+  font-size: 0;
+  gap: 0;
+  animation: rdpop 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+  animation-delay: var(--d, 0ms);
+  transform: translate(var(--x), var(--y));
+  transition: background 0.12s, box-shadow 0.12s;
+}
+#ctxRadial button.rd .ic {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+}
+#ctxRadial button.rd:hover,
+#ctxRadial button.rd:focus-visible {
+  background: #3a4a80;
+  border-color: #9fb0ff;
+  box-shadow: 0 0 0 3px #8fa0ff66, 0 4px 12px rgba(0, 0, 0, 0.55);
+  outline: 0;
+}
+#ctxRadial button.rd.primary {
+  background: #5568e0;
+  border-color: #8fa0ff;
+}
+#ctxRadial button.rd.active {
+  background: #c8751a;
+  border-color: #ffc46b;
+  color: #fff3d6;
+}
+@keyframes rdpop {
+  from {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: translate(var(--x), var(--y)) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #ctxRadial button.rd {
+    animation: none;
+  }
+}
+

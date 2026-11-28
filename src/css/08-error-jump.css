@@ -1,0 +1,547 @@
+/* ===== エラーから該当行へ飛ぶ ===== */
+#message.has-jump {
+  display: block;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+#message .jump-hint {
+  display: block;
+  margin-top: 2px;
+  color: #ffd479;
+  font-weight: 700;
+}
+.jump-hl {
+  animation: jumpHl 2.6s ease-out;
+}
+@keyframes jumpHl {
+  0%,
+  55% {
+    box-shadow: 0 0 0 3px #ffd479;
+    background: #3a3414;
+  }
+  100% {
+    box-shadow: 0 0 0 0 #ffd47900;
+  }
+}
+.jump-link {
+  margin-left: 4px;
+}
+
+/* ===== 技能の分類・成功時の処理 ===== */
+.cat-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 0;
+}
+.cat-bar.hidden {
+  display: none;
+}
+.cat-chip {
+  min-height: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: #161c27;
+  border: 1px solid #3d4b63;
+  color: #b4c0d8;
+}
+.cat-chip.on {
+  background: #27476b;
+  border-color: #5aa7e8;
+  color: #fff;
+}
+#skills .row > div:first-child {
+  position: relative;
+}
+#skills .skill-more-btn {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 26px;
+  height: 26px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  color: #7c89a6;
+}
+#skills .skill-more-btn .ic {
+  width: 15px;
+  height: 15px;
+}
+#skills .skill-more-btn.has-os {
+  color: #ffd479;
+}
+#skills .row.more-open .skill-more-btn {
+  color: #fff;
+  background: #2a3446;
+}
+#skills .row input.skill-name {
+  padding-right: 30px;
+}
+#skills .skill-more {
+  display: none;
+  grid-column: 1/-1;
+  order: 16;
+  margin: 2px 0 4px;
+  padding: 8px;
+  border: 1px solid #3a4660;
+  border-radius: 8px;
+  background: #121722;
+}
+#skills .row.more-open .skill-more {
+  display: block;
+}
+#skills .skill-more .sm-h {
+  margin: 6px 0 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #9fb0d4;
+}
+#skills .skill-more .sm-h:first-child {
+  margin-top: 0;
+}
+#skills .skill-cat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#skills .sm-add {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+#skills .sm-add input {
+  flex: 1;
+  text-align: left;
+  padding: 0 8px;
+}
+#skills .skill-more textarea {
+  width: 100%;
+  font-size: 14px;
+  min-height: 0;
+}
+#skills .skill-more .hint {
+  margin: 4px 0 0;
+}
+.vw-skill .tg.os {
+  background: #3a3414;
+  color: #ffd479;
+  border: 1px solid #7a6a22;
+}
+.vw-os {
+  margin-top: 6px;
+}
+.vw-os .vw-os-memo {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #e5e9ff;
+}
+.vw-os .vw-os-lines {
+  margin: 6px 0 0;
+  padding: 6px 8px;
+  background: #0a0e1d;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #bfe3ff;
+}
+
+/* ===== 基本能力値の表（初期値／増加分／その他／合計） ===== */
+#base {
+  grid-template-columns: 2.6em repeat(3, minmax(0, 1fr)) minmax(0, 0.9fr);
+  gap: 6px 5px;
+  align-items: center;
+}
+@media (min-width: 700px) {
+  #base {
+    grid-template-columns: 3em repeat(3, minmax(0, 1fr)) minmax(0, 0.9fr);
+  }
+}
+#base .st-h {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #9fb0d4;
+  text-align: center;
+}
+#base .st-n {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #c7b5ff;
+}
+#base input {
+  height: 38px;
+  min-width: 0;
+  width: 100%;
+  font-size: 16px;
+}
+#base input.st-d {
+  font-size: 15px;
+}
+#base input.inv {
+  border-color: #ff8f8f;
+  background: #3a1e24;
+}
+#base .st-total {
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #e5e9ff;
+  background: #0e1328;
+  border: 1px solid #2f3a66;
+  border-radius: 8px;
+  padding: 8px 2px;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+#base .st-total.changed {
+  color: #ffd479;
+  border-color: #7a6a22;
+}
+
+/* ===== JSON出力：ステータスにする技能の選択 ===== */
+.ss-box {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px solid #2f3a52;
+  border-radius: 10px;
+  background: #121722;
+}
+.ss-box .ss-l {
+  display: block;
+  margin: 0 0 4px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.ss-box select {
+  width: 100%;
+}
+.ss-box .hint {
+  margin: 4px 0 0;
+}
+.ss-tools {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 6px;
+}
+.ss-tools input {
+  flex: 1;
+  min-width: 0;
+}
+.ss-list {
+  max-height: 240px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 8px;
+}
+.ss-list label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 2px;
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+}
+.ss-list input {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* ===== 自由コマンド・ラベル整理 ===== */
+.free-cmd {
+  margin: 8px 0 12px;
+  padding: 10px;
+  border: 1px solid #2f3a52;
+  border-radius: 10px;
+  background: #121722;
+}
+.sub-h {
+  margin: 8px 0 4px;
+  font-size: 0.9rem;
+  color: #c7d3ee;
+}
+.free-cmd .sub-h {
+  margin-top: 0;
+}
+.free-cmd label {
+  display: block;
+  margin: 8px 0 3px;
+  font-size: 0.8rem;
+}
+.free-cmd input,
+.free-cmd select {
+  width: 100%;
+}
+.free-prev {
+  margin: 8px 0 0;
+  padding: 6px 8px;
+  background: #0b0f17;
+  border-radius: 6px;
+}
+.free-prev span {
+  display: block;
+  font-size: 0.72rem;
+  color: #8e9bb8;
+}
+.free-prev code {
+  overflow-wrap: anywhere;
+  color: #bfe3ff;
+}
+.hint.warn {
+  color: #ffd479;
+  min-height: 0;
+  margin: 4px 0;
+}
+.free-cmd button.primary {
+  margin-top: 6px;
+  width: 100%;
+}
+.palette-command-item > .pc-ctl {
+  display: flex;
+  gap: 4px;
+  flex: none;
+  order: 1;
+}
+.palette-command-item > .pc-ctl button {
+  order: 0;
+  padding: 4px 8px;
+  min-height: 0;
+}
+.palette-command-item {
+  flex-wrap: wrap;
+}
+.palette-command-item > code,
+.palette-command-item > .pc-edit {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+.palette-command-item .pc-edit {
+  height: 34px;
+}
+.label-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 8px 0 2px;
+}
+.label-bar .switch-label {
+  margin: 0;
+}
+#paletteLabelInfo {
+  margin: 2px 0 6px;
+}
+.pal-lead {
+  margin: 6px 0;
+  line-height: 1.6;
+}
+.how-box {
+  border: 1px solid #30394a;
+  border-radius: 10px;
+  margin: 8px 0;
+  background: #161c27;
+}
+.how-box > summary {
+  cursor: pointer;
+  padding: 8px 12px;
+  font-weight: 700;
+  color: #d5c4ff;
+  list-style: none;
+}
+.how-box > summary::-webkit-details-marker {
+  display: none;
+}
+.how-box > summary::before {
+  content: "▸ ";
+  color: #aab4c5;
+}
+.how-box[open] > summary::before {
+  content: "▾ ";
+}
+.how-box > :not(summary) {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.how-box > .label-bar {
+  margin-top: 2px;
+}
+.how-box > button#cancelPaletteOrder {
+  margin-bottom: 8px;
+}
+.how-box > #paletteLabelInfo {
+  margin: 2px 12px 6px;
+}
+.how-body {
+  padding-bottom: 10px;
+}
+.how-list {
+  margin: 0;
+}
+.how-list dt {
+  font-weight: 700;
+  color: #e5e9ff;
+  margin-top: 8px;
+}
+.how-list dd {
+  margin: 2px 0 0;
+  color: #b8c3de;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+.view-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid #4a5a80;
+  border-radius: 14px;
+  overflow: hidden;
+  max-width: 100%;
+}
+.pl-label.is-cat {
+  color: #ffd9a0;
+}
+#catStatus {
+  color: #b9c5ff;
+  min-height: 1.4em;
+  margin: 6px 0 0;
+}
+.view-seg .seg {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #b8c3de;
+  padding: 7px 11px;
+  min-height: 0;
+  font-size: 0.88rem;
+}
+.view-seg .seg.on {
+  background: #5568e0;
+  color: #fff;
+  font-weight: 700;
+}
+.pl-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.pl-block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.pl-count {
+  font-size: 0.72rem;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #24305a;
+  color: #cdd6ff;
+  border: 1px solid #4a5a9a;
+}
+.pl-toggle {
+  min-height: 0;
+  padding: 2px 8px;
+  font-size: 0.74rem;
+  background: transparent;
+  border: 1px solid #4a5a80;
+  color: #b8c3de;
+  border-radius: 999px;
+}
+.pl-sub {
+  margin: 0;
+  padding-left: 6px;
+  border-left: 2px solid #4a5a9a;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pl-sub code {
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+  color: #b8c3de;
+}
+.palette-order-item.is-block {
+  border-left: 3px solid #5568e0;
+}
+.pl-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+  flex: 1;
+}
+.pl-body code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.pl-label {
+  font-weight: 700;
+  color: #e5e9ff;
+  overflow-wrap: anywhere;
+}
+.pl-label.none {
+  color: #9aa6bf;
+  font-weight: 400;
+}
+.pl-note {
+  font-size: 0.72rem;
+  color: #8e9bb8;
+}
+.pl-dup {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #3a3414;
+  color: #ffd479;
+  border: 1px solid #7a6a22;
+}
+#labelTools {
+  margin: 6px 0;
+  padding: 8px;
+  border: 1px solid #3a4660;
+  border-radius: 8px;
+  background: #121722;
+}
+.lt-list {
+  display: grid;
+  gap: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.lt-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+  gap: 6px;
+  align-items: center;
+}
+.lt-orig {
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+.lt-row input.lt-new {
+  height: 34px;
+  min-width: 0;
+}
+.lt-rm {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  margin: 0;
+}
+.lt-rm input {
+  width: 18px;
+  height: 18px;
+}
+

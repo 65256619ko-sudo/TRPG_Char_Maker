@@ -1,0 +1,511 @@
+/* ===== 色の差をはっきりさせる・画像を大きく ===== */
+body {
+  background: #0b0e15;
+}
+section {
+  background: #1f2736;
+  border-color: #46536e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+#editorView > section > h2 {
+  padding: 3px 0 3px 9px;
+  border-left: 4px solid #7b8cff;
+  background: linear-gradient(90deg, #2c3860, #1f273600 70%);
+  border-radius: 3px;
+}
+#skills .row:nth-of-type(even) {
+  background: #263044;
+}
+#skills .row:nth-of-type(odd) {
+  background: #1b2230;
+}
+body.viewer-mode {
+  background: #090c18;
+}
+.vw-sec {
+  background: #212c58;
+  border-color: #5262b8;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+.vw-sec > h3,
+.vw-sec > summary {
+  padding: 4px 8px;
+  margin: -4px -4px 8px;
+  border-radius: 8px;
+  background: #34428a;
+  color: #eef1ff;
+}
+details.vw-sec > summary {
+  margin: -4px -4px 0;
+}
+details.vw-sec[open] > summary {
+  margin-bottom: 8px;
+}
+.vw-tile {
+  background: #0d1330;
+  border-color: #4a5aa8;
+}
+.vw-tile span {
+  color: #aab5f0;
+}
+.vw-skill {
+  padding: 6px 6px;
+  border-bottom: 1px solid #36448a;
+}
+.vw-skill:nth-child(even) {
+  background: #1a2350;
+}
+.vw-skill:nth-child(odd) {
+  background: #263268;
+}
+.vw-item {
+  border-bottom-color: #36448a;
+}
+.vw-portrait {
+  width: min(40vw, 160px);
+  height: auto;
+  aspect-ratio: 3 / 4;
+  border-color: #6b7bd6;
+}
+.portrait-box {
+  grid-template-columns: minmax(0, min(46vw, 210px)) 1fr;
+}
+.portrait-stage {
+  max-width: min(46vw, 210px);
+}
+.portrait-box .portrait-frame img {
+  max-height: 290px;
+}
+
+/* パソコン幅：ホームのカードは、画像を左に大きく、文字とボタンを右に並べる（横の空きを減らす） */
+@media (min-width: 820px) {
+  .home-card.has-portrait {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    grid-template-rows: repeat(4, min-content) 1fr;
+    column-gap: 14px;
+    align-content: start;
+  }
+  .home-card.has-portrait > .card-portrait {
+    grid-column: 1;
+    grid-row: 1 / 6;
+    width: 200px;
+    max-width: none;
+    aspect-ratio: 1 / 1.1;
+    margin: 0;
+  }
+  .home-card.has-portrait > :not(.card-portrait) {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .home-card.has-portrait > .actions {
+    grid-row: 5;
+    align-self: end;
+  }
+}
+
+/* ===== チェック項目は、押せるボタン（ON＝緑、OFF＝灰）。縦に積まず、横に並べて詰める ===== */
+.switch-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 6px 3px 0;
+  padding: 5px 11px 5px 7px;
+  border-radius: 999px;
+  border: 1px solid #4a5670;
+  background: #1b2230;
+  color: #b4bfd2;
+  font-size: 0.86rem;
+  line-height: 1.3;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  max-width: 100%;
+}
+.switch-label::before {
+  content: "OFF";
+  flex: none;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #2b3448;
+  color: #8f9bb3;
+  letter-spacing: 0.03em;
+}
+.switch-label:has(input:checked) {
+  background: #17583c;
+  border-color: #4fd08e;
+  color: #eafff4;
+}
+.switch-label:has(input:checked)::before {
+  content: "ON";
+  background: #4fd08e;
+  color: #063a22;
+}
+.switch-label input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  pointer-events: none;
+}
+.switch-label:focus-within {
+  outline: 2px solid #8fa0ff;
+  outline-offset: 1px;
+}
+.pal-opts {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2px 0;
+}
+.pal-opts + .hint {
+  margin-top: 2px;
+}
+/* ON/OFFを文字で示すボタンも、ONのときは緑にそろえる */
+.secret-edit-btn,
+#bulkToggle,
+#autoUpdateToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.secret-edit-btn::before,
+#bulkToggle::before,
+#autoUpdateToggle::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #66728b;
+}
+.secret-edit-btn[aria-pressed="true"],
+#bulkToggle[aria-pressed="true"],
+#autoUpdateToggle[aria-pressed="true"] {
+  background: #17583c;
+  border-color: #4fd08e;
+  color: #eafff4;
+}
+.secret-edit-btn[aria-pressed="true"]::before,
+#bulkToggle[aria-pressed="true"]::before,
+#autoUpdateToggle[aria-pressed="true"]::before {
+  background: #4fd08e;
+  box-shadow: 0 0 6px #4fd08e;
+}
+
+.switch-label {
+  padding: 4px 9px 4px 5px;
+  font-size: 0.82rem;
+  margin: 2px 4px 2px 0;
+  gap: 5px;
+}
+.switch-label::before {
+  font-size: 0.58rem;
+  padding: 1px 5px;
+}
+.opt-row {
+  gap: 4px 4px;
+}
+.opt-row .switch-label,
+.palette-heading-actions .switch-label,
+.label-bar .switch-label {
+  margin: 0;
+  font-size: 0.82rem;
+}
+.palette-heading-actions {
+  gap: 4px;
+}
+
+/* ===== ヒントは「？ヒント」ボタンで開く ===== */
+body:not(.hints-all) #editorView section:not(.hints-open) .hint-fold {
+  display: none !important;
+}
+.hint-fold {
+  display: block;
+  margin: 4px 0 6px;
+  padding: 6px 9px;
+  border-left: 3px solid var(--acc, #8fa0ff);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--acc, #8fa0ff) 14%, transparent);
+  color: #dfe7fb !important;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+#editorView > section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hint-btn {
+  margin: 0 0 0 auto !important;
+  padding: 1px 9px !important;
+  min-height: 0;
+  height: auto;
+  font-size: 0.68rem !important;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  border-radius: 999px !important;
+  background: transparent !important;
+  border: 1px solid color-mix(in srgb, var(--acc, #8fa0ff) 55%, transparent) !important;
+  color: color-mix(in srgb, var(--acc, #8fa0ff) 75%, #c8d0e6) !important;
+  opacity: 0.75;
+}
+.hint-btn[aria-pressed="true"],
+body.hints-all .hint-btn {
+  opacity: 1;
+  background: var(--acc, #8fa0ff) !important;
+  color: #0a0f1e !important;
+}
+
+/* ===== 全体を、はっきりした色に。タブごとに色分け ===== */
+body {
+  background: #060914;
+  color: #f4f7ff;
+}
+section {
+  --acc: #8fa0ff;
+  background: color-mix(in srgb, var(--acc) 9%, #121a2e);
+  border: 1px solid color-mix(in srgb, var(--acc) 62%, #19213a);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+section[data-tab="basic"] {
+  --acc: #38c6ff;
+}
+section[data-tab="stats"] {
+  --acc: #ffb03a;
+}
+section[data-tab="skills"] {
+  --acc: #ff6ec7;
+}
+section[data-tab="out"] {
+  --acc: #46e08a;
+}
+#editorView > section > h2,
+#editorView > section .palette-heading h2 {
+  color: var(--acc);
+  border-left: 4px solid var(--acc);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--acc) 30%, transparent), transparent 80%);
+  padding: 3px 8px;
+  margin-bottom: 6px;
+}
+#editorView > section .palette-heading h2 {
+  flex: 1;
+}
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background: #070b17;
+  border-color: #62729f;
+}
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--acc, #8fa0ff);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--acc, #8fa0ff) 45%, transparent);
+}
+button {
+  background: #2c3965;
+  border-color: #7385c6;
+}
+.primary {
+  background: linear-gradient(#6f88ff, #4c63ee);
+  border-color: #a4b4ff;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(80, 104, 240, 0.45);
+}
+.danger {
+  background: #5c2030;
+  border-color: #ff6f85;
+  color: #ffdbe1;
+}
+.hint {
+  color: #c4cee8;
+}
+.switch-label {
+  background: #1a2240;
+  border-color: #6577b0;
+  color: #dbe3f8;
+}
+.switch-label::before {
+  background: #34406a;
+  color: #aab6dd;
+}
+.switch-label:has(input:checked) {
+  background: #11875a;
+  border-color: #62f0b0;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(70, 224, 138, 0.35);
+}
+.switch-label:has(input:checked)::before {
+  background: #62f0b0;
+  color: #04301c;
+}
+.secret-edit-btn[aria-pressed="true"],
+#bulkToggle[aria-pressed="true"],
+#autoUpdateToggle[aria-pressed="true"] {
+  background: #11875a;
+  border-color: #62f0b0;
+  color: #fff;
+}
+#skills .row:nth-of-type(even) {
+  background: #27346a;
+}
+#skills .row:nth-of-type(odd) {
+  background: #141b36;
+}
+#editorTabs button {
+  background: #161d36;
+  border-color: #3b4a7e;
+  color: #c9d3f0;
+}
+#editorTabs button[data-acc="basic"] {
+  border-color: #38c6ff;
+  color: #8fdcff;
+}
+#editorTabs button[data-acc="stats"] {
+  border-color: #ffb03a;
+  color: #ffd08a;
+}
+#editorTabs button[data-acc="skills"] {
+  border-color: #ff6ec7;
+  color: #ffa9de;
+}
+#editorTabs button[data-acc="out"] {
+  border-color: #46e08a;
+  color: #8ff0bb;
+}
+#editorTabs button.on[data-acc="basic"] {
+  background: #38c6ff;
+  color: #04202e;
+}
+#editorTabs button.on[data-acc="stats"] {
+  background: #ffb03a;
+  color: #2b1800;
+}
+#editorTabs button.on[data-acc="skills"] {
+  background: #ff6ec7;
+  color: #35001f;
+}
+#editorTabs button.on[data-acc="out"] {
+  background: #46e08a;
+  color: #02281a;
+}
+#editorTabs button.on {
+  font-weight: 800;
+}
+
+/* ===== 密度：余白を詰める ===== */
+section {
+  padding: 8px 9px;
+  margin: 7px 0;
+}
+h2 {
+  margin-bottom: 5px;
+}
+.btn-row {
+  margin: 4px 0;
+}
+
+/* ===== やりたいこと一覧・案内 ===== */
+#guideSearch {
+  margin: 4px 0 6px;
+}
+.gd-group {
+  margin: 12px 0 3px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffd54a;
+  letter-spacing: 0.04em;
+}
+.gd-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 3px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #222d5a;
+  border-color: #6f82d8;
+}
+.gd-item b {
+  display: block;
+  font-size: 0.95rem;
+}
+.gd-item small {
+  display: block;
+  color: #b9c5ee;
+  font-weight: 400;
+  font-size: 0.78rem;
+}
+.gd-item:hover,
+.gd-item:focus-visible {
+  background: #3446a0;
+  border-color: #b3c0ff;
+}
+#guideBar {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  top: calc(8px + env(safe-area-inset-top));
+  margin: 0 auto;
+  max-width: 540px;
+  z-index: 900;
+  background: #0f1840;
+  border: 2px solid #ffd54a;
+  border-radius: 14px;
+  padding: 8px 12px 10px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.7);
+}
+#guideBar .gb-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #ffd54a;
+}
+#guideBar .gb-head button {
+  margin: 0;
+  padding: 0 10px;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+#guideBar ol {
+  margin: 4px 0 6px;
+  padding-left: 1.4em;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+#guideBar .gb-act {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+#guideBar .gb-act button {
+  margin: 0;
+  padding: 6px 12px;
+}
+.guide-pulse {
+  outline: 3px solid #ffd54a !important;
+  outline-offset: 3px;
+  border-radius: 10px;
+  animation: gpulse 0.9s ease-in-out infinite;
+}
+@keyframes gpulse {
+  50% {
+    box-shadow: 0 0 0 7px rgba(255, 213, 74, 0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-pulse {
+    animation: none;
+  }
+}
+#message:empty {
+  display: none;
+}
+

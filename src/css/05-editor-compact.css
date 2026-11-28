@@ -1,0 +1,486 @@
+/* --- 編集：共通 --- */
+#editingBar {
+  margin: 2px 2px 6px;
+  font-size: 0.92rem;
+}
+/* 基本キャラ情報：入れ子の枠をやめて横幅を広く使う */
+.profile-block {
+  border: 0;
+  background: none;
+  border-radius: 0;
+  margin: 2px 0;
+}
+.profile-block > summary {
+  padding: 8px 2px 6px;
+  border-top: 1px solid #2a3344;
+  font-size: 0.93rem;
+}
+.profile-block > .grid,
+.profile-block > .profile-long,
+.profile-block > textarea {
+  margin: 0 0 8px;
+}
+.profile-block > textarea {
+  width: 100%;
+}
+.list-row {
+  margin: 3px 0;
+}
+.list-add {
+  margin: 4px 0 8px !important;
+}
+#secretBody {
+  margin: 0 0 8px !important;
+}
+#sec-profile > .hint {
+  margin: 2px 0 8px;
+}
+#charName {
+  font-weight: 700;
+  font-size: 1rem;
+}
+/* 基本能力値：4列 */
+#base {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+#base > div {
+  display: flex;
+  flex-direction: column;
+}
+#base label {
+  margin: 0 0 2px;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #c7b5ff;
+  letter-spacing: 0.04em;
+}
+#base input {
+  height: 40px;
+  padding: 0 2px;
+  text-align: center;
+  font-size: 16px;
+}
+@media (min-width: 700px) {
+  #base {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+.db-compact {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  margin: 10px 0 6px;
+}
+.db-compact .db-main strong {
+  display: block;
+  font-size: 0.76rem;
+  color: #aab4c5;
+  font-weight: 600;
+}
+.db-compact output {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+.db-compact input {
+  height: 38px;
+  padding: 0 8px;
+  font-size: 0.9rem;
+}
+/* 基本ステータス：1項目＝1行 */
+.derived-head,
+.derived-row {
+  display: grid;
+  grid-template-columns: minmax(58px, 0.75fr) minmax(0, 1.5fr) 52px 24px;
+  gap: 6px;
+  align-items: center;
+}
+.derived-head {
+  font-size: 0.7rem;
+  color: #9fb0c9;
+  font-weight: 700;
+  margin: 2px 0 0;
+  padding: 0 2px;
+}
+.derived-head span:nth-child(3) {
+  text-align: center;
+}
+.derived-row {
+  margin: 4px 0;
+}
+.derived-row > div {
+  min-width: 0;
+}
+.derived-row label {
+  display: none;
+}
+.derived-row > div:last-child {
+  grid-column: auto;
+}
+.derived-row input {
+  height: 34px;
+  padding: 0 8px;
+  font-size: 15px;
+}
+.derived-row > div:first-child > div {
+  padding: 0 !important;
+  font-weight: 700;
+}
+.derived-row output.pending {
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  color: #9aa6bb;
+}
+.derived-row output {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  height: 34px;
+  padding: 0 4px;
+  font-weight: 700;
+  background: #161e2b;
+}
+.derived-row button.danger {
+  font-size: 0;
+  padding: 0;
+  width: 24px;
+  height: 34px;
+  margin: 0;
+  border-radius: 6px;
+}
+.derived-row button.danger::before {
+  content: "×";
+  font-size: 15px;
+}
+#sanInfo {
+  font-size: 0.84rem;
+  line-height: 1.55;
+  padding: 7px 10px;
+  margin: 8px 0;
+}
+/* 追加ステータス：技能と同じ密度 */
+#extras .row {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 24px;
+  gap: 6px;
+  align-items: center;
+  margin: 5px 0;
+}
+#extras .row label {
+  display: none;
+}
+#extras .row input {
+  height: 36px;
+  padding: 0 8px;
+}
+#extras .row button.danger {
+  font-size: 0;
+  padding: 0;
+  width: 24px;
+  height: 36px;
+  margin: 0;
+  border-radius: 6px;
+}
+#extras .row button.danger::before {
+  content: "×";
+  font-size: 15px;
+}
+/* 技能の操作欄 */
+.skill-tools {
+  margin: 6px 0 8px;
+}
+.skill-tools input[type="search"] {
+  height: 38px;
+  padding: 0 10px;
+}
+.opt-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: center;
+  margin-top: 6px;
+}
+.opt-row .switch-label {
+  margin: 0;
+  font-size: 0.86rem;
+}
+.opt-row .small-btn {
+  margin: 0;
+}
+/* 追加チャパレ */
+.palette-builder {
+  gap: 6px;
+  margin: 8px 0;
+}
+.palette-builder label {
+  font-size: 0.72rem;
+  margin-bottom: 2px;
+}
+.palette-status-picker {
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.palette-status-picker .hint {
+  grid-column: 1/-1;
+}
+.palette-builder input,
+.palette-builder select {
+  height: 38px;
+  padding: 0 8px;
+}
+.palette-builder button {
+  height: 38px;
+}
+.palette-command-list .hint {
+  margin: 2px 0;
+}
+/* チャットパレット見出し */
+.palette-heading {
+  gap: 6px;
+}
+.palette-heading-actions {
+  gap: 6px 12px;
+}
+.palette-heading-actions .small-btn {
+  margin: 0;
+}
+/* トースト：技能ポイントバーと重ならない */
+body.sp-on.editor-mode #toast {
+  bottom: 136px;
+}
+/* v75-2 */
+select {
+  font: inherit;
+  color: #fff;
+  background: #111722;
+  border: 1px solid #30394a;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+#charSort {
+  height: 36px;
+}
+.btn-row > button {
+  white-space: nowrap;
+}
+#memo {
+  min-height: 90px;
+}
+.palette-command-list .hint {
+  font-size: 0.8rem;
+}
+/* v75-3 */
+.preset-quick {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 8px 0;
+}
+.preset-quick button {
+  padding: 10px 4px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.batch-grid select,
+.batch-grid input,
+#newGroupNameWrap input {
+  width: 100%;
+}
+#batchDialog select {
+  width: 100%;
+}
+.move-row {
+  padding: 10px 12px;
+  background: #111722;
+  border: 1px solid #30394a;
+  border-radius: 10px;
+  margin: 6px 0;
+  gap: 10px;
+  cursor: pointer;
+}
+.move-row input {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  margin: 0;
+}
+.move-row span {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.palette-command-list > .hint {
+  margin: 4px 0;
+  color: #8d98b0;
+}
+/* v75-4：PC幅では下部バーも本文の幅にそろえる */
+@media (min-width: 960px) {
+  #editorBar,
+  #groupBar {
+    padding-left: calc((100vw - 920px) / 2);
+    padding-right: calc((100vw - 920px) / 2);
+  }
+  #editorMenu,
+  #groupMenu {
+    right: calc((100vw - 920px) / 2);
+  }
+}
+/* v75-5：狭い画面でのはみ出し対策 */
+#editorBar button,
+#groupBar button {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 400px) {
+  #editorBar,
+  #groupBar {
+    gap: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  #editorBar button,
+  #groupBar button {
+    padding-left: 6px;
+    padding-right: 6px;
+    font-size: 0.92rem;
+  }
+  #editorBar #saveCharacter {
+    flex: 2.2;
+  }
+}
+@media (max-width: 350px) {
+  body {
+    padding: 12px;
+  }
+  button {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  #editorBar button,
+  #groupBar button {
+    font-size: 0.84rem;
+  }
+}
+#sec-home .toolbar button {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+#sec-home .toolbar #newCharacter {
+  flex: 2 1 auto;
+}
+@media (max-width: 350px) {
+  #sec-home .toolbar button {
+    font-size: 0.78rem;
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+}
+section select,
+section input,
+section button {
+  min-width: 0;
+}
+/* v76：連続生成のまとめ */
+.group-card.batch-card {
+  border-left: 3px solid #7c8cff;
+}
+.batch-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  margin: 6px 0;
+  background: #111722;
+  border: 1px solid #30394a;
+  border-radius: 10px;
+}
+.batch-row .b-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.batch-row .b-info strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.batch-row .b-stats {
+  font-size: 0.74rem;
+  color: #8d98b0;
+  line-height: 1.35;
+}
+.batch-row button {
+  flex: none;
+  margin: 0;
+  padding: 8px 9px;
+  font-size: 0.85rem;
+  min-width: 0;
+  width: auto !important;
+}
+.batch-row .b-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, auto));
+  justify-content: start;
+  column-gap: 8px;
+  font-size: 0.72rem;
+}
+.batch-row .b-stats i {
+  font-style: normal;
+  white-space: nowrap;
+}
+#batchDialog button {
+  width: 100%;
+}
+/* v77 */
+.batch-image {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+}
+.batch-image .bi-thumb {
+  width: 72px;
+  height: 72px;
+  flex: none;
+  border-radius: 10px;
+  background: #0b0f16;
+  border: 1px solid #2a3446;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 1.4rem;
+}
+.batch-image .bi-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.batch-image .bi-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  min-width: 0;
+}
+.batch-image .bi-side button {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+}
+.batch-image .bi-side .muted {
+  font-size: 0.74rem;
+  line-height: 1.35;
+}

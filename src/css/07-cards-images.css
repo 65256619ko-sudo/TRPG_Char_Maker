@@ -1,0 +1,450 @@
+/* v88：連続生成カードの複製ボタン */
+.batch-card .actions button {
+  flex: 0 0 auto;
+  padding: 7px 22px;
+}
+
+/* ===== v90：右利きの親指に合わせ、よく使うボタンを右下へ ===== */
+.home-card .actions.act-tiers {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  margin-top: 8px;
+}
+.home-card .act-sub,
+.home-card .act-main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.home-card .act-sub button {
+  flex: 0 0 auto;
+  padding: 6px 11px;
+  font-size: 0.8rem;
+}
+.home-card .act-main button {
+  flex: 0 0 auto;
+  min-width: 92px;
+  padding: 11px 14px;
+  font-size: 0.98rem;
+}
+.home-card .act-main button.primary {
+  flex: 0 0 auto;
+  min-width: 130px;
+}
+.home-card.group-card .actions {
+  justify-content: flex-end;
+}
+.home-card.group-card .actions button {
+  flex: 0 0 auto;
+  min-width: 84px;
+  padding: 8px 14px;
+}
+#sec-groups .toolbar {
+  justify-content: flex-end;
+}
+.batch-row button:nth-of-type(3) {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+/* ===== v90：削除ボタンは左端へ（右端は親指でスクロールするので、誤タップしにくくする） ===== */
+.skill-head,
+#skills .row {
+  grid-template-columns: 22px minmax(0, 1fr) 52px 30px;
+}
+.skill-head > span:last-child,
+#skills .row > button.danger {
+  order: -1;
+}
+body.sp-on #skills .row {
+  grid-template-columns: 22px repeat(5, minmax(0, 1fr));
+}
+body.sp-on .skill-head {
+  grid-template-columns: 22px minmax(0, 4fr) minmax(0, 1fr);
+}
+body.sp-on #skills .row > div:nth-child(1) {
+  grid-column: 2/6;
+}
+body.sp-on #skills .dmg-toggle {
+  grid-column: 6;
+}
+body.sp-on #skills .row > button.danger {
+  order: -1;
+  grid-column: 1;
+}
+body.sp-on #skills .skill-points > div:nth-child(1) {
+  grid-column: 2;
+}
+#extras .row {
+  grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1.3fr);
+}
+#extras .row > button.danger {
+  order: -1;
+}
+.derived-head,
+.derived-row {
+  grid-template-columns: 24px minmax(58px, 0.75fr) minmax(0, 1.5fr) 52px;
+}
+.derived-head > span:last-child,
+.derived-row > button.danger,
+.derived-spacer {
+  order: -1;
+}
+.list-row > button.danger {
+  order: -1;
+}
+.palette-command-item {
+  justify-content: flex-start;
+}
+.palette-command-item > button {
+  order: -1;
+  flex: none;
+}
+.palette-command-item > code {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* カード：削除は左端、よく使うボタンは右 */
+.home-card .act-sub button.danger,
+.home-card.group-card .actions button.danger {
+  margin-right: auto;
+}
+/* 追加チャパレの選択欄は、狭い画面でも右にはみ出さない */
+.palette-status-picker,
+.palette-status-picker > *,
+.palette-builder > * {
+  min-width: 0;
+}
+.palette-builder select,
+.palette-builder input {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* ===== v91：その他のダイス用の🎲ボタン（割り振り方式のときだけ、その他にダイスがある行に出る） ===== */
+#skills .row > button.dice-btn {
+  display: none;
+}
+body.sp-on #skills .row > button.dice-btn {
+  display: block;
+  order: 1;
+  grid-column: 5;
+  width: 100%;
+  height: 32px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1;
+  background: #232c3c;
+  border: 1px solid #3a4660;
+  opacity: 0.5;
+}
+body.sp-on #skills .row.has-dice > button.dice-btn {
+  background: #27476b;
+  border-color: #5aa7e8;
+  opacity: 1;
+}
+body.sp-on #skills .row > div:nth-child(1) {
+  grid-column: 2/5;
+}
+
+/* ===== v92：成長記録 ===== */
+#growthDialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(4, 7, 14, 0.78);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12px;
+  overflow: auto;
+}
+#growthDialog.hidden {
+  display: none !important;
+}
+.growth-card {
+  width: min(100%, 560px);
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  margin: auto;
+}
+.growth-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.growth-top h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.growth-top button {
+  margin: 0;
+}
+.growth-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 4px 0 10px;
+}
+.growth-bar button {
+  margin: 0;
+}
+.growth-item {
+  border: 1px solid #34405a;
+  border-radius: 12px;
+  padding: 10px;
+  margin: 0 0 10px;
+  background: #161d2b;
+}
+.growth-item.applied {
+  border-color: #3d6b57;
+}
+.growth-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+.growth-h b {
+  font-size: 1rem;
+}
+.growth-badge {
+  margin-left: auto;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #3a2f1c;
+  color: #f2c879;
+  border: 1px solid #6b5630;
+}
+.growth-badge.on {
+  background: #1d3a2c;
+  color: #8fe0b4;
+  border-color: #3d6b57;
+}
+.growth-line {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+.growth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 10px;
+}
+.growth-actions button {
+  margin: 0;
+  flex: 0 0 auto;
+  min-width: 78px;
+}
+.growth-actions button.danger {
+  margin-right: auto;
+}
+.growth-lab {
+  display: block;
+  margin: 8px 0;
+}
+.growth-lab > span {
+  display: block;
+  font-size: 0.85rem;
+  color: #9fb0cc;
+  margin-bottom: 3px;
+}
+.growth-lab input,
+.growth-lab textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+.growth-sub {
+  margin: 14px 0 4px;
+  font-size: 1rem;
+}
+.growth-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0;
+}
+.growth-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1.3fr) minmax(0, 1fr) 38px;
+  gap: 6px;
+  align-items: center;
+}
+.growth-row.gain {
+  grid-template-columns: 30px 104px minmax(0, 1fr) minmax(0, 1fr);
+}
+.growth-row input,
+.growth-row select,
+.growth-row button {
+  min-width: 0;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.growth-row button.danger {
+  padding: 6px 0;
+}
+.vw-grow {
+  border-top: 1px solid #2c3750;
+  padding: 8px 0;
+}
+.vw-grow.pending {
+  opacity: 0.7;
+}
+.vw-grow-h {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+.vw-grow-l {
+  margin-top: 4px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+/* v96：下部バーのボタンが4つになったので、小さいボタンは文字の幅に合わせ、残りを「保存して…へ」に回す。足りないときは「保存して…へ」だけ2行にする */
+#editorBar button {
+  flex: 0 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: visible;
+  text-overflow: clip;
+}
+#editorBar #saveCharacter {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  line-height: 1.15;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+@media (max-width: 400px) {
+  #editorBar {
+    gap: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  #editorBar button {
+    padding-left: 6px;
+    padding-right: 6px;
+    font-size: 0.85rem;
+  }
+}
+@media (max-width: 350px) {
+  #editorBar button {
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 0.78rem;
+  }
+}
+.home-fine {
+  margin: 2px 0 0;
+  text-align: right;
+}
+.home-fine button {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  min-height: 0;
+  padding: 4px 2px;
+  font-size: 11.5px;
+  color: #7d889c;
+  text-decoration: underline;
+}
+
+
+/* ===== アイコン（SVG） ===== */
+.ic {
+  width: 1.15em;
+  height: 1.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.2em;
+  flex: none;
+  pointer-events: none;
+}
+.ic-l {
+  margin-right: 0.35em;
+}
+input.has-search-ic.has-search-ic {
+  padding-left: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f9bb3' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cline x1='16' y1='16' x2='21' y2='21'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 17px 17px;
+}
+
+/* ===== 閲覧モード：タップで内訳 ===== */
+.vw-tile.tap,
+.vw-skill.tap {
+  cursor: pointer;
+}
+.vw-tile.tap.open {
+  border-color: #6f7ce0;
+  background: #1a2250;
+}
+.vw-skill {
+  flex-wrap: wrap;
+}
+.vw-skill.open {
+  background: #121936;
+}
+.vw-detail {
+  margin-top: 8px;
+  background: #0e1328;
+  border: 1px solid #3a4590;
+  border-radius: 9px;
+  padding: 8px 10px;
+  font-size: 0.84rem;
+}
+.vw-detail.hidden {
+  display: none;
+}
+.vw-detail.more {
+  flex: 0 0 100%;
+  margin: 4px 0 2px;
+  cursor: default;
+}
+.vw-detail .r {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 0;
+}
+.vw-detail .r span {
+  color: #98a4d6;
+}
+.vw-detail .r b {
+  color: #f2f4ff;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.vw-detail h4 {
+  margin: 6px 0 2px;
+  font-size: 0.78rem;
+  color: #8f9be0;
+}
+.vw-detail .vw-detail-title {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  color: #f2f4ff;
+}
+

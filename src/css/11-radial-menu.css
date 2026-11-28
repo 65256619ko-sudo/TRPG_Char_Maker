@@ -1,0 +1,260 @@
+/* 右クリックの円形メニュー：向きで選ぶ（ボタンの上でなくてよい）。押している間は強調、離すと決定 */
+#ctxRadial button.rd {
+  pointer-events: none;
+  animation-fill-mode: backwards;
+}
+#ctxRadial button.rd.hot {
+  transform: translate(var(--x), var(--y)) scale(1.2);
+  background: #4a5cc0;
+  border-color: #c3ceff;
+  box-shadow: 0 0 0 3px #8fa0ff88, 0 6px 16px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+#ctxRadial .rd-wedge {
+  position: absolute;
+  left: -150px;
+  top: -150px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask: radial-gradient(circle, transparent 38px, #000 39px, #000 148px, transparent 150px);
+  mask: radial-gradient(circle, transparent 38px, #000 39px, #000 148px, transparent 150px);
+  transition: opacity 0.08s;
+}
+#ctxRadial .rd-hub {
+  position: absolute;
+  left: -34px;
+  top: -34px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 1px dashed rgba(160, 175, 255, 0.45);
+  pointer-events: none;
+}
+#ctxRadial .rd-cap {
+  z-index: 1;
+  text-shadow: 0 1px 3px #000;
+}
+/* 選択バー：並べ替えの長いリストでも、選択解除をいつでも押せるよう上に張り付く */
+.palette-selection-bar {
+  position: sticky;
+  top: 0;
+  z-index: 55;
+  background: #151c34;
+  border-bottom: 1px solid #4a5a9a;
+  padding: 5px 4px;
+  margin-bottom: 4px;
+}
+body.tabs-on.editor-mode .palette-selection-bar {
+  top: var(--tabs-h, 56px);
+}
+.palette-selection-bar.has-sel {
+  background: #4a3410;
+  border-bottom-color: #ffc46b;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+.palette-selection-bar.has-sel .palette-selection-count {
+  color: #ffe0a6;
+  font-weight: 800;
+}
+.palette-selection-bar button {
+  margin: 0;
+}
+.palette-selection-bar.has-sel button {
+  background: #ffb03a;
+  border-color: #ffd58a;
+  color: #2b1800;
+  font-weight: 800;
+}
+.palette-selection-bar button:disabled {
+  opacity: 0.45;
+}
+
+/* 円形メニューの設定 */
+#rsStage {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #1c2432;
+  border-bottom: 1px solid #3d4a66;
+  width: min(300px, 100%);
+  height: 270px;
+  margin: 8px auto;
+}
+.rs-slot {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #242d44;
+  border: 1px solid #5a6aa8;
+  color: #e7ecfa;
+}
+.rs-slot .ic {
+  width: 22px;
+  height: 22px;
+}
+.rs-slot.empty {
+  background: transparent;
+  border-style: dashed;
+  color: #7c89b6;
+}
+.rs-slot.sel {
+  outline: 3px solid #ffd54a;
+  outline-offset: 2px;
+  background: #4a5cc0;
+}
+.rs-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 110px;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+.rs-center b {
+  display: block;
+  color: #ffd54a;
+}
+.rs-pool-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.rs-act {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  background: #222d5a;
+  border-color: #6f82d8;
+}
+.rs-act .ic {
+  width: 16px;
+  height: 16px;
+}
+.rs-act.placed {
+  background: #17583c;
+  border-color: #62f0b0;
+}
+
+/* スマホの長押し円形メニュー：指で隠れないよう、名前は上（入らなければ下）に出す。長押し中は文字選択を止める */
+body.ctx-nosel,
+body.ctx-nosel * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+#ctxRadial.is-touch .rd-cap {
+  left: -105px;
+  top: var(--capy, -168px);
+  width: 210px;
+  height: 32px;
+  background: rgba(10, 14, 30, 0.92);
+  border: 1px solid rgba(143, 160, 255, 0.5);
+  border-radius: 16px;
+}
+#ctxRadial.is-touch .rd-hub {
+  border-color: rgba(160, 175, 255, 0.7);
+}
+.rs-hold {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 4px 0 8px;
+}
+.rs-hold label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.rs-hold select {
+  width: auto;
+  min-width: 0;
+}
+.hold-sec {
+  width: 5.2em;
+  min-width: 0;
+  text-align: right;
+}
+.hold-off {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 400;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.hold-off input {
+  width: auto;
+  min-height: 0;
+  margin: 0;
+}
+.home-hold {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: #7d889c;
+}
+.home-hold .hold-sec {
+  font-size: 12px;
+  padding: 2px 4px;
+  min-height: 0;
+}
+.card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 2px;
+}
+.cs-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1px solid #3a4468;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.cs-chip b {
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.75;
+}
+.home-tutorial {
+  border: 1px dashed #4a5a8a;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 6px 0;
+}
+.home-tutorial h3 {
+  margin: 0 0 6px;
+}
+.home-tutorial ol {
+  margin: 0 0 8px;
+  padding-left: 1.3em;
+  line-height: 1.6;
+}
+.home-tutorial li {
+  margin: 3px 0;
+}
+.home-tutorial button {
+  width: 100%;
+}
