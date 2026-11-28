@@ -93,7 +93,14 @@ function viewerCompute(f) {
   const ov = String(f.dbOverride || "").trim();
   if (ov) db = ov.replace(/\s+/g, "");
   else if (nums.STR != null && nums.SIZ != null) db = calculateDB(nums.STR, nums.SIZ);
-  return { nums, derived, extras, skills: rows, db, ctx };
+  // 職業P・興味Pの使用合計。編集画面（updatePointSummary）と同じ数え方：全行を、入力どおり（マイナスもそのまま、名前のない行も含む）足す
+  const pts = { occ: 0, int: 0 };
+  (f.skills || []).forEach((s) => {
+    if (!s) return;
+    pts.occ += Number(s.occ) || 0;
+    pts.int += Number(s.int) || 0;
+  });
+  return { nums, derived, extras, skills: rows, db, ctx, pts };
 }
 function vwSec(title, small, tag) {
   const d = vwEl(tag || "div", "vw-sec");
@@ -324,12 +331,8 @@ function renderViewer(c) {
     const sk = vwSec("技能", k.skills.length + "件");
     const occN = k.skills.filter((r) => r.occ > 0).length,
       intN = k.skills.filter((r) => r.int > 0).length;
-    let occUsed = 0,
-      intUsed = 0;
-    k.skills.forEach((r) => {
-      occUsed += r.occ;
-      intUsed += r.int;
-    });
+    const occUsed = k.pts.occ,
+      intUsed = k.pts.int;
     if (f.spMode || occUsed || intUsed) {
       const lim = (fm) => {
         fm = String(fm || "").trim();
